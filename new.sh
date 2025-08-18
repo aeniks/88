@@ -19,11 +19,13 @@ printf %b "\e[A";
 ####
 ####
 model=($(getprop ro.product.vendor.marketname; getprop ro.product.manufacturer; uname --kernel-name --kernel-release --machine --operating-system)); 
-cpu=($(lscpu |grep "Model name"|tr -s "\t" " "|cut -f3- -d" ")); 
-cpus=$(lscpu|grep -e 'CPU(s):'|cut -f2 -d":"|tr -d " "); 
+cpu=($(lscpu |grep -E 'Model name|Vendor ID'|tr -s "\t" " "|cut -f3- -d" ")); 
+cpus=($(lscpu|grep -e 'CPU(s):'|cut -f2 -d":"|tr -d " ")); 
 ##
 dfree() { [ "$PREFIX" ]&& printf %b "$(df -h|grep -v "tmpfs"|grep -v "passthrough"|cut -f2- -d" "|tr -s " " " "|grep -E "sdcard/default|storage|Size"|column --table --table-columns-limit 5 --output-separator ' | '|bat -ppfljs --theme DarkNeon)"|| printf %b "$(df -h|grep -v "tmpfs"|tr -s " " " "|column --table --table-columns-limit 5 --output-separator ' | '|bat -ppfljs --theme DarkNeon)"; }; 
 ##
+[ $PREFIX ] && wlan=$(getprop vendor.arc.net.ipv4.host_address);
+[ -z $iploc ] && iploc="$(ifconfig 2>/dev/null | grep -e "wlan" -A1|sed -e 1d|tr -s "a-z " "\n"|sed -e 1d -e 3,4d)";
 wlan="$(ifconfig 2>/dev/null | grep -e "wlan" -A1|sed -e 1d|tr -s "a-z " "\n"|sed -e 1d -e 3,4d)"; 
 iplo=${wlan}; 
 iploc=${wlan}; 
