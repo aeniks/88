@@ -48,6 +48,7 @@ dots() { printf %b "$re\n··········${re}\n"; };
 dots; printf %b "$cyan[\e[38;5;$((lopa + 88))m\e[1m${model[*]}$re${cyan}]"; 
 dots; printf %b "${cpu[*]} x $cpus" | bat -ppfljava; 
 dots; load; 
+dots; . ~/88/f/12cal.sh; 12cal; 
 dots; printf %b "${iplo[*]} $ssh"|bat -ppflgo --theme Visual\ Studio\ Dark+;
 dots; dfree; dots; 
 ##
