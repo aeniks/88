@@ -8,4 +8,8 @@ alias 88_pullpush='git commit -a -m "${USER}_${mod}_$(date)" -v; git pull; git p
 alias bb='if [ "$PREFIX" ]; then \
 tmux display-popup -w "98%" -h "98%" "htop"; else \
 tmux display-popup -w 98% -h 98% "btop"; fi '
+<<<<<<< HEAD
 alias qb='ssh aa@ants.ftp.sh "qbittorrent-nox -d" && xdg-open https://qb.aeniks.com'
+=======
+alias jacketts='/home/aa/gh/jackett/jackett &'
+>>>>>>> 68b42e0 (aa__Sat Aug 23 12:59:09 AM CEST 2025)
