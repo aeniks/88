@@ -18,7 +18,7 @@ printf %b "\e[A";
 # printf %b "${date[*]}"|bat -ppflgo --theme Visual\ Studio\ Dark+; 
 ####
 ####
-model=($(getprop ro.product.vendor.marketname; getprop ro.product.manufacturer; uname --kernel-name --kernel-release --machine --operating-system)); 
+[ $PREFIX ] && model=($(getprop ro.product.vendor.marketname; getprop ro.product.manufacturer; uname --kernel-name --kernel-release --machine --operating-system)) || model=($(uname --kernel-name --kernel-release --machine --operating-system)); 
 cpu=($(lscpu |grep -E 'Model name|Vendor ID'|tr -s "\t" " "|cut -f3- -d" ")); 
 cpus=($(lscpu|grep -e 'CPU(s):'|cut -f2 -d":"|tr -d " ")); 
 ##
