@@ -25,20 +25,18 @@ cpus=($(lscpu|grep -e 'CPU(s):'|cut -f2 -d":"|tr -d " "));
 dfree() { [ "$PREFIX" ]&& printf %b "$(df -h|grep -v "tmpfs"|grep -v "passthrough"|cut -f2- -d" "|tr -s " " " "|grep -E "sdcard/default|storage|Size"|column --table --table-columns-limit 5 --output-separator ' | '|bat -ppfljs --theme DarkNeon)"|| printf %b "$(df -h|grep -v "tmpfs"|tr -s " " " "|column --table --table-columns-limit 5 --output-separator ' | '|bat -ppfljs --theme DarkNeon)"; }; 
 ##
 [ $PREFIX ] && wlan=$(getprop vendor.arc.net.ipv4.host_address);
-[ -z $iploc ] && iploc="$(ifconfig 2>/dev/null | grep -e "wlan" -A1|sed -e 1d|tr -s "a-z " "\n"|sed -e 1d -e 3,4d)";
-wlan="$(ifconfig 2>/dev/null | grep -e "wlan" -A1|sed -e 1d|tr -s "a-z " "\n"|sed -e 1d -e 3,4d)"; 
-iplo=${wlan}; 
-iploc=${wlan}; 
+[ -z $wlan ] && wlan="$(ifconfig 2>/dev/null | grep -e "wlan" -A1|sed -e 1d|tr -s "a-z " "\n"|sed -e 1d -e 3,4d)";
+iplo=${wlan}; iploc=${wlan}; 
 ##
-load() { 
-unset -v load ll; 
-printf %b "\e[37;2m|\e[10b\e[1G"; 
-load=$(uptime | cut -f 11 -d " " | tr -d ",. "); 
-ll=($(seq "$((load / ${cpus}00))")); 
-##
-for i in ${ll[*]}; do case $i in 0|1) o=2;; 2|3) o=4;; 4|5) o=3;; 6|7) o=5;; 8|9) o=1;; esac; printf %b "\e[0m\e[38;5;${o}m|"; done; 
-l1="$((load / 8))"; printf %b "\e[12G ${l1:0:2}.${l1:(-1)}\e[0m";
-}; 
+# load() { 
+# unset -v load ll; 
+# printf %b "\e[37;2m|\e[10b\e[1G"; 
+# load=$(uptime | cut -f 11 -d " " | tr -d ",. "); 
+# ll=($(seq "$((load / ${cpus}00))")); 
+# ##
+# for i in ${ll[*]}; do case $i in 0|1) o=2;; 2|3) o=4;; 4|5) o=3;; 6|7) o=5;; 8|9) o=1;; esac; printf %b "\e[0m\e[38;5;${o}m|"; done; 
+# l1="$((load / 8))"; printf %b "\e[12G ${l1:0:2}.${l1:(-1)}\e[0m";
+# }; 
 ##
 printf %b "${wlan[*]}" > ~/logs/iplo.sh; 
 printf %b "${wlan[*]}" > ~/logs/iploc.sh; 
@@ -47,7 +45,7 @@ dots() { printf %b "$re\n··········${re}\n"; };
 ##
 dots; printf %b "$cyan[\e[38;5;$((lopa + 88))m\e[1m${model[*]}$re${cyan}]"; 
 dots; printf %b "${cpu[*]} x $cpus" | bat -ppfljava; 
-dots; load; 
+# dots; load; 
 dots; . ~/88/f/12cal.sh; 12cal; 
 dots; printf %b "${iplo[*]} $ssh"|bat -ppflgo --theme Visual\ Studio\ Dark+;
 dots; dfree; dots; 
@@ -62,9 +60,9 @@ for i in ~/88/f/*.sh; do . $i; done;
 # command ps -A|cut -c25-|grep -e 'sshd' &>/dev/null || 
 sshd 2>/dev/null; 
 command ps -A|cut -c25-|grep -e 'crond' &>/dev/null || crond 2>/dev/null; 
-[ -z "$new" ] && export new=yes && cd || cd; 
+# [ -z "$new" ] && export new=yes && cd || cd; 
 }; 
-[ $TMUX ] && [ -z "$new" ] && new || export new=yes; 
+[ $TMUX ] && [ -z "$new" ] && new || unset new; 
 # [ -z $TMUX ] && uptime; 
 # termux-api-start & 
 # termux-wake-lock & 
