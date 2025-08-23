@@ -10,4 +10,5 @@ tmux display-popup -w "98%" -h "98%" "htop"; else \
 tmux display-popup -w 98% -h 98% "btop"; fi '
 alias qb='ssh aa@ants.ftp.sh "qbittorrent-nox -d" && xdg-open https://qb.aeniks.com'
 alias jacketts='/home/aa/gh/jackett/jackett &'
+[ -z $PREFIX ] && sudo=sudo; 
 alias uu='$sudo nala update; $sudo nala upgrade -y'
