@@ -10,5 +10,5 @@ selpo="${sel}"; printf %b "\n\n\e[A -- user "; read -rep ' ' -i "aa" "selus";
 printf %b "mosh -P $selpo ${selus}@${selip}\n"|tee -a >> $HISTFILE; echo; history -a; 
 mosh -P $selpo ${selus}@${selip}; 
 printf %b "\n-------- mosh exit --------\n"; 
-printf %b "mosh -P $selpo ${selus}@${selip}\n"; 
+printf %b "mosh -P $selpo  ${selus}@${selip}\n"; 
 (uname -a; echo; uptime)|bat -ppfljava --theme DarkNeon; echo; }||return 0; sshh; }; 
