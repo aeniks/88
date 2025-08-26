@@ -8,7 +8,7 @@ if [ -z "$PREFIX" ]; then cat $HISTFILE|tr -s "\n" "\n"|uniq -u|fzf --tac -i -m 
 --cycle --expect "q" --scheme history \
 --no-inline-info --no-border|tee $h1 -a $HISTFILE; 
 else 
-cat $HISTFILE|tr -s "\n" "\n"|uniq -u|fzf --tac -i -m --wrap --cycle --highlight-line --expect "q" --style="minimal" --tmux="center,88%" --info inline|tee $h1 -a $HISTFILE; 
+cat $HISTFILE|tr -s "\n" "\n"|uniq -u|fzf --tac -i -m --wrap --cycle --highlight-line --expect "q" --style="minimal" --tmux="center,98%,92%" --info inline|tee $h1 -a $HISTFILE; 
 fi; 
 printf %b "saved to: $dim$h1$re\n\n\
 1) open/edit\n\

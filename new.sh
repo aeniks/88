@@ -29,6 +29,7 @@ cpus=($(lscpu|grep -e 'CPU(s):'|cut -f2 -d":"|tr -d " "));
 # dfree() { [ "$PREFIX" ]&& printf %b "$(df -h|grep -v "tmpfs"|grep -v "passthrough"|cut -f2- -d" "|tr -s " " " "|grep -E "sdcard/default|storage|Size"|column --table --table-columns-limit 5 --output-separator ' | '|bat -ppfljs --theme DarkNeon)"|| printf %b "$(df -h|grep -v "tmpfs"|tr -s " " " "|column --table --table-columns-limit 5 --output-separator ' | '|bat -ppfljs --theme DarkNeon)"; }; 
 ##
 . $HOME/88/f/dfree.sh; 
+. $HOME/88/f/12calendar.sh; 
 [ $PREFIX ] && wlan=$(getprop vendor.arc.net.ipv4.host_address);
 [ -z $wlan ] && wlan="$(ifconfig 2>/dev/null | grep -e "wlan" -A1|sed -e 1d|tr -s "a-z " "\n"|sed -e 1d -e 3,4d)";
 iplo=${wlan}; iploc=${wlan}; 
@@ -55,8 +56,7 @@ dots; printf %b "${cpu[*]} x $cpus\n" | bat -ppfljava;
 dots; 
 gum style --border normal --border-foreground 66 --margin "0 1" "$(printf %b " $0 | $TERM | $TERM_PROGRAM | $LANG "|bat -ppflc++ --theme Coldark-Dark)"; 
 dots; 
-. ~/88/f/12cal.sh; 12cal; echo; 
-dots; 
+12calendar; dots; 
 printf %b "${iplo[*]} $ssh\n"|bat -ppflsyslog --theme Visual\ Studio\ Dark+; 
 dots; 
 dfree; 
