@@ -3,3 +3,4 @@ df2() { local IFS=$'\n\t '; df=($(df -H|grep -E "storage|Size"|tr -s " " " "|cut
 # case $o in 0) oc=28;; 1) oc=196;; 2) oc=196;; 3) oc=166;; 4) oc=130;; 5) oc=130;; 6) oc=94;; 7) oc=100;; 8) oc=64;; 9) oc=64;; esac; 
 
 }; 
+
