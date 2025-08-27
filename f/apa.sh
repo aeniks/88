@@ -22,7 +22,7 @@ printf %b "$bb ? \e[0m[\e[2mY\e[0m/\e[2mn\e[0m] or [\e[2mr\e[0m]\e[2memove\e[0m 
 cd $OLDPWD &>/dev/null; 
 read -s -n1 "ny"; if [ -z $ny ]; then cd $OLDPWD; 
 printf %b "\e[92m OK\e[0m \n\n"; 
-tmux split-window -l 5 "$sudo apt update 2>/dev/null|bat -ppfljava --theme DarkNeon; $sudo apt upgrade -y 2>/dev/null|bat -ppfljava --theme DarkNeon; clear; $sudo apt install -y ${aapp[*]}|bat -ppfljava --theme DarkNeon; printf %b '\n\n\e[95;2m-\e[${COLUMNS}b\e[12G\e[0;96m \e[5;7m done \e[0m '; read -n1 -t5 xx"; 
+tmux split-window -l "12%" -d -v "$sudo apt update 2>/dev/null|bat -ppfljava --theme DarkNeon; $sudo apt upgrade -y 2>/dev/null|bat -ppfljava --theme DarkNeon; clear; $sudo apt install -y ${aapp[*]}|bat -ppfljava --theme DarkNeon; for i in {1..5}; do printf %b '\e[48;5;21${i}m\e[22S\n\n\e[2A\e[12G\e[0;95;7m gg '; read -n1 -t 1 xx; done; "; 
 elif [ $ny = r ]; then tmux split-window -l 5 "$sudo apt remove -y ${aapp[*]}|bat -ppfljava --theme DarkNeon; echo 'ok'; read -t5 -n1 xx;"; 
 fi; 
 cd $OLDPWD &>/dev/null; 
