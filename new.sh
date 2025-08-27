@@ -34,6 +34,8 @@ cpus=($(lscpu|grep -e 'CPU(s):'|cut -f2 -d":"|tr -d " "));
 [ $PREFIX ] && wlan=$(getprop vendor.arc.net.ipv4.host_address);
 [ -z $wlan ] && wlan="$(ifconfig 2>/dev/null | grep -e "wlan" -A1|sed -e 1d|tr -s "a-z " "\n"|sed -e 1d -e 3,4d)";
 iplo=${wlan}; iploc=${wlan}; 
+####
+portlocal=($(netstat -tl4 2>/dev/null|tail -n+2|tr -s "A-z:/ " " "|cut -f5 -d" ")); 
 ##
 # dots; printf %b "$cyan[\e[38;5;$((lopa + 88))m\e[1m${model[*]}$re${cyan}]"; 
 # load() { 
@@ -58,7 +60,7 @@ dots;
 gum style --border normal --border-foreground 66 --margin "0 1" "$(printf %b " $0 | $TERM | $TERM_PROGRAM | $LANG "|bat -ppflc++ --theme Coldark-Dark)"; 
 dots; 
 12calendar; dots; 
-printf %b "${iplo[*]} $ssh\n"|bat -ppflsyslog --theme Visual\ Studio\ Dark+; 
+printf %b "${iplo[*]} : ${portlocal[*]} $ssh\n"|bat -ppflsyslog --theme Visual\ Studio\ Dark+; 
 dots; 
 dfree; 
 dots; 
