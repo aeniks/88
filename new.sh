@@ -8,7 +8,6 @@ export HISTCONTROL="ignoreboth";
 export PROMPT_COMMAND="history -a; history -n; "; 
 export tmp=$HOME/tmp
 
-
 ##
 export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls --color always -pm {}" --highlight-line --wrap-sign "" --scroll-off 22 --color "list-bg:234,bg+:24,fg+:15,info:6" --scrollbar "0" --ghost "0: change orientation"'; 
 [ -z "$PREFIX" ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls --color always -pm {}" --scroll-off 22 --color "bg:0,preview-bg:16,bg+:24,fg+:15,info:6" --scrollbar "▀"'; 
@@ -17,6 +16,7 @@ export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(ri
 . ~/.config/cloudflare_id.conf
 ####
 [ -e $HOME/.config/path.sh ]&& export PATH=$(cat $HOME/.config/path.sh);
+# . $HOME/88/s/sig.sh &>/dev/null; 
 [ -z $TMUX ] && tmux; 
 new() { 
 # date=($(date +%D\ %X)); 
@@ -35,6 +35,7 @@ cpus=($(lscpu|grep -e 'CPU(s):'|cut -f2 -d":"|tr -d " "));
 ##
 . $HOME/88/f/dfree.sh; 
 . $HOME/88/f/12calendar.sh; 
+ # &>/dev/null;
 [ $PREFIX ] && wlan=$(getprop vendor.arc.net.ipv4.host_address);
 [ -z $wlan ] && wlan="$(ifconfig 2>/dev/null | grep -e "wlan" -A1|sed -e 1d|tr -s "a-z " "\n"|sed -e 1d -e 3,4d)";
 iplo=${wlan}; iploc=${wlan}; 
@@ -69,7 +70,7 @@ dots;
 dfree; 
 dots; 
 ##
-PS1='\e[38;5;$((${?} + 112 / 8))m$? \e[0;2m\t\e[93m ${model[@]:0:4}\e[92m \h \e[0m\e[96m\u\e[0m \w \n'
+PS1='$s\e[38;5;$((${?} + 112 / 8))m$? \e[0;2m\t\e[93m ${model[@]:0:4}\e[92m \h \e[0m\e[96m\u\e[0m \w \n'
 printf '\e]12;red\e\\'; 
 ####
 ####
@@ -80,6 +81,7 @@ for i in ~/88/f/*.sh; do . $i; done;
 sshd 2>/dev/null; 
 command ps -A|cut -c25-|grep -e 'crond' &>/dev/null || crond 2>/dev/null; 
 # [ -z "$new" ] && export new=yes && cd || cd; 
+. ${HOME}/88/s/sig.sh &>/dev/null; 
 }; 
 [ $TMUX ] && [ -z "$new" ] && new || unset new; 
 # [ -z $TMUX ] && uptime; 
