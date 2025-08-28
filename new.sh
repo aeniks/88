@@ -6,6 +6,10 @@ export EDITOR="micro";
 export BAT_THEME="Coldark-Dark"; 
 export HISTCONTROL="ignoreboth"; 
 export PROMPT_COMMAND="history -a; history -n; "; 
+export tmp=$HOME/tmp
+
+
+##
 export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls --color always -pm {}" --highlight-line --wrap-sign "" --scroll-off 22 --color "list-bg:234,bg+:24,fg+:15,info:6" --scrollbar "0" --ghost "0: change orientation"'; 
 [ -z "$PREFIX" ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls --color always -pm {}" --scroll-off 22 --color "bg:0,preview-bg:16,bg+:24,fg+:15,info:6" --scrollbar "▀"'; 
 ####
