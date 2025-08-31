@@ -7,9 +7,9 @@ export BAT_THEME="Coldark-Dark";
 export HISTCONTROL="ignoreboth"; 
 export PROMPT_COMMAND="history -a; history -n; "; 
 export tmp=$HOME/tmp
-
+export IFS=$'\n\t '; 
 ##
-export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls --color always -pm {}" --wrap-sign "" --scroll-off 22 --color "list-bg:234,bg+:24,fg+:15,info:6" --scrollbar "0" --ghost "0: change orientation"'; 
+export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls --color always -pm {}" --wrap-sign "" --scroll-off 22 --color "list-bg:234,bg+:24,fg+:15,info:6" --scrollbar "▀" --ghost "0: change orientation"'; 
 [ -z "$PREFIX" ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls --color always -pm {}" --scroll-off 22 --color "bg:0,preview-bg:16,bg+:24,fg+:15,info:6" --scrollbar "▀"'; 
 ####
 . ~/.config/gemini_api_id.conf
@@ -19,6 +19,7 @@ export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(ri
 # . $HOME/88/s/sig.sh &>/dev/null; 
 [ -z $TMUX ] && tmux; 
 new() { 
+local IFS=$' '; 
 # date=($(date +%D\ %X)); 
 re='\e[0m'; cyan='\e[96m'
 printf %b "$re··········${re}\n"; 
@@ -26,8 +27,9 @@ date|bat -ppfljava --theme Sublime\ Snazzy;
 # printf %b "\e[A"; 
 # printf %b "${date[*]}"|bat -ppflgo --theme Visual\ Studio\ Dark+; 
 ####
+# [ $PREFIX ] && model=($(getprop ro.product.vendor.marketname; getprop ro.product.manufacturer; 
 ####
-[ $PREFIX ] && model=($(getprop ro.product.vendor.marketname; getprop ro.product.manufacturer; uname --kernel-name --machine --operating-system; uname --kernel-release|head -c12)) || model=($(uname --kernel-name --kernel-release --machine --operating-system)); 
+[ $PREFIX ] && model=($((getprop ro.product.manufacturer; getprop ro.product.model; getprop ro.product.name; uname --kernel-name --machine --operating-system; uname --kernel-release|head -c12)|tr -s "\n" " ")) || model=($(uname --kernel-name --kernel-release --machine --operating-system)); 
 cpu=($(lscpu |grep -E 'Model name|Vendor ID'|tr -s "\t" " "|cut -f3- -d" ")); 
 cpus=($(lscpu|grep -e 'CPU(s):'|cut -f2 -d":"|tr -d " ")); 
 ##
@@ -59,17 +61,22 @@ else sudo=sudo; fi;
 # for i in ${ll[*]}; do case $i in 0|1) o=2;; 2|3) o=4;; 4|5) o=3;; 6|7) o=5;; 8|9) o=1;; esac; printf %b "\e[0m\e[38;5;${o}m|"; done; 
 # l1="$((load / 8))"; printf %b "\e[12G ${l1:0:2}.${l1:(-1)}\e[0m";
 # }; 
+# 
+# local IFS=$'\n'; gum style --border normal --border-foreground 66  --margin "0 1" $(printf %b "${model[*]}\n"|tr -s "\n" " "|bat -ppfljava --theme DarkNeon; ); 
 ##
 printf %b "${wlan[*]}" > ~/logs/iplo.sh; 
 printf %b "${wlan[*]}" > ~/logs/iploc.sh; 
 ##
 dots() { printf %b "$re··········${re}\n"; }; 
 ##
-dots; printf %b "[${model[*]}]\n"|bat -ppfljava --theme DarkNeon;  
-dots; printf %b "${cpu[*]} x $cpus\n" | bat -ppfljava; 
+
+dots; 
+local IFS=$'\n'; gum style --border hidden --background 0 --width 45 --padding "1 2" --trim $(printf %b "${model[*]}"|tr -s "\n " " ")|bat -ppfljava; 
+dots; printf %b "${cpu[*]} x $cpus\n" |tr -s "\n" " "| bat -ppfljava; 
+printf %b "\n"; 
 # dots; load; 
 dots; 
-gum style --border normal --border-foreground 66 --margin "0 1" "$(printf %b " $0 | $TERM | $TERM_PROGRAM | $LANG "|bat -ppflc++ --theme Coldark-Dark)"; 
+printf %b "$0 | $TERM | $TERM_PROGRAM | $LANG \n"|bat -ppflc++ --theme Coldark-Dark; 
 dots; 
 12calendar; dots; 
 printf %b "${iplo[*]} : ${portlocal[*]} $ssh\n"|bat -ppflsyslog --theme Visual\ Studio\ Dark+; 
@@ -79,7 +86,7 @@ dots;
 ##
 # PS1='\e[38;5;$((${?} + 112 / 8))m$? \e[0;2m\t\e[93m ${model[@]:0:4}\e[92m \h \e[0m\e[96m\u\e[0m \w \n'
 . $HOME/88/_ps1.sh; 
-PS1='$s\e[38;5;$((${?} + 112 / 8))m$? \e[0;2m\t\e[93m ${model[@]:0:4}\e[92m \h \e[0m\e[96m\u\e[0m \w \n'
+# PS1='$s\e[38;5;$((${?} + 112 / 8))m$? \e[0;2m\t\e[93m ${model[@]:0:4}\e[92m \h \e[0m\e[96m\u\e[0m \w \n'
 printf '\e]12;red\e\\'; 
 ####
 ####
@@ -90,7 +97,7 @@ for i in ~/88/f/*.sh; do . $i; done;
 sshd 2>/dev/null; 
 command ps -A|cut -c25-|grep -e 'crond' &>/dev/null || crond 2>/dev/null; 
 # [ -z "$new" ] && export new=yes && cd || cd; 
-. ${HOME}/88/s/sig.sh &>/dev/null; 
+# . ${HOME}/88/s/sig.sh &>/dev/null; 
 }; 
 [ $TMUX ] && [ -z "$new" ] && new || unset new; 
 # [ -z $TMUX ] && uptime; 
