@@ -10,7 +10,7 @@ hash sudo 2>/dev/null && sudo=sudo;
 # printf %b "\n.... to update run [apass] ....\n"|bat -ppflc --theme Dracula; 
 #cd 
 # &>/dev/null; 
-FZF_DEFAULT_OPTS='--bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder" --preview "bat -ppf {} 2>/dev/null||ls --color always -pm {}" --highlight-line'
+FZF_DEFAULT_OPTS='-m --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder" --preview "bat -ppf {} 2>/dev/null||ls --color always -pm {}"'
 aapp=($(ls $HOME/logs/apts|fzf --query " $1" -i -m --color \
 preview-bg:0 --bind "q:abort" --preview 'cat $HOME/logs/apts/{}|tr -s "\n " "\n "|grep -vE "Package|Version|Maintainer|APT-Sources|Download-Size"|sed -e "s/Homepage: //" -e "s/Description: //"|bat -ppfld' --preview-window "wrap,5,noborder,top" --cycle --ansi --inline-info))||\
 (printf %b "\n\n"&& cd $pwd &>/dev/null&& return 1;)||\
