@@ -6,7 +6,7 @@ dim='\e[2m' q="$(printf %b "\e[0;2m--\e[0m";)";
 unset filelist new newchange gg; 
 ## perl function 
 #newf() { echo -n $1 | perl -pe 's/[\?\[\]\/\\=<>:;,''"@&\$#*()|~`!{}%+]//g;' -pe 's/[\r\n\t -]+/_/g;'; }; 
-newf() { echo -n $1 | tr -d '%&/"" ?@!*[]{}()<>~/$|,:;`=*#\’'; }; 
+newf() { echo -n $1 | tr -d '?%&/ \?@!*\[\]{}()<>~/$|,:;`=\"\"*#\’'; }; 
 
 # perl -pe 's/[\?\[\]\/\\=<>:;,''"@&\$#*()|~`!{}%+]//g;' 
 # -pe #'s/[\r\n\t -]+/_/g;'; }; 

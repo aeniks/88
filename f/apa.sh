@@ -1,5 +1,5 @@
-
 apa() { 
+[ -z $PREFIX ] && apa_ubuntu && return 0  2>/dev/null && break 2>/dev/null; 
 local IFS=$'\n '; 
 unset ny sudo; 
 hash sudo 2>/dev/null && sudo=sudo; 
