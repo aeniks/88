@@ -1,0 +1,1 @@
+history -a 'nmap $wlan -p 22,8022|grep -e "open"'
