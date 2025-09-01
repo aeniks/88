@@ -15,3 +15,4 @@ alias l='lf -last-dir-path $HOME/logs/ll.log; cd $(cat $HOME/logs/ll.log); '
 alias jacketts='/home/aa/gh/jackett/jackett &'
 alias uu="tmux split-window -l 44% -e sudo='$sudo' '$sudo nala update; $sudo nala upgrade -y; '"; 
 alias ffff='[ -z $PREFIX ] && neofetch || [ $PREFIX ] && fastfetch --percent-type 2 --logo-position right --logo-padding 2 --bar-border-right "" --bar-border-left "" --disable-linewrap';
+alias mm='micro'

@@ -16,6 +16,7 @@ export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(ri
 . ~/.config/gemini_api_id.conf
 . ~/.config/cloudflare_id.conf
 ####
+[ -e $HOME/.config/lesskey ] || ln -s $HOME/88/c/lesskey $HOME/.config/lesskey; 
 [ -e $HOME/.config/path.sh ]&& export PATH=$(cat $HOME/.config/path.sh);
 # . $HOME/88/s/sig.sh &>/dev/null; 
 [ -z $TMUX ] && tmux; 
@@ -33,12 +34,22 @@ date|bat -ppfljava --theme Sublime\ Snazzy;
 
 
 [ -z $wlan ] && wlan="$($sudo ifconfig 2>/dev/null | grep -e "wlan" -A1|sed -e 1d|tr -s "a-z " "\n"|sed -e 1d -e 3,4d)";
+# [ -z "${HOST}" ]&& HOST="$(uname --kernel-name --kernel-release);";
 # iplo=${wlan}; iploc=${wlan}; 
 # [ $PREFIX ] && model=($(getprop ro.product.vendor.marketname; getprop ro.product.manufacturer; 
 ####
-[ $PREFIX ] && model=($((getprop ro.product.manufacturer; getprop ro.product.model; getprop ro.product.name; uname --kernel-name --machine --operating-system; uname --kernel-release|head -c12)|tr -s "\n" " ")) || model=($(uname --kernel-name --kernel-release --machine --operating-system)); 
-cpu=($(lscpu |grep -E 'Model name|Vendor ID'|tr -s "\t" " "|cut -f3- -d" ")); 
-cpus=($(lscpu|grep -e 'CPU(s):'|cut -f2 -d":"|tr -d " ")); 
+[ $PREFIX ] && model=($((getprop ro.product.model; getprop ro.product.name; getprop ro.product.manufacturer; uname --kernel-name; uname --kernel-release|head -c8; uname --machine --operating-system; )|tr -s "\n" " ")) \
+|| [ -e /sys/devices/virtual/dmi/id/product_family ] && \
+model=($((cat /sys/devices/virtual/dmi/id/product_sku \
+/sys/devices/virtual/dmi/id/board_vendor \
+/sys/devices/virtual/dmi/id/sys_vendor \
+/sys/devices/virtual/dmi/id/bios_vendor 2>/dev/null; (uname --kernel-name --kernel-release|cut -f1 -d"-"|tr " " "-"; ); printf %b " "; uname --machine --operating-system)|sort|uniq -u|tr '\n' ' '; )); 
+model=($(printf %b "${model[*]}"|uniq -u|tr -s "\n" " "));
+
+# model=($(uname --kernel-name; uname --kernel-release|head -c8; uname --machine --operating-system)); 
+
+cpu=($(lscpu |grep -E 'Model name'|tr -s "\t" " "|cut -f3- -d" ")); 
+cpus=($(lscpu|grep -e 'CPU(s):' -m1|cut -f2 -d":"|tr -d " ")); 
 ##
 # dfree() { [ "$PREFIX" ]&& printf %b "$(df -h|grep -v "tmpfs"|grep -v "passthrough"|cut -f2- -d" "|tr -s " " " "|grep -E "sdcard/default|storage|Size"|column --table --table-columns-limit 5 --output-separator ' | '|bat -ppfljs --theme DarkNeon)"|| printf %b "$(df -h|grep -v "tmpfs"|tr -s " " " "|column --table --table-columns-limit 5 --output-separator ' | '|bat -ppfljs --theme DarkNeon)"; }; 
 ##
@@ -83,7 +94,10 @@ dots;
 printf %b "$0 | $TERM | $TERM_PROGRAM | $LANG \n"|bat -ppflc++ --theme Coldark-Dark; 
 dots; 
 12calendar; dots; 
-(printf %b "${iploc[*]} : ${portlocal[*]} "; [ "$ssh" ] && printf %b "$ssh\n")|bat -ppflsyslog --theme Visual\ Studio\ Dark+; 
+
+[ -z $PREFIX ] && gum style --border normal --border-foreground 6 --bold --padding "1 3" --align center --margin "0" "$(hostnamectl |grep -E 'Chassis|Operating|Virtualization|Kernel|Hardware Model'|cut -f2- -d":"|cut -f2- -d" ")"|bat -ppfljava; dots; 
+printf %b "${iploc[*]} "|bat -ppflsyslog --theme Visual\ Studio\ Dark+; [ "$ssh" ] && printf %b "| \e[95m\e[7m$ssh";
+printf %b "\e[0m\n"; 
 dots; 
 dfree; 
 dots; 
@@ -107,3 +121,4 @@ command ps -A|cut -c25-|grep -e 'crond' &>/dev/null || crond 2>/dev/null;
 # [ -z $TMUX ] && uptime; 
 # termux-api-start & 
 # termux-wake-lock & 
+
