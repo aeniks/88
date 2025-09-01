@@ -38,13 +38,18 @@ date|bat -ppfljava --theme Sublime\ Snazzy;
 # iplo=${wlan}; iploc=${wlan}; 
 # [ $PREFIX ] && model=($(getprop ro.product.vendor.marketname; getprop ro.product.manufacturer; 
 ####
-[ $PREFIX ] && model=($((getprop ro.product.model; getprop ro.product.name; getprop ro.product.manufacturer; uname --kernel-name; uname --kernel-release|head -c8; uname --machine --operating-system; )|tr -s "\n" " ")) \
-|| [ -e /sys/devices/virtual/dmi/id/product_family ] && \
+[ -z $PREFIX ] && [ -e /sys/devices/virtual/dmi/id/product_family ] && \
 model=($((cat /sys/devices/virtual/dmi/id/product_sku \
 /sys/devices/virtual/dmi/id/board_vendor \
 /sys/devices/virtual/dmi/id/sys_vendor \
 /sys/devices/virtual/dmi/id/bios_vendor 2>/dev/null; (uname --kernel-name --kernel-release|cut -f1 -d"-"|tr " " "-"; ); printf %b " "; uname --machine --operating-system)|sort|uniq -u|tr '\n' ' '; )); 
-model=($(printf %b "${model[*]}"|uniq -u|tr -s "\n" " "));
+
+
+
+
+
+[ $PREFIX ] && model=($((getprop ro.product.model; getprop ro.product.name; getprop ro.product.manufacturer; getprop ro.build.product; getprop ro.build.version.release; getprop ro.build.version.codename; printf %b "\n\n------------\n\n"; uname --operating-system; uname --kernel-name; uname --kernel-release|cut -f1 -d"-"; uname --machine)|tr -s "\n" " ")); 
+model=($(printf %b "${model[*]}"|uniq -u));
 
 # model=($(uname --kernel-name; uname --kernel-release|head -c8; uname --machine --operating-system)); 
 
@@ -86,7 +91,7 @@ dots() { printf %b "$re··········${re}\n"; };
 ##
 
 dots; 
-local IFS=$'\n'; gum style --border hidden --background 0 --width 45 --padding "1 2" --trim $(printf %b "${model[*]}"|tr -s "\n " " ")|bat -ppfljava; 
+local IFS=$'\n'; gum style --border hidden --background 0 --align center --padding "1 3" --margin "0 2" --trim $(printf %b "${model[*]}"|tr -s "\n " " "|fmt -g 42)|bat -ppfljava; 
 dots; printf %b "${cpu[*]} x $cpus\n" |tr -s "\n" " "| bat -ppfljava; 
 printf %b "\n"; 
 # dots; load; 
@@ -95,10 +100,10 @@ printf %b "$0 | $TERM | $TERM_PROGRAM | $LANG \n"|bat -ppflc++ --theme Coldark-D
 dots; 
 12calendar; dots; 
 
-[ -z $PREFIX ] && gum style --border normal --border-foreground 6 --bold --padding "1 3" --align center --margin "0" "$(hostnamectl |grep -E 'Chassis|Operating|Virtualization|Kernel|Hardware Model'|cut -f2- -d":"|cut -f2- -d" ")"|bat -ppfljava; dots; 
+[ -z $PREFIX ] && (gum style --border normal --border-foreground 6 --bold --padding "1 3" --align center --margin "0" "$(hostnamectl |grep -E 'Chassis|Operating|Virtualization|Kernel|Hardware Model'|cut -f2- -d":"|cut -f2- -d" ")"|bat -ppfljava; dots; 
 printf %b "${iploc[*]} "|bat -ppflsyslog --theme Visual\ Studio\ Dark+; [ "$ssh" ] && printf %b "| \e[95m\e[7m$ssh";
 printf %b "\e[0m\n"; 
-dots; 
+dots; )
 dfree; 
 dots; 
 ##
