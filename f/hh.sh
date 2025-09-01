@@ -6,6 +6,7 @@ hh() { unset -v hh; [ $TMUX ] && fzt="-tmux -h"; [ -z $tmp ] && (tmp="$HOME/tmp"
 if [ $PREFIX ]; then hh="$(bat -ppflbash $HISTFILE|tr -s "\n" "\n"|uniq -u|fzf --tmux "center,99%,99%" --tac -i -m --wrap --cycle --highlight-line --wrap-sign="" --bind "q:abort" --style="minimal" --info inline)"; [ "${hh}" ] && printf %b "${hh[*]}"|tee $h1 -a $HISTFILE || echo gg && return 0; 
 else 
 hh="$(bat -ppfljava $HISTFILE|tr -s "\n" "\n"|uniq -u|fzf-tmux -h 99% -w 99% --tac -i -m --cycle --bind "q:abort" --scheme history --no-inline-info --no-border)"; [ "${hh}" ] && printf %b "${hh}" | tee $h1 -a $HISTFILE || (echo gg && return 1;)||return 0; fi; 
+history -s "${hh}"; 
 # [ -z "${hh}" ] && return 0;
 printf %b "
 saved to: $dim$h1$re\n\n\
