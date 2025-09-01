@@ -9,6 +9,7 @@
 # cat $HOME/logs/bp.log 2>/dev/null && printf %b "\e[0m "; cat "/sys/class/power_supply/BAT0/capacity" 2>/dev/null;
 # }; 
 bc=0; 
+[ $PREFIX ] && . $HOME/88/s/bat.sh & disown; 
 _bat() { 
 if [ -e "/sys/class/power_supply/BAT0/status" ]; \
 then printf -v "batstat" "/sys/class/power_supply/BAT0/status"; \
@@ -43,7 +44,7 @@ printf %b "\e[38;5;$((hh + 22))m${hh:1:2}$re:\e[38;5;$((mm + 22))m${mm:1:2}$re:\
 PS1=''$re'\e[0m[\e[0;1;38;5;$((2 + $?))m$?'$re'] \
 ['$re'$(_dtime)'$re']'$re'\
 '$re'$(_bat) \
-['$re'\e[1m\e[38;5;$((RANDOM%88 + 88))m${mod:0:12}'$re'] \
+['$re'\e[1m\e[38;5;$((RANDOM%88 + 88))m${model:0:12}'$re'] \
 ['$re$cyan'\u'$re']'$re' \
 $_host\
 ['$re$yellow'\w'$re']\e[?25h\e[0m\n'; 

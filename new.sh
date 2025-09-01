@@ -7,6 +7,7 @@ export BAT_THEME="Coldark-Dark";
 export HISTCONTROL="ignoreboth"; 
 export PROMPT_COMMAND="history -a; history -n; "; 
 export tmp=$HOME/tmp
+[ -z $TMPDIR ] && export TMPDIR=$HOME/tmp
 export IFS=$'\n\t '; 
 ##
 export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls --color always -pm {}" --wrap-sign "" --scroll-off 22 --color "list-bg:234,bg+:24,fg+:15,info:6" --scrollbar "▀" --ghost "0: change orientation"'; 
@@ -27,6 +28,12 @@ date|bat -ppfljava --theme Sublime\ Snazzy;
 # printf %b "\e[A"; 
 # printf %b "${date[*]}"|bat -ppflgo --theme Visual\ Studio\ Dark+; 
 ####
+[ $PREFIX ] && wlan=$(getprop vendor.arc.net.ipv4.host_address);
+[ -z $wlan ] && iploc=($(ip -brief -4 a|grep -vE "lo|127.0.0.1|valid|altname|BROADCAST"|tr -s " /" " "|cut -f1,3 -d" ")); [ $iploc ] && wlan="${iploc[-1]}"; 
+
+
+[ -z $wlan ] && wlan="$($sudo ifconfig 2>/dev/null | grep -e "wlan" -A1|sed -e 1d|tr -s "a-z " "\n"|sed -e 1d -e 3,4d)";
+# iplo=${wlan}; iploc=${wlan}; 
 # [ $PREFIX ] && model=($(getprop ro.product.vendor.marketname; getprop ro.product.manufacturer; 
 ####
 [ $PREFIX ] && model=($((getprop ro.product.manufacturer; getprop ro.product.model; getprop ro.product.name; uname --kernel-name --machine --operating-system; uname --kernel-release|head -c12)|tr -s "\n" " ")) || model=($(uname --kernel-name --kernel-release --machine --operating-system)); 
@@ -38,9 +45,6 @@ cpus=($(lscpu|grep -e 'CPU(s):'|cut -f2 -d":"|tr -d " "));
 . $HOME/88/f/dfree.sh; 
 . $HOME/88/f/12calendar.sh; 
  # &>/dev/null;
-[ $PREFIX ] && wlan=$(getprop vendor.arc.net.ipv4.host_address);
-[ -z $wlan ] && wlan="$(ifconfig 2>/dev/null | grep -e "wlan" -A1|sed -e 1d|tr -s "a-z " "\n"|sed -e 1d -e 3,4d)";
-iplo=${wlan}; iploc=${wlan}; 
 ####
 export LESS='-R --file-size --use-color --incsearch --mouse --prompt=%F(%T) [/]search [n]ext [p]rev ?f%f .?n?m(%T %i of %m) ..?lt %lt-%lb?L/%L. :byte %bB?s/%s.  .?e(END)  ?x-  Next\:   %x.:?pB  %pB\%..%t ';
 # export LESSKEY='m toggle-option --mouse\n\r';
@@ -79,7 +83,7 @@ dots;
 printf %b "$0 | $TERM | $TERM_PROGRAM | $LANG \n"|bat -ppflc++ --theme Coldark-Dark; 
 dots; 
 12calendar; dots; 
-printf %b "${iplo[*]} : ${portlocal[*]} $ssh\n"|bat -ppflsyslog --theme Visual\ Studio\ Dark+; 
+(printf %b "${iploc[*]} : ${portlocal[*]} "; [ "$ssh" ] && printf %b "$ssh\n")|bat -ppflsyslog --theme Visual\ Studio\ Dark+; 
 dots; 
 dfree; 
 dots; 
@@ -90,7 +94,7 @@ dots;
 printf '\e]12;red\e\\'; 
 ####
 ####
-. ${HOME}/start/alias.sh; 
+# . ${HOME}/start/alias.sh; 
 . ${HOME}/88/alias.sh; 
 for i in ~/88/f/*.sh; do . $i; done; 
 # command ps -A|cut -c25-|grep -e 'sshd' &>/dev/null || 
