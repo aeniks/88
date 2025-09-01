@@ -22,8 +22,9 @@ printf %b "$bb ? \e[0m[\e[2mY\e[0m/\e[2mn\e[0m] or [\e[2mr\e[0m]\e[2memove\e[0m 
 cd $OLDPWD &>/dev/null; 
 read -s -n1 "ny"; if [ -z $ny ]; then cd $OLDPWD; 
 printf %b "\e[92m OK\e[0m \n\n"; 
-tmux split-window -l "12%" -d -v "$sudo apt update 2>/dev/null|bat -ppfljava --theme DarkNeon; $sudo apt upgrade -y 2>/dev/null|bat -ppfljava --theme DarkNeon; clear; $sudo apt install -y ${aapp[*]}|bat -ppfljava --theme DarkNeon; for i in {1..5}; do printf %b '\e[48;5;21${i}m\e[22S\n\n\e[2A\e[12G\e[0;95;7m gg '; read -n1 -t 1 xx; done; "; 
-elif [ $ny = r ]; then tmux split-window -l 5 "$sudo apt remove -y ${aapp[*]}|bat -ppfljava --theme DarkNeon; echo 'ok'; read -t5 -n1 xx;"; 
+tmux split-window -e apap="${aapp[*]}" -l "12%" -v '$sudo apt update 2>/dev/null|bat -ppfljava --theme DarkNeon; printf %b "\n\n -- ${apap}\n";	read -n1 sasa; $sudo apt install -y ${apap[*]}; for i in {1..5}; do printf %b "\e[48;5;21${i}m\e[22S\n\n\e[2A\e[12G\e[0;95;7m gg "; read -n1 -t 1 xx; done; '; 
+# $sudo apt upgrade -y 2>/dev/null|bat -ppfljava --theme DarkNeon; clear; 
+elif [ $ny = r ]; then tmux split-window -l 5 '$sudo apt remove -y ${aapp[*]}|bat -ppfljava --theme DarkNeon; echo ok; read -t5 -n1 xx;'; 
 fi; 
 cd $OLDPWD &>/dev/null; 
 # printf %b "\n\n -- \${aapp[*]}\n\n"|bat -ppflc --theme Nord; 
