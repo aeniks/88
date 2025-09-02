@@ -23,7 +23,7 @@ jp2a \
 mediainfo \
 exiftool \
 lsd \ 
-
+nmap \ 
 ); 
 
 
