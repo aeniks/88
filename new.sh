@@ -18,8 +18,8 @@ export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(ri
 ####
 [ -e $HOME/.config/lesskey ] || ln -s $HOME/88/c/lesskey $HOME/.config/lesskey; 
 [ -e $HOME/.config/path.sh ]&& export PATH=$(cat $HOME/.config/path.sh);
-# . $HOME/88/s/sig.sh &>/dev/null; 
 [ -z $TMUX ] && tmux; 
+# . $HOME/88/s/sig.sh &>/dev/null; 
 new() { 
 local IFS=$' '; 
 # date=($(date +%D\ %X)); 
@@ -31,8 +31,6 @@ date|bat -ppfljava --theme Sublime\ Snazzy;
 ####
 [ $PREFIX ] && wlan=$(getprop vendor.arc.net.ipv4.host_address);
 [ -z $wlan ] && iploc=($(ip -brief -4 a|grep -vE "lo|127.0.0.1|valid|altname|BROADCAST"|tr -s " /" " "|cut -f1,3 -d" ")); [ $iploc ] && wlan="${iploc[-1]}"; 
-
-
 [ -z $wlan ] && wlan="$($sudo ifconfig 2>/dev/null | grep -e "wlan" -A1|sed -e 1d|tr -s "a-z " "\n"|sed -e 1d -e 3,4d)";
 # [ -z "${HOST}" ]&& HOST="$(uname --kernel-name --kernel-release);";
 # iplo=${wlan}; iploc=${wlan}; 
@@ -43,16 +41,11 @@ model=($((cat /sys/devices/virtual/dmi/id/product_sku \
 /sys/devices/virtual/dmi/id/board_vendor \
 /sys/devices/virtual/dmi/id/sys_vendor \
 /sys/devices/virtual/dmi/id/bios_vendor 2>/dev/null; (uname --kernel-name --kernel-release|cut -f1 -d"-"|tr " " "-"; ); printf %b " "; uname --machine --operating-system)|sort|uniq -u|tr '\n' ' '; )); 
-
-
-
-
-
+####
 [ $PREFIX ] && model=($((getprop ro.product.model; getprop ro.product.name; getprop ro.product.manufacturer; getprop ro.build.product; getprop ro.build.version.release; getprop ro.build.version.codename; printf %b "\n\n------------\n\n"; uname --operating-system; uname --kernel-name; uname --kernel-release|cut -f1 -d"-"; uname --machine)|tr -s "\n" " ")); 
 model=($(printf %b "${model[*]}"|uniq -u));
-
 # model=($(uname --kernel-name; uname --kernel-release|head -c8; uname --machine --operating-system)); 
-
+####
 cpu=($(lscpu |grep -E 'Model name'|tr -s "\t" " "|cut -f3- -d" ")); 
 cpus=($(lscpu|grep -e 'CPU(s):' -m1|cut -f2 -d":"|tr -d " ")); 
 ##
@@ -87,9 +80,11 @@ else sudo=sudo; fi;
 printf %b "${wlan[*]}" > ~/logs/iplo.sh; 
 printf %b "${wlan[*]}" > ~/logs/iploc.sh; 
 ##
+[ $SSH_CONNECTION ] && ssh=(${SSH_CONNECTION}); 
+##
+##
 dots() { printf %b "$re··········${re}\n"; }; 
 ##
-
 dots; 
 local IFS=$'\n'; gum style --border hidden --background 0 --align center --padding "1 3" --margin "0 2" --trim $(printf %b "${model[*]}"|tr -s "\n " " "|fmt -g 42)|bat -ppfljava; 
 dots; printf %b "${cpu[*]} x $cpus\n" |tr -s "\n" " "| bat -ppfljava; 
@@ -99,9 +94,9 @@ dots;
 printf %b "$0 | $TERM | $TERM_PROGRAM | $LANG \n"|bat -ppflc++ --theme Coldark-Dark; 
 dots; 
 12calendar; dots; 
-
+##
 [ -z $PREFIX ] && (gum style --border normal --border-foreground 6 --bold --padding "1 3" --align center --margin "0" "$(hostnamectl |grep -E 'Chassis|Operating|Virtualization|Kernel|Hardware Model'|cut -f2- -d":"|cut -f2- -d" ")"|bat -ppfljava; dots; 
-printf %b "${iploc[*]} "|bat -ppflsyslog --theme Visual\ Studio\ Dark+; [ "$ssh" ] && printf %b "| \e[95m\e[7m$ssh";
+printf %b "${iploc[*]} "|bat -ppflsyslog --theme Visual\ Studio\ Dark+; [ "$ssh" ] && printf %b "| \e[95m\e[7m${ssh:2}";
 printf %b "\e[0m\n"; 
 dots; )
 dfree; 
