@@ -14,6 +14,7 @@ alias ss='cd $start; ';
 alias mm='$EDITOR '
 alias qq='cd .. ; ll ';
 alias rr='sudo -s';
+alias ll='lsd -l --extensionsort --group-directories-first -tr'; 
 # alias ll='lsd -l --extensionsort --group-directories-first -tr'; 
 alias ll='ls -hk -Gltr --color=always'; 
 alias ipme='wget https://icanhazip.com -qLO-'; 
