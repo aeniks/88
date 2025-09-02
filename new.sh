@@ -46,9 +46,10 @@ model=($((cat /sys/devices/virtual/dmi/id/product_sku \
 /sys/devices/virtual/dmi/id/board_name \
 /sys/devices/virtual/dmi/id/board_vendor \
 /sys/devices/virtual/dmi/id/sys_vendor \
-/sys/devices/virtual/dmi/id/bios_vendor 2>/dev/null; 
+/sys/devices/virtual/dmi/id/bios_vendor 2>/dev/null))); 
 ##
-# (uname --kernel-name --kernel-release|cut -f1 -d"-"|tr " " "-"; ); printf %b " "; uname --machine --operating-system)|sort|uniq -u|tr '\n' ' '; )); 
+# (uname --kernel-name --kernel-release|cut -f1 -d"-"|tr " " "-"; ); 
+# (uname --machine --operating-system)|sort|uniq -u|tr '\n' ' '); 
 ##
 ##
 [ $PREFIX ] && unset -v modelx && \
