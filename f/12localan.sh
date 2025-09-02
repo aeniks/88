@@ -3,7 +3,7 @@
 ## discover lan w ping & ssh 
 #ipt=$(mktemp; ); 
 mkdir -p $HOME/logs/iplocal/ 2>/dev/null; rm $HOME/logs/iplocal/* 2>/dev/null;  
-printf %b "\n\n\n\n\e[4A\n -- ip ok? "; read -ep '>' -i "${wlan[*]}" "iploc"; 
+printf %b "\n\n\n\n\e[4A\n -- ip ok? "; read -ep '> ' -i "${wlan[*]}" "iploc"; 
 printf %b "\e[?25l\n -- checking ips ... \t\t [q]uit\n\n\n\n\e[4A\n\n"; 
 # ip -4 n
 for i in {0..66}; do printf %b "\e[K"; 
@@ -25,7 +25,7 @@ iplocal=($(command ls $HOME/logs/iplocal; ));
 # iplocall=-($iploc);
 command ls "$HOME/logs/iplocal"; echo; 
 for i in ${iplocal[*]}; do \
-nmap --open $i -p 22,8022|grep -e "open"|cut -f1 -d"/" >> \
+nmap --open $i -p 22,8022|grep -e "open"|cut -f1 -d"/" > \
 $HOME/logs/iplocal/$i; done; 
 printf %b "\e[?25h"; 
 ## selection menu 
