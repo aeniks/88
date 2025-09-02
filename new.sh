@@ -43,20 +43,24 @@ wlan=($(ip -brief -4 a 2>/dev/null|grep -vE "lo|127.0.0.1|valid|altname|BROADCAS
 ####
 [ -z $PREFIX ] && [ -e /sys/devices/virtual/dmi/id/product_family ] && \
 model=($((cat /sys/devices/virtual/dmi/id/product_sku \
+/sys/devices/virtual/dmi/id/board_name \
 /sys/devices/virtual/dmi/id/board_vendor \
 /sys/devices/virtual/dmi/id/sys_vendor \
-/sys/devices/virtual/dmi/id/bios_vendor 2>/dev/null; (uname --kernel-name --kernel-release|cut -f1 -d"-"|tr " " "-"; ); printf %b " "; uname --machine --operating-system)|sort|uniq -u|tr '\n' ' '; )); 
+/sys/devices/virtual/dmi/id/bios_vendor 2>/dev/null; 
+##
+# (uname --kernel-name --kernel-release|cut -f1 -d"-"|tr " " "-"; ); printf %b " "; uname --machine --operating-system)|sort|uniq -u|tr '\n' ' '; )); 
 ##
 ##
-[ $PREFIX ] && \
-modelx=($(\
+[ $PREFIX ] && unset -v modelx && \
+modelx="$(\
 (\
+getprop ro.product.vendor.model; 
 getprop ro.product.marketname; 
 getprop ro.product.name; 
 getprop ro.product.manufacturer; 
 getprop ro.build.product; 
 getprop ro.product.model\
-)|uniq -u||tr -s "\n" " ")); 
+)|sort -u|tr -s "\n" " ")"; 
 ####
 osx=($(\
 (
@@ -108,7 +112,7 @@ printf %b "${wlan[*]}" > ~/logs/iploc.sh;
 [ $SSH_CONNECTION ] && ssh=(${SSH_CONNECTION}); 
 ##
 ##
-unalias dots; 
+# unalias dots 2>/dev/null;  
 dots() { printf %b "$re··········${re}\n"; }; 
 ##
 dots; 
