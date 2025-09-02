@@ -52,29 +52,24 @@ model=($((cat /sys/devices/virtual/dmi/id/product_sku \
 ##
 ##
 [ $PREFIX ] && unset -v modelx && \
-modelx="$(\
-(\
-getprop ro.product.vendor.model; 
-getprop ro.product.marketname; 
-getprop ro.product.name; 
-getprop ro.product.manufacturer; 
-getprop ro.build.product; 
-getprop ro.product.model\
-)|sort -u|tr -s "\n" " ")"; 
+modelx=($((getprop ro.product.vendor.model; getprop ro.product.marketname; getprop ro.product.name; getprop ro.product.manufacturer; \
+getprop ro.build.product; getprop ro.product.model)|sort -u)); 
 ####
 osx=($(\
-(
+(\
 uname --operating-system; 
 getprop ro.build.version.release 2>/dev/null; 
 getprop ro.build.version.codename 2>/dev/null; 
 uname --kernel-name; 
 uname --kernel-release|cut -f1 -d"-"; 
 uname --machine\
-)|uniq -u|tr -s "\n" " ")); 
+)|uniq -u)); 
 # 2>/dev/null; 
 # [ $PREFIX ] && model=($((getprop ro.product.model; getprop ro.product.name; getprop ro.product.manufacturer; getprop ro.build.product; getprop ro.build.version.release; getprop ro.build.version.codename; printf %b "\n\n------------\n\n"; uname --operating-system; uname --kernel-name; uname --kernel-release|cut -f1 -d"-"; uname --machine)|tr -s "\n" " ")); 
-model="$(printf %b "${modelx[*]}"|uniq -u|tr -s "\n" " ")"; 
-os="$(printf %b "${osx[*]}"|uniq -u|tr -s "\n" " ")"; 
+local IFS=$' '; 
+model=($(printf %b "${modelx[*]}"|sort -u)); 
+os="$(printf %b "${osx[*]}")"; 
+local IFS=$'\n\t '; 
 # model=($(uname --kernel-name; uname --kernel-release|head -c8; uname --machine --operating-system)); 
 ####
 cpu=($(lscpu |grep -E 'Model name'|tr -s "\t" " "|cut -f3- -d" ")); 
@@ -117,8 +112,8 @@ dots() { printf %b "$re··········${re}\n"; };
 ##
 dots; 
 local IFS=$'\n'; 
-gum style --border normal --border-foreground 6 --align center --padding "1 3" --margin "0 2" --trim "$(printf %b "${model[*]}"|tr -s "\n " " "|fmt -g 42)"| bat -ppfljava; dots; 
-gum style --border normal --border-foreground 5 --align center --padding "1 3" --margin "0 2" --trim "$(printf %b "${os[*]}"|tr -s "\n " " "|fmt -g 42)"| bat -ppfljava; dots; 
+gum style --border normal --border-foreground 6 --align center --padding "1 3" --margin "0 1" --trim "$(printf %b "${model[*]}"|tr -s "\n " " "|fmt -g 42)"| bat -ppfljava; dots; 
+gum style --border normal --border-foreground 5 --align center --padding "1 3" --margin "0 1" --trim "$(printf %b "${os[*]}"|tr -s "\n " " "|fmt -g 42)"| bat -ppfljava; dots; 
 printf %b "${cpu[*]} x $cpus\n" | tr -s "\n" " "| bat -ppfljava; printf %b "\n"; dots; 
 printf %b "$0 | $TERM | $TERM_PROGRAM | $LANG \n"|bat -ppflc++ --theme Coldark-Dark; 
 dots; 
@@ -134,8 +129,11 @@ dfree;
 dots; 
 ##
 # PS1='\e[38;5;$((${?} + 112 / 8))m$? \e[0;2m\t\e[93m ${model[@]:0:4}\e[92m \h \e[0m\e[96m\u\e[0m \w \n'
-mod="${model:0:12}"; model="${mod/%\ /}"; 
-. $HOME/88/_ps1.sh; 
+local IFS=$' '; 
+mod="$(printf %b "${modelx[*]}"|grep -E "[A-z]|[0-9]"|tr -s "\n" " ")"; 
+moda="$(printf %b "${mod[*]}"|head -c14)"; 
+model="${moda/%\ /}"; 
+. $HOME/88/_ps1.sh; 	
 # PS1='$s\e[38;5;$((${?} + 112 / 8))m$? \e[0;2m\t\e[93m ${model[@]:0:4}\e[92m \h \e[0m\e[96m\u\e[0m \w \n'
 printf '\e]12;red\e\\'; 
 ####
