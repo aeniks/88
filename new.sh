@@ -108,6 +108,7 @@ printf %b "${wlan[*]}" > ~/logs/iploc.sh;
 [ $SSH_CONNECTION ] && ssh=(${SSH_CONNECTION}); 
 ##
 ##
+unalias dots; 
 dots() { printf %b "$re··········${re}\n"; }; 
 ##
 dots; 
