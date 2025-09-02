@@ -29,7 +29,8 @@ date|bat -ppfljava --theme Sublime\ Snazzy;
 # printf %b "\e[A"; 
 # printf %b "${date[*]}"|bat -ppflgo --theme Visual\ Studio\ Dark+; 
 ####
-[ $PREFIX ] && wlan=$(getprop vendor.arc.net.ipv4.host_address);
+# [ $PREFIX ] && [ -z $wlan ] && wlan=$(getprop vendor.arc.net.ipv4.host_address);
+[ $PREFIX ] && wlan="$(getprop |grep -v "gateway"|grep -E "ipv4" -m1|tr -d "[]"|cut -f2 -d" ")";
 [ -z $wlan ] && iploc=($(ip -brief -4 a|grep -vE "lo|127.0.0.1|valid|altname|BROADCAST"|tr -s " /" " "|cut -f1,3 -d" ")); [ $iploc ] && wlan="${iploc[-1]}"; 
 [ -z $wlan ] && wlan="$($sudo ifconfig 2>/dev/null | grep -e "wlan" -A1|sed -e 1d|tr -s "a-z " "\n"|sed -e 1d -e 3,4d)";
 # [ -z "${HOST}" ]&& HOST="$(uname --kernel-name --kernel-release);";
