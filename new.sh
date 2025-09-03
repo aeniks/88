@@ -6,15 +6,16 @@ export EDITOR="micro";
 export BAT_THEME="Coldark-Dark"; 
 export HISTCONTROL="ignoreboth"; 
 export PROMPT_COMMAND="history -a; history -n; "; 
-export tmp=$HOME/tmp
-[ -z $TMPDIR ] && export TMPDIR=$HOME/tmp
+export tmp="$HOME/tmp"
+[ -z $TMPDIR ] && export TMPDIR="$HOME/tmp"
 export IFS=$'\n\t '; 
-##
-export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls --color always -pm {}" --wrap-sign "" --scroll-off 22 --color "list-bg:234,bg+:24,fg+:15,info:6" --scrollbar "▀" --ghost "0: change orientation"'; 
-[ -z "$PREFIX" ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls --color always -pm {}" --scroll-off 22 --color "bg:0,preview-bg:16,bg+:24,fg+:15,info:6" --scrollbar "▀"'; 
 ####
-. ~/.config/gemini_api_id.conf
-. ~/.config/cloudflare_id.conf
+# export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls --color always -pm {}" --wrap-sign "" --scroll-off 22 --color "list-bg:234,bg+:24,fg+:15,info:6" --ghost "0: change orientation"';
+####
+# [ -z "$PREFIX" ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls --color always -pm {}" --scroll-off 22 --color "bg:0,preview-bg:16,bg+:24,fg+:15,info:6"';
+####
+[ -e $HOME/.config/gemini_api_id.conf ] && . $HOME/.config/gemini_api_id.conf;
+[ -e $HOME/.config/cloudflare_id.conf ] && . $HOME/.config/cloudflare_id.conf; 
 ####
 [ -e $HOME/.config/lesskey ] || ln -s $HOME/88/c/lesskey $HOME/.config/lesskey; 
 [ -e $HOME/.config/path.sh ]&& export PATH=$(cat $HOME/.config/path.sh);
@@ -31,22 +32,25 @@ date|bat -ppfljava --theme Sublime\ Snazzy;
 ####
 # [ $PREFIX ] && [ -z $wlan ] && wlan=$(getprop vendor.arc.net.ipv4.host_address);
 [ $PREFIX ] && \
-wlan="$(getprop |grep -v "gateway"|grep -E "ipv4" -m1|tr -d "[]"|cut -f2 -d" ")"; 
+wlan="$(getprop|grep -v "gateway"|grep -E "ipv4" -m1|tr -d "[]"|cut -f2 -d" ")"; 
 [ -z $wlan ] && \
-wlan="$($sudo ifconfig 2>/dev/null | grep -e "wlan" -A1|sed -e 1d|tr -s "a-z " "\n"|sed -e 1d -e 3,4d 2>/dev/null)";
+wlan="$(ip -brief a|grep -v "127.0.0.1"|tr -s "/\t " "\n"|grep -E "UP" -A1 -m1|tail -n1)";
 [ -z $wlan ] && \
-wlan=($(ip -brief -4 a 2>/dev/null|grep -vE "lo|127.0.0.1|valid|altname|BROADCAST"|tr -s " /" " "|cut -f1,3 -d" " 2>/dev/null)); 
-# [ -z "${HOST}" ]&& HOST="$(uname --kernel-name --kernel-release);";
+wlan="$($sudo ifconfig 2>/dev/null | grep -e "wlan" -A1|sed -e 1d|tr -s "a-z " "\n"|sed -e 1d -e 3,4d 2>/dev/null)"; 
+####
 [ $iploc ] && wlan="${iploc[-1]}"; 
+# [ -z $wlan ] && \
+# wlan=($(ip -brief -4 a 2>/dev/null|grep -vE "lo|127.0.0.1|valid|altname|BROADCAST"|tr -s " /" " "|cut -f1,3 -d" " 2>/dev/null));
+# [ -z "${HOST}" ]&& HOST="$(uname --kernel-name --kernel-release);";
 # iplo=${wlan}; iploc=${wlan}; 
 # [ $PREFIX ] && model=($(getprop ro.product.vendor.marketname; getprop ro.product.manufacturer; ####
 ####
 [ -z $PREFIX ] && [ -e /sys/devices/virtual/dmi/id/product_family ] && \
-model=($((cat /sys/devices/virtual/dmi/id/product_sku \
+modelx=($(cat /sys/devices/virtual/dmi/id/product_sku \
 /sys/devices/virtual/dmi/id/board_name \
 /sys/devices/virtual/dmi/id/board_vendor \
 /sys/devices/virtual/dmi/id/sys_vendor \
-/sys/devices/virtual/dmi/id/bios_vendor 2>/dev/null))); 
+/sys/devices/virtual/dmi/id/bios_vendor 2>/dev/null)); 
 ##
 # (uname --kernel-name --kernel-release|cut -f1 -d"-"|tr " " "-"; ); 
 # (uname --machine --operating-system)|sort|uniq -u|tr '\n' ' '); 
@@ -56,7 +60,7 @@ model=($((cat /sys/devices/virtual/dmi/id/product_sku \
 modelx=($((getprop ro.product.vendor.model; getprop ro.product.marketname; getprop ro.product.name; getprop ro.product.manufacturer; \
 getprop ro.build.product; getprop ro.product.model)|sort -u)); 
 ####
-osx=($(\
+[ $PREFIX ] && osx=($(\
 (\
 uname --operating-system; 
 getprop ro.build.version.release 2>/dev/null; 
@@ -65,6 +69,13 @@ uname --kernel-name;
 uname --kernel-release|cut -f1 -d"-"; 
 uname --machine\
 )|uniq -u)); 
+####
+####
+[ -z $PREFIX ] && osx=($(\
+uname --operating-system; \
+uname --machine; \
+uname --kernel-release|cut -f-2 -d"-"; \
+lsb_release -sirc|tr -s "\n" " ")); 
 # 2>/dev/null; 
 # [ $PREFIX ] && model=($((getprop ro.product.model; getprop ro.product.name; getprop ro.product.manufacturer; getprop ro.build.product; getprop ro.build.version.release; getprop ro.build.version.codename; printf %b "\n\n------------\n\n"; uname --operating-system; uname --kernel-name; uname --kernel-release|cut -f1 -d"-"; uname --machine)|tr -s "\n" " ")); 
 local IFS=$' '; 
@@ -121,17 +132,17 @@ dots;
 12calendar; 
 dots; 
 ##
-[ -z $PREFIX ] && (gum style --border normal --border-foreground 0 --bold --padding "1 3" --align center --margin 0 "$(hostnamectl |grep -E 'Chassis|Operating|Virtualization|Kernel|Hardware Model'|cut -f2- -d":"|cut -f2- -d" ")"|bat -ppfljava; dots; 
 ##
-printf %b "${iploc[*]} "|bat -ppflsyslog --theme Visual\ Studio\ Dark+; [ "$ssh" ] && printf %b "| \e[95m\e[7m${ssh:2}";
-printf %b "\e[0m\n"; 
-dots; )
+[ "$wlan" ] && \
+(printf %b "${wlan} "|bat -ppflsyslog --theme Visual\ Studio\ Dark+; \
+[ "$ssh" ] && printf %b "| ${ssh:2}"bat -ppflsyslog --theme DarkNeon;
+printf %b "\e[0m\n"; dots; ); 
 dfree; 
 dots; 
 ##
 # PS1='\e[38;5;$((${?} + 112 / 8))m$? \e[0;2m\t\e[93m ${model[@]:0:4}\e[92m \h \e[0m\e[96m\u\e[0m \w \n'
-local IFS=$' '; 
-mod="$(printf %b "${modelx[*]}"|grep -E "[A-z]|[0-9]"|tr -s "\n" " ")"; 
+local IFS=$' '; 	
+mod="$(printf %b "${modelx[*]}"|grep -E "[A-Za-z0-9]"|tr -s "\n" " ")"; 
 moda="$(printf %b "${mod[*]}"|head -c14)"; 
 model="${moda/%\ /}"; 
 . $HOME/88/_ps1.sh; 	
@@ -152,4 +163,6 @@ command ps -A|cut -c25-|grep -e 'crond' &>/dev/null || crond 2>/dev/null;
 # [ -z $TMUX ] && uptime; 
 # termux-api-start & 
 # termux-wake-lock & 
+
+# [ -z $PREFIX ] && (gum style --border normal --border-foreground 0 --bold --padding "1 3" --align center --margin 0 "$(hostnamectl |grep -E 'Chassis|Operating|Virtualization|Kernel|Hardware Model'|cut -f2- -d":"|cut -f2- -d" ")"|bat -ppfljava; dots; 
 
