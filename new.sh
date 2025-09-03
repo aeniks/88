@@ -22,7 +22,7 @@ export IFS=$'\n\t ';
 [ -z $TMUX ] && tmux; 
 # . $HOME/88/s/sig.sh &>/dev/null; 
 new() { 
-local IFS=$' '; 
+# local IFS=$' '; 
 # date=($(date +%D\ %X)); 
 re='\e[0m'; cyan='\e[96m'
 printf %b "$re··········${re}\n"; 
@@ -34,11 +34,11 @@ date|bat -ppfljava --theme Sublime\ Snazzy;
 [ $PREFIX ] && \
 wlan="$(getprop|grep -v "gateway"|grep -E "ipv4" -m1|tr -d "[]"|cut -f2 -d" ")"; 
 [ -z $wlan ] && \
-wlan="$(ip -brief a|grep -v "127.0.0.1"|tr -s "/\t " "\n"|grep -E "UP" -A1 -m1|tail -n1)";
+wlan="$(ip -brief a 2>/dev/null|grep -v "127.0.0.1"|tr -s "/\t " "\n"|grep -E "UP" -A1 -m1|tail -n1)";
 [ -z $wlan ] && \
-wlan="$($sudo ifconfig 2>/dev/null | grep -e "wlan" -A1|sed -e 1d|tr -s "a-z " "\n"|sed -e 1d -e 3,4d 2>/dev/null)"; 
+wlan="$($sudo ifconfig 2>/dev/null|grep -e "wlan" -A1|sed -e 1d|tr -s "a-z " "\n"|sed -e 1d -e 3,4d)"; 
 ####
-[ $iploc ] && wlan="${iploc[-1]}"; 
+# [ $iploc ] && wlan="${iploc[-1]}"; 
 # [ -z $wlan ] && \
 # wlan=($(ip -brief -4 a 2>/dev/null|grep -vE "lo|127.0.0.1|valid|altname|BROADCAST"|tr -s " /" " "|cut -f1,3 -d" " 2>/dev/null));
 # [ -z "${HOST}" ]&& HOST="$(uname --kernel-name --kernel-release);";
@@ -57,30 +57,49 @@ modelx=($(cat /sys/devices/virtual/dmi/id/product_sku \
 ##
 ##
 [ $PREFIX ] && unset -v modelx && \
-modelx=($((getprop ro.product.vendor.model; getprop ro.product.marketname; getprop ro.product.name; getprop ro.product.manufacturer; \
-getprop ro.build.product; getprop ro.product.model)|sort -u)); 
+modelx=($((\
+getprop ro.product.manufacturer; 
+getprop ro.product.marketname; 
+getprop ro.product.name; 
+getprop ro.build.product; 
+getprop ro.product.model; 
+getprop ro.product.vendor.model; 
+)|uniq)); 
 ####
-[ $PREFIX ] && osx=($(\
-(\
-uname --operating-system; 
-getprop ro.build.version.release 2>/dev/null; 
-getprop ro.build.version.codename 2>/dev/null; 
-uname --kernel-name; 
-uname --kernel-release|cut -f1 -d"-"; 
-uname --machine\
-)|uniq -u)); 
-####
-####
-[ -z $PREFIX ] && osx=($(\
+[ $PREFIX ] && \
+osx1=($(\
 uname --operating-system; \
-uname --machine; \
-uname --kernel-release|cut -f-2 -d"-"; \
-lsb_release -sirc|tr -s "\n" " ")); 
+getprop ro.build.version.release; \
+getprop ro.build.version.codename; \
+)); 
+##
+[ $PREFIX ] && \
+osx2=($((\
+uname --kernel-name; 
+uname --kernel-release|cut -f1 -d"-"|uniq; 
+uname --machine)|tr -s "\n" " "; 
+)); 
+####
+####
+[ -z $PREFIX ] && \
+osx1=($(uname --operating-system; uname --machine; uname --kernel-release|cut -f1 -d"-")); 
+[ -z $PREFIX ] && \
+osx2=($(lsb_release -sirc|tr -s "\n" " ")); 
 # 2>/dev/null; 
 # [ $PREFIX ] && model=($((getprop ro.product.model; getprop ro.product.name; getprop ro.product.manufacturer; getprop ro.build.product; getprop ro.build.version.release; getprop ro.build.version.codename; printf %b "\n\n------------\n\n"; uname --operating-system; uname --kernel-name; uname --kernel-release|cut -f1 -d"-"; uname --machine)|tr -s "\n" " ")); 
-local IFS=$' '; 
-model=($(printf %b "${modelx[*]}"|sort -u)); 
-os="$(printf %b "${osx[*]}")"; 
+# local IFS=$' '; 
+model1="$(printf %b "${modelx[*]:0:4}"|uniq|tr -s "\n" " "; printf %b "\b"|col -xb)"; 
+model2="$(printf %b "${modelx[*]:4:4}"|uniq|tr -s "\n" " "; printf %b "\b"|col -xb)"; 
+mod1="$(printf %b "${model1}\b"|col -xb)";
+mod2="$(printf %b "${model2}\b"|col -xb)";
+osa1="$(printf %b "${osx1[*]}"|uniq|tr -s "\n" " "; printf %b "\b"|col -xb)"; 
+osa2="$(printf %b "${osx2[*]}"|uniq|tr -s "\n" " "; printf %b "\b"|col -xb)"; 
+os1="$(printf %b "${osa1}\b"|col -xb)";
+os2="$(printf %b "${osa2}\b"|col -xb)";
+
+
+
+
 local IFS=$'\n\t '; 
 # model=($(uname --kernel-name; uname --kernel-release|head -c8; uname --machine --operating-system)); 
 ####
@@ -124,9 +143,17 @@ dots() { printf %b "$re··········${re}\n"; };
 ##
 dots; 
 local IFS=$'\n'; 
-gum style --border normal --border-foreground 6 --align center --padding "1 3" --margin "0 1" --trim "$(printf %b "${model[*]}"|tr -s "\n " " "|fmt -g 42)"| bat -ppfljava; dots; 
-gum style --border normal --border-foreground 5 --align center --padding "1 3" --margin "0 1" --trim "$(printf %b "${os[*]}"|tr -s "\n " " "|fmt -g 42)"| bat -ppfljava; dots; 
-printf %b "${cpu[*]} x $cpus\n" | tr -s "\n" " "| bat -ppfljava; printf %b "\n"; dots; 
+dots; 
+gum style --background 0 --border none \
+--border-foreground 5 \
+--align center --padding "0" \
+--margin "0" --trim \
+"$(gum style --border normal --background 0 --border-foreground 6 --align center --padding "0 1" --margin " 0 0 0 1" --trim "$(printf %b "${mod1//\ /-}"|bat -ppfld; printf %b "\n${mod2//\ /-}"|bat -ppfld)"; 
+ printf %b "${os1}"|bat -ppfljava; \
+ printf %b " - ${os2}"|bat -ppfld; )"; 
+dots; 
+printf %b "${cpu[*]} x $cpus\n" | tr -s "\n" " "| bat -ppfljava; printf %b "\n"; 
+dots; 
 printf %b "$0 | $TERM | $TERM_PROGRAM | $LANG \n"|bat -ppflc++ --theme Coldark-Dark; 
 dots; 
 12calendar; 
@@ -135,7 +162,7 @@ dots;
 ##
 [ "$wlan" ] && \
 (printf %b "${wlan} "|bat -ppflsyslog --theme Visual\ Studio\ Dark+; \
-[ "$ssh" ] && printf %b "| ${ssh:2}"bat -ppflsyslog --theme DarkNeon;
+[ "$ssh" ] && printf %b "${ssh[*]:2}"|bat -ppflsyslog --theme DarkNeon;
 printf %b "\e[0m\n"; dots; ); 
 dfree; 
 dots; 
@@ -143,7 +170,7 @@ dots;
 # PS1='\e[38;5;$((${?} + 112 / 8))m$? \e[0;2m\t\e[93m ${model[@]:0:4}\e[92m \h \e[0m\e[96m\u\e[0m \w \n'
 local IFS=$' '; 	
 mod="$(printf %b "${modelx[*]}"|grep -E "[A-Za-z0-9]"|tr -s "\n" " ")"; 
-moda="$(printf %b "${mod[*]}"|head -c14)"; 
+moda="$(printf %b "${mod1}"|head -c14)"; 
 model="${moda/%\ /}"; 
 . $HOME/88/_ps1.sh; 	
 # PS1='$s\e[38;5;$((${?} + 112 / 8))m$? \e[0;2m\t\e[93m ${model[@]:0:4}\e[92m \h \e[0m\e[96m\u\e[0m \w \n'
