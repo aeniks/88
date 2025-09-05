@@ -10,9 +10,9 @@ export tmp="$HOME/tmp"
 [ -z $TMPDIR ] && export TMPDIR="$HOME/tmp"
 export IFS=$'\n\t '; 
 ####
-# export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls --color always -pm {}" --wrap-sign "" --scroll-off 22 --color "list-bg:234,bg+:24,fg+:15,info:6" --ghost "0: change orientation"';
+export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls --color always -pm {}" --wrap-sign "" --scroll-off 22 --color "list-bg:234,bg+:24,fg+:15,info:6" --ghost "0: change orientation"';
 ####
-# [ -z "$PREFIX" ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls --color always -pm {}" --scroll-off 22 --color "bg:0,preview-bg:16,bg+:24,fg+:15,info:6"';
+[ -z "$PREFIX" ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls --color always -pm {}" --scroll-off 22 --color "bg:0,preview-bg:16,bg+:24,fg+:15,info:6"';
 ####
 [ -e $HOME/.config/gemini_api_id.conf ] && . $HOME/.config/gemini_api_id.conf;
 [ -e $HOME/.config/cloudflare_id.conf ] && . $HOME/.config/cloudflare_id.conf; 
@@ -46,7 +46,6 @@ iplanget;
 # iplan() {
 # printf %b "${wlan[*]}"|bat -ppfljs; 
 # }; 
-
 ####
 # [ $iploc ] && wlan="${iploc[-1]}"; 
 # [ -z $wlan ] && \
@@ -56,17 +55,19 @@ iplanget;
 # [ $PREFIX ] && model=($(getprop ro.product.vendor.marketname; getprop ro.product.manufacturer; ####
 ####
 [ -z $PREFIX ] && [ -e /sys/devices/virtual/dmi/id/product_family ] && \
-modelx=($(cat /sys/devices/virtual/dmi/id/product_sku \
-/sys/devices/virtual/dmi/id/board_name \
+modelx=($(\cat \
 /sys/devices/virtual/dmi/id/board_vendor \
+/sys/devices/virtual/dmi/id/board_name \
 /sys/devices/virtual/dmi/id/sys_vendor \
-/sys/devices/virtual/dmi/id/bios_vendor 2>/dev/null)); 
+/sys/devices/virtual/dmi/id/bios_vendor \
+/sys/devices/virtual/dmi/id/product_sku \
+2>/dev/null)); 
 ##
 # (uname --kernel-name --kernel-release|cut -f1 -d"-"|tr " " "-"; ); 
 # (uname --machine --operating-system)|sort|uniq -u|tr '\n' ' '); 
 ##
 ##
-[ $PREFIX ] && modo="$((getprop |grep -E "vendor.manufacturer|product.manufacturer" -m1 -A1 --group-separator=""|cut -f2- -d" "|tr -s "\n" " "; printf %b "\b")|col -xb)"; 	
+[ $PREFIX ] && modo="$((getprop|grep -E "vendor.manufacturer|product.manufacturer" -m1 -A1 --group-separator=""|cut -f2- -d" "|tr -s "\n" " "; printf %b "\b")|col -xb)"; 	
 # [ $PREFIX ] && unset -v modelx && \
 # modelx=($((\
 # getprop |grep -E "vendor.manufacturer|product.manufacturer" -m1 -A1 --group-separator=""|cut -f2- -d" "; 
@@ -124,11 +125,7 @@ cpus=($(lscpu|grep -e 'CPU(s):' -m1|cut -f2 -d":"|tr -d " "));
 ####
 export LESS='-R --file-size --use-color --incsearch --mouse --prompt=%F(%T) [/]search [n]ext [p]rev ?f%f .?n?m(%T %i of %m) ..?lt %lt-%lb?L/%L. :byte %bB?s/%s.  .?e(END)  ?x-  Next\:   %x.:?pB  %pB\%..%t ';
 # export LESSKEY='m toggle-option --mouse\n\r';
-
-
 # export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "q:abort" --info inline --inline-info';
-
-
 if [ $(echo $HOME|grep -w "termux") ]; then alias sudo='command';
 else sudo=sudo; fi; 
 # portlocal=($(netstat -tl4 2>/dev/null|tail -n+2|tr -s "A-z:/ " " "|cut -f5 -d" ")); 
@@ -146,6 +143,7 @@ else sudo=sudo; fi;
 # 
 # local IFS=$'\n'; gum style --border normal --border-foreground 66  --margin "0 1" $(printf %b "${model[*]}\n"|tr -s "\n" " "|bat -ppfljava --theme DarkNeon; ); 
 ##
+# gum style --border thick --background 0 --border-foreground 6 --align center --padding "1 2" --margin "0 1" --trim "$(\
 printf %b "${wlan[*]}" > ~/logs/iplo.sh; 
 printf %b "${wlan[*]}" > ~/logs/iploc.sh; 
 ##
@@ -155,34 +153,28 @@ printf %b "${wlan[*]}" > ~/logs/iploc.sh;
 # unalias dots 2>/dev/null;  
 dots() { printf %b "$re··········${re}\n"; }; 
 ##
-dots; 
 local IFS=$'\n\t '; 
 dots; 
-# printf %b "\n${mod2//\ /-}"|bat -ppfld; 
-gum style --border thick --background 0 --border-foreground 6 --align center --padding "1 2" --margin "0 1" --trim "$(\
-printf %b "${modo}"; 
-printf %b "\n----------------\n"; 
-printf %b "[${os2} | ${os1}]")"|bat -ppfljava; 
+printf %b "${modo}\n[${os1} | ${os2}]\n"|bat -ppfljava; 
 dots; 
 printf %b "${cpu[*]} x $cpus\n" | tr -s "\n" " "| bat -ppfljava; printf %b "\n"; 
 dots; 
-printf %b "$0 | $TERM | $TERM_PROGRAM | $LANG \n"|bat -ppflc++ --theme Coldark-Dark; 
+printf %b "${0/-/} | $TERM | $TERM_PROGRAM | $LANG \n"|bat -ppflc++ --theme Coldark-Dark; 
 dots; 
 12calendar; 
 dots; 
 ##
 ##
-iplan; 
-[ "$ssh" ] && printf %b "${ssh[*]:1,4}"|bat -ppflsyslog --theme DarkNeon;
-printf %b "\e[0m\n"; [ "$wlan" ] && dots; 
-
+# iplan; 
+[ "$wlan" ] && printf %b "${wlan[*]} $([ "$ssh" ] && printf %b " | ${ssh[*]:1,4}")"|bat -ppflsyslog --theme DarkNeon && \
+printf %b "\e[0m\n" && dots || (printf %b "\e[91mno lan\n" && dots); 
 # [ "$wlan" ] && (printf %b "${wlan} "|bat -ppflsyslog --theme Visual\ Studio\ Dark+; [ "$ssh" ] && printf %b "${ssh[*]:1,4}"|bat -ppflsyslog --theme DarkNeon;
 # printf %b "\e[0m\n"; dots; ); 
 dfree; 
 dots; 
 ##
 # PS1='\e[38;5;$((${?} + 112 / 8))m$? \e[0;2m\t\e[93m ${model[@]:0:4}\e[92m \h \e[0m\e[96m\u\e[0m \w \n'
-local IFS=$' '; 	
+# local IFS=$' '; 	
 # mod="$(printf %b "${modelx[*]}"|grep -E "[A-Za-z0-9]"|tr -s "\n" " ")"; 
 moda="$(printf %b "${modo}"|tr -d "[]"|head -c14)"; 
 model="${moda/%\ /}"; 
@@ -204,6 +196,5 @@ command ps -A|cut -c25-|grep -e 'crond' &>/dev/null || crond 2>/dev/null;
 # [ -z $TMUX ] && uptime; 
 # termux-api-start & 
 # termux-wake-lock & 
-
 # [ -z $PREFIX ] && (gum style --border normal --border-foreground 0 --bold --padding "1 3" --align center --margin 0 "$(hostnamectl |grep -E 'Chassis|Operating|Virtualization|Kernel|Hardware Model'|cut -f2- -d":"|cut -f2- -d" ")"|bat -ppfljava; dots; 
 
