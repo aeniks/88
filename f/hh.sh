@@ -13,7 +13,7 @@ h1="$tmp/$(id -nu|tr -d "\n"; date +__%__y%m%d_%H_%M_%S).sh"; touch $h1;
 if [ $PREFIX ]; 
 ####
 then \
-history -s "$(bat -ppfljava $HISTFILE|tr -s "\n" "\n"|uniq -u|fzf --tac -i -m --wrap --cycle --highlight-line --wrap-sign="" --bind "q:abort" --style="minimal" --info inline; if [ $? != 0 ]; then $(return 1); echo; else history -a; history -n; fi; )" >> $HISTFILE; if [ $? != 0 ]; then echo okok; return 1; else history -a; history -n; fi; 
+history -s "$(bat -ppfljava $HISTFILE|tr -s "\n" "\n"|uniq -u|fzf --tac -i -m --wrap --cycle --highlight-line --wrap-sign="" --bind "q:abort" --style="minimal" --info inline; if [ $? != 0 ]; then $(return 1); echo; else history -a; history -n; fi; )"||return 1 >> $HISTFILE; if [ $? != 0 ]; then echo okok; return 1; else history -a; history -n; fi; 
 ####
 # [ "${hh}" ] && printf %b "\n${hh[*]}\n"|tee -a $HISTFILE; 
 ####
