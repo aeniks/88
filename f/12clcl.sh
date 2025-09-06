@@ -1,6 +1,6 @@
 #!/bin/bash
 ## clean filenames 
-12cleanse() { 
+12clcl() { 
 local IFS=$'\n' red='\e[91m' green='\e[92m' re='\e[0m' \
 dim='\e[2m' q="$(printf %b "\e[0;2m--\e[0m";)"; 
 unset filelist new newchange gg; 
