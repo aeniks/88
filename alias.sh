@@ -19,7 +19,8 @@ alias mm='micro'
 #!/bin/bash
 ## aaaaaa
 # alias yno='nyo'; 
-alias zz='col -b|tr -s "\n\t " "\n\t "|bat -pfljava --pager "more"'; 
+alias zz='cd $zz'; 
+# alias zz='col -b|tr -s "\n\t " "\n\t "|bat -pfljava --pager "more"'; 
 alias f='fff; cd $(cat $HOME/.cache/fff/.fff_d)'; 
 alias sshaa='mosh aa@ants.ftp.sh||ssh aa@ants.ftp.sh'; 
 alias 12moshants='sshaa'; 
@@ -64,7 +65,29 @@ NVM_DIR="$HOME/.nvm";
 # alias dfree2='printf %b "\e[0;2m$(df -h|head -n1|tr -s " " "\t"|batcat --theme=Nord -ppflc++; )\e[0;1m\n"; df="/dev"; [ $PREFIX ]&& df="/dev/fuse"; df -h|tr -s " " "\t"|grep -v "100%"|grep -v "tmpfs"|grep -v "none"|grep -v "run"|grep -v "efivars"|grep -v "boot"|grep -v loop|grep -e "$df"|batcat --theme=Dracula -ppflc++';
 ########
 
-alias 12info='info12=$(ls $HOME/88/i|fzf) && [ ${info12/*./} = md ] && glow $info12 || bat -pf $info12'
+unalias 12info 2>/dev/null; 
+
+
+12info() { local FZF_DEFAULT_OPTS="-m -i --cycle --ansi --inline-info --bind "q:abort" --height "~99%" --color "list-bg:233" --highlight-line"; 
+
+##
+lsw="$((COLUMNS - $(ls -w2 $HOME/88/i|wc --max-line-length) - 4))";
+in12=$HOME/88/i/$(ls -w2 $HOME/88/i|fzf --preview "bat -ppfljava $HOME/88/i/{}" --preview-window "noborder,right,${lsw},wrap" --wrap-sign "" --bind "o:execute(tmux display-popup -w 98% -h 98% -E 'micro $HOME/88/i/{}')";) && case ${in12:(-2)} in md) glow $in12;; *) bat -pf $in12;; esac || echo gg; }; 
+
+# fzf --bind 'focus:transform-header:file --brief {}'
+
+
+# Integration with ripgrep
+alias fzfrg='\
+RG_PREFIX="rg --column --line-number --no-heading --color=always --smart-case "; 
+INITIAL_QUERY="foobar"; 
+FZF_DEFAULT_COMMAND="$RG_PREFIX '$INITIAL_QUERY'"; 
+fzf --bind "change:reload:$RG_PREFIX {q} || true" --ansi --disabled --query "$INITIAL_QUERY"; '; 
+
+
+                  
+
+
 alias 12info_tput='batcat -pf "$start/info/tput.nfo"; ';
 alias 12info_ansi='batcat -pf "$start/info/ansi.md"; ';
 alias 12info_bash='batcat -pf "$start/info/bash.md"; '; 
