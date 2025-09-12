@@ -9,6 +9,7 @@ export PROMPT_COMMAND="history -a; history -n; ";
 export tmp="$HOME/tmp"
 [ -z $TMPDIR ] && export TMPDIR="$HOME/tmp"
 export IFS=$'\n\t '; 
+export HISTTIMEFORMAT="%b-%d-%H:%M:%S "; 
 ####
 export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --height "~99%" --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls -pm {}" --wrap-sign "" --scroll-off 22 --color "list-bg:234,bg+:24,fg+:15,info:6" --ghost "0: change orientation"';
 ####
@@ -24,7 +25,9 @@ export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --height "~99%" --bind "0:change-p
 new() { 
 # local IFS=$' '; 
 # date=($(date +%D\ %X)); 
-re='\e[0m'; cyan='\e[96m'
+re='\e[0m'; cyan='\e[96m'; 
+dfree > $HOME/logs/df.md & disown; 
+
 # printf %b "$re··········${re}\n"; 
 # printf %b "\e[A"; 
 # printf %b "${date[*]}"|bat -ppflgo --theme Visual\ Studio\ Dark+; 
@@ -188,7 +191,7 @@ printf %b "\e[0m\n" && dots || (printf %b "\e[91mno lan\n" && dots);
 
 # [ "$wlan" ] && (printf %b "${wlan} "|bat -ppflsyslog --theme Visual\ Studio\ Dark+; [ "$ssh" ] && printf %b "${ssh[*]:1,4}"|bat -ppflsyslog --theme DarkNeon;
 # printf %b "\e[0m\n"; dots; ); 
-dfree; 
+cat $HOME/logs/df.md; 
 dots; 
 ##
 # PS1='\e[38;5;$((${?} + 112 / 8))m$? \e[0;2m\t\e[93m ${model[@]:0:4}\e[92m \h \e[0m\e[96m\u\e[0m \w \n'
