@@ -2,18 +2,22 @@
 # very good bash enviorment 
 shopt -s histappend; 
 shopt -s histverify; 
+export IFS=$'\n\t '; 
 export EDITOR="micro"; 
 export BAT_THEME="Coldark-Dark"; 
 export HISTCONTROL="ignoreboth"; 
 export PROMPT_COMMAND="history -a; history -n; "; 
+export LESS='-R --file-size --use-color --incsearch --mouse --prompt=%F(%T) [/]search [n]ext [p]rev ?f%f .?n?m(%T %i of %m) ..?lt %lt-%lb?L/%L. :byte %bB?s/%s.  .?e(END)  ?x-  Next\:   %x.:?pB  %pB\%..%t '; 
 export tmp="$HOME/tmp"
 [ -z $TMPDIR ] && export TMPDIR="$HOME/tmp"
-export IFS=$'\n\t '; 
 export HISTTIMEFORMAT="%b-%d-%H:%M:%S "; 
 ####
-export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --height "~99%" --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls -pm {}" --wrap-sign "" --scroll-off 22 --color "list-bg:234,bg+:24,fg+:15,info:6" --ghost "0: change orientation"';
+[ $PREFIX ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --height "~99%" --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls -pm {}" --wrap-sign "" --scroll-off 22 --color "list-bg:234,bg+:24,fg+:15,info:6" --ghost "0: change orientation"';
 ####
-[ -z "$PREFIX" ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls --color always -pm {}" --scroll-off 22 --color "bg:0,preview-bg:16,bg+:24,fg+:15,info:6"';
+[ -z $PREFIX ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls --color always -pm {}" --scroll-off 22 --color "bg:0,preview-bg:16,bg+:24,fg+:15,info:6"';
+####
+if echo $HOME|grep -w "termux"; 
+then alias sudo='command'; else sudo=sudo; fi; 
 ####
 [ -e $HOME/.config/gemini_api_id.conf ] && . $HOME/.config/gemini_api_id.conf;
 [ -e $HOME/.config/cloudflare_id.conf ] && . $HOME/.config/cloudflare_id.conf; 
@@ -21,34 +25,30 @@ export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --height "~99%" --bind "0:change-p
 [ -e $HOME/.config/lesskey ] || ln -s $HOME/88/c/lesskey $HOME/.config/lesskey; 
 [ -e $HOME/.config/path.sh ]&& export PATH=$(cat $HOME/.config/path.sh);
 [ -z $TMUX ] && tmux; 
+####
+re='\e[0m'; cyan='\e[96m'; 
 # . $HOME/88/s/sig.sh &>/dev/null; 
 new() { 
 # local IFS=$' '; 
 # date=($(date +%D\ %X)); 
-re='\e[0m'; cyan='\e[96m'; 
 . $HOME/88/f/dfree.sh; . $HOME/88/f/12calendar.sh; . $HOME/88/f/memram.sh; 
-dfree > $HOME/logs/df.md & disown; 
-
+# dfree > $HOME/logs/df.md & disown; 
+# dfree > $HOME/logs/df.md & disown; 
 # printf %b "$re··········${re}\n"; 
 # printf %b "\e[A"; 
 # printf %b "${date[*]}"|bat -ppflgo --theme Visual\ Studio\ Dark+; 
 ####
 # [ $PREFIX ] && [ -z $wlan ] && wlan=$(getprop vendor.arc.net.ipv4.host_address);
 iplanget() { 
-[ $PREFIX ] && \
-wlan="$(getprop|grep -v "gateway"|grep -E "ipv4" -m1|tr -d "[]"|cut -f2 -d" ")"; 
-[ -z $wlan ] && \
-wlan="$(ip -brief a 2>/dev/null|grep -v "127.0.0.1"|tr -s "/\t " "\n"|grep -E "UP" -A1 -m1|tail -n1)";
-[ -z $wlan ] && \
-wlan="$($sudo ifconfig 2>/dev/null|grep -e "wlan" -A1|sed -e 1d|tr -s "a-z " "\n"|sed -e 1d -e 3,4d)"; 
-iplan() {
-printf %b "${wlan[*]}"|bat -ppfljs; 
-}; 
+
+[ $PREFIX ] && wlan="$(getprop|grep -v "gateway"|grep -E "ipv4" -m1|tr -d "[]"|cut -f2 -d" ")"; 
+[ -z $wlan ] && wlan="$(ip -brief a 2>/dev/null|grep -v "127.0.0.1"|tr -s "/\t " "\n"|grep -E "UP" -A1 -m1|tail -n1)";
+[ -z $wlan ] && wlan="$($sudo ifconfig 2>/dev/null|grep -e "wlan" -A1|sed -e 1d|tr -s "a-z " "\n"|sed -e 1d -e 3,4d)"; 
+iplan() { printf %b "${wlan[*]}"|bat -ppfljs; }; 
 }; 
 ##
 iplanget; 
 # ram() { free  -h|grep -v "Swap"|cut -c-44|sed -e 1s/\ \ \ \ /\ \\/-\\// -e "s/i//g"| tr -s " " " "|column --table|bat -|column --table --output-separator " | " | bat -ppljs --theme zenburn; }; 
-
 # iplan() {
 # printf %b "${wlan[*]}"|bat -ppfljs; 
 # }; 
@@ -59,15 +59,11 @@ iplanget;
 # [ -z "${HOST}" ]&& HOST="$(uname --kernel-name --kernel-release);";
 # iplo=${wlan}; iploc=${wlan}; 
 # [ $PREFIX ] && model=($(getprop ro.product.vendor.marketname; getprop ro.product.manufacturer; ####
+## bios_vendor sys_vendor product_sku; 
 ####
 [ -z $PREFIX ] && [ -e /sys/devices/virtual/dmi/id/product_family ] && \
-modo=($(cat \
-/sys/devices/virtual/dmi/id/board_vendor \
-/sys/devices/virtual/dmi/id/board_name \
-/sys/devices/virtual/dmi/id/sys_vendor \
-/sys/devices/virtual/dmi/id/bios_vendor \
-/sys/devices/virtual/dmi/id/product_sku \
-2>/dev/null|tr -s "\n" " ")); 
+modo=($(for bb in board_vendor board_name; do cat /sys/devices/virtual/dmi/id/${bb} 2>/dev/null|tr -s "\n" " "; done)); 
+# && modo=($(printf %b "${modo[*]}"|tr -s "\n" " ")); 
 ##
 # (uname --kernel-name --kernel-release|cut -f1 -d"-"|tr " " "-"; ); 
 # (uname --machine --operating-system)|sort|uniq -u|tr '\n' ' '); 
@@ -107,8 +103,6 @@ osx2=($(lsb_release -sirc|tr -s "\n" " "));
 # 2>/dev/null; 
 # [ $PREFIX ] && model=($((getprop ro.product.model; getprop ro.product.name; getprop ro.product.manufacturer; getprop ro.build.product; getprop ro.build.version.release; getprop ro.build.version.codename; printf %b "\n\n------------\n\n"; uname --operating-system; uname --kernel-name; uname --kernel-release|cut -f1 -d"-"; uname --machine)|tr -s "\n" " ")); 
 # local IFS=$' '; 
-
-
 # model1="$(printf %b "${modelx[*]:0:4}"|uniq|tr -s "\n" " "; printf %b "\b"|col -xb)"; 
 # model2="$(printf %b "${modelx[*]:4:4}"|uniq|tr -s "\n" " "; printf %b "\b"|col -xb)"; 
 # mod1="$(printf %b "${model1}\b"|col -xb)";
@@ -127,11 +121,8 @@ cpus=($(lscpu|grep -e 'CPU(s):' -m1|cut -f2 -d":"|tr -d " "));
 ##
 # &>/dev/null;
 ####
-export LESS='-R --file-size --use-color --incsearch --mouse --prompt=%F(%T) [/]search [n]ext [p]rev ?f%f .?n?m(%T %i of %m) ..?lt %lt-%lb?L/%L. :byte %bB?s/%s.  .?e(END)  ?x-  Next\:   %x.:?pB  %pB\%..%t '; 
 # export LESSKEY='m toggle-option --mouse\n\r';
 # export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "q:abort" --info inline --inline-info';
-if [ $(echo $HOME|grep -w "termux") ]; 
-then alias sudo='command'; else sudo=sudo; fi; 
 # portlocal=($(netstat -tl4 2>/dev/null|tail -n+2|tr -s "A-z:/ " " "|cut -f5 -d" ")); 
 ##
 # dots; printf %b "$cyan[\e[38;5;$((lopa + 88))m\e[1m${model[*]}$re${cyan}]"; 
@@ -151,7 +142,7 @@ then alias sudo='command'; else sudo=sudo; fi;
 printf %b "${wlan[*]}" > ~/logs/wlan.sh; 
 # printf %b "${wlan[*]}" > ~/logs/iploc.sh; 
 ##
-[ $SSH_CONNECTION ] && ssh=(${SSH_CONNECTION}); 
+# [ $SSH_CONNECTION ] && ssh=(${SSH_CONNECTION}); 
 ##
 ##
 # unalias dots 2>/dev/null;  
@@ -159,7 +150,8 @@ dots() { printf %b "$re··········${re}\n"; };
 ##
 local IFS=$'\n\t '; 
 dots; 
-printf %b "${modo[*]}\n[${os1} | ${os2}]\n"|bat -ppfljava; 
+printf %b "[${modo[*]}] "|tr -s "\n" " "|bat -ppfljava; echo; 
+printf %b "[${os1} | ${os2}] "|tr -s "\n" " "|bat -ppfljava; echo; 
 dots; 
 printf %b "${cpu[*]} x $cpus | \n" | tr -s "\n" " "| bat -ppfljava; memram 2>/dev/null && \
 dots; 
@@ -169,27 +161,29 @@ dots;
 # >>>>>>> a3043e3a5cc8c6aa050eb63b0b830a3baa135100
 # printf %b "${0/-/} | $TERM | $TERM_PROGRAM | $LANG \n"|bat -ppflc++ --theme Coldark-Dark; dots; 
 ##
-
 # date|bat -ppfljava 
 # dots; 
 # printf %b "\e[0m"; 
 # bat -ppfljava --theme Sublime\ Snazzy; 
 # CALENDAR1
 # printf %b "\e[38;2m•\e[5b "; 
-(date +%a\ %b\ %d\ %Y\ \|\ %X\ \ ; printf %b "| $EPOCHSECONDS \n")| tr -d "\n"|bat -ppflc++ --theme Coldark-Dark; printf %b "\n"; 
+date +%a\ %b\ %d\ %Y\ \|\ %X\ \ | tr -d "\n"|bat -ppflc++ --theme Coldark-Dark; printf %b "\n";
+dots; 
 12calendar && 
+dots; 
+printf %b "$EPOCHSECONDS \n"|bat -ppflc++ --theme Coldark-Dark; 
 dots; 
 ##
 ##
 # iplan; 
-[ $SSH_CLIENT ] && ssh=($(printf %b "$SSH_CLIENT"|sed -e "s/\ [0-9.]*//")); 
-[ "$wlan" ] && printf %b "${wlan[*]} $([ "$ssh" ] && printf %b " | ${ssh[*]}")" | bat -ppflsyslog --theme DarkNeon && printf %b "\e[0m\n" && dots || (printf %b "\e[91mno lan\n" && dots); 
+[ "$wlan" ] && printf %b "${wlan[*]} "|bat -ppflsyslog --theme DarkNeon; 
+[ "$SSH_CLIENT" ] && printf %b "| $SSH_CLIENT"|cut -f1,2,4  -d" " | bat -ppfljs --theme GitHub && printf %b "\e[0m" && dots || (printf %b "\e[91mno lan\n" && dots); 
 # resolveip $ssh 2>/dev/null; 
-
-
+# && printf %b "\e[0m\n"; 
 # [ "$wlan" ] && (printf %b "${wlan} "|bat -ppflsyslog --theme Visual\ Studio\ Dark+; [ "$ssh" ] && printf %b "${ssh[*]:1,4}"|bat -ppflsyslog --theme DarkNeon;
 # printf %b "\e[0m\n"; dots; ); 
-cat $HOME/logs/df.md; 
+dfree; 
+# cat $HOME/logs/df.md; 
 dots; 
 ##
 # PS1='\e[38;5;$((${?} + 112 / 8))m$? \e[0;2m\t\e[93m ${model[@]:0:4}\e[92m \h \e[0m\e[96m\u\e[0m \w \n'
