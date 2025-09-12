@@ -25,8 +25,7 @@ new() {
 # local IFS=$' '; 
 # date=($(date +%D\ %X)); 
 re='\e[0m'; cyan='\e[96m'
-printf %b "$re··········${re}\n"; 
-date|bat -ppfljava --theme Sublime\ Snazzy; 
+# printf %b "$re··········${re}\n"; 
 # printf %b "\e[A"; 
 # printf %b "${date[*]}"|bat -ppflgo --theme Visual\ Studio\ Dark+; 
 ####
@@ -42,8 +41,9 @@ iplan() {
 printf %b "${wlan[*]}"|bat -ppfljs; 
 }; 
 }; 
+##
 iplanget; 
-ram() { free  -h|grep -v "Swap"|cut -c-44|sed -e 1s/\ \ \ \ /\ \\/-\\// -e "s/i//g"| tr -s " " " "|column --table|bat -|column --table --output-separator " | " | bat -ppljs --theme zenburn; }; 
+# ram() { free  -h|grep -v "Swap"|cut -c-44|sed -e 1s/\ \ \ \ /\ \\/-\\// -e "s/i//g"| tr -s " " " "|column --table|bat -|column --table --output-separator " | " | bat -ppljs --theme zenburn; }; 
 
 # iplan() {
 # printf %b "${wlan[*]}"|bat -ppfljs; 
@@ -57,7 +57,7 @@ ram() { free  -h|grep -v "Swap"|cut -c-44|sed -e 1s/\ \ \ \ /\ \\/-\\// -e "s/i/
 # [ $PREFIX ] && model=($(getprop ro.product.vendor.marketname; getprop ro.product.manufacturer; ####
 ####
 [ -z $PREFIX ] && [ -e /sys/devices/virtual/dmi/id/product_family ] && \
-modelx=($(\cat \
+modo=($(cat \
 /sys/devices/virtual/dmi/id/board_vendor \
 /sys/devices/virtual/dmi/id/board_name \
 /sys/devices/virtual/dmi/id/sys_vendor \
@@ -126,11 +126,11 @@ cpus=($(lscpu|grep -e 'CPU(s):' -m1|cut -f2 -d":"|tr -d " "));
 . $HOME/88/f/memram.sh; 
 # &>/dev/null;
 ####
-export LESS='-R --file-size --use-color --incsearch --mouse --prompt=%F(%T) [/]search [n]ext [p]rev ?f%f .?n?m(%T %i of %m) ..?lt %lt-%lb?L/%L. :byte %bB?s/%s.  .?e(END)  ?x-  Next\:   %x.:?pB  %pB\%..%t ';
+export LESS='-R --file-size --use-color --incsearch --mouse --prompt=%F(%T) [/]search [n]ext [p]rev ?f%f .?n?m(%T %i of %m) ..?lt %lt-%lb?L/%L. :byte %bB?s/%s.  .?e(END)  ?x-  Next\:   %x.:?pB  %pB\%..%t '; 
 # export LESSKEY='m toggle-option --mouse\n\r';
 # export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "q:abort" --info inline --inline-info';
-if [ $(echo $HOME|grep -w "termux") ]; then alias sudo='command';
-else sudo=sudo; fi; 
+if [ $(echo $HOME|grep -w "termux") ]; 
+then alias sudo='command'; else sudo=sudo; fi; 
 # portlocal=($(netstat -tl4 2>/dev/null|tail -n+2|tr -s "A-z:/ " " "|cut -f5 -d" ")); 
 ##
 # dots; printf %b "$cyan[\e[38;5;$((lopa + 88))m\e[1m${model[*]}$re${cyan}]"; 
@@ -147,8 +147,8 @@ else sudo=sudo; fi;
 # local IFS=$'\n'; gum style --border normal --border-foreground 66  --margin "0 1" $(printf %b "${model[*]}\n"|tr -s "\n" " "|bat -ppfljava --theme DarkNeon; ); 
 ##
 # gum style --border thick --background 0 --border-foreground 6 --align center --padding "1 2" --margin "0 1" --trim "$(\
-printf %b "${wlan[*]}" > ~/logs/iplo.sh; 
-printf %b "${wlan[*]}" > ~/logs/iploc.sh; 
+printf %b "${wlan[*]}" > ~/logs/wlan.sh; 
+# printf %b "${wlan[*]}" > ~/logs/iploc.sh; 
 ##
 [ $SSH_CONNECTION ] && ssh=(${SSH_CONNECTION}); 
 ##
@@ -158,25 +158,34 @@ dots() { printf %b "$re··········${re}\n"; };
 ##
 local IFS=$'\n\t '; 
 dots; 
-printf %b "${modo}\n[${os1} | ${os2}]\n"|bat -ppfljava; 
+printf %b "${modo[*]}\n[${os1} | ${os2}]\n"|bat -ppfljava; 
 dots; 
-printf %b "${cpu[*]} x $cpus\n" | tr -s "\n" " "| bat -ppfljava; printf %b "\n"; 
+printf %b "${cpu[*]} x $cpus | \n" | tr -s "\n" " "| bat -ppfljava; memram 2>/dev/null && \
 dots; 
-# <<<<<<< HEAD
-memram 2>/dev/null && \
-dots; 
+# printf %b "\n"; 
 # =======
 # memram; 
 # >>>>>>> a3043e3a5cc8c6aa050eb63b0b830a3baa135100
-printf %b "${0/-/} | $TERM | $TERM_PROGRAM | $LANG \n"|bat -ppflc++ --theme Coldark-Dark; 
-dots; 
-12calendar; 
+# printf %b "${0/-/} | $TERM | $TERM_PROGRAM | $LANG \n"|bat -ppflc++ --theme Coldark-Dark; dots; 
+##
+
+# date|bat -ppfljava 
+# dots; 
+# printf %b "\e[0m"; 
+# bat -ppfljava --theme Sublime\ Snazzy; 
+# CALENDAR1
+# printf %b "\e[38;2m•\e[5b "; 
+(date +%a\ %b\ %d\ %Y\ \|\ %X\ \ ; printf %b "| $EPOCHSECONDS \n")| tr -d "\n"|bat -ppflc++ --theme Coldark-Dark; printf %b "\n"; 
+12calendar && 
 dots; 
 ##
 ##
 # iplan; 
-[ "$wlan" ] && printf %b "${wlan[*]} $([ "$ssh" ] && printf %b " | ${ssh[*]:1,4}")"|bat -ppflsyslog --theme DarkNeon && \
+[ $SSH_CLIENT ] && ssh=($(printf %b "$SSH_CLIENT"|sed -e "s/\ [0-9.]*//")); 
+[ "$wlan" ] && printf %b "${wlan[*]} $([ "$ssh" ] && printf %b " | ${ssh[*]}")" | bat -ppflsyslog --theme DarkNeon && resolveip $ssh 2>/dev/null; \
 printf %b "\e[0m\n" && dots || (printf %b "\e[91mno lan\n" && dots); 
+
+
 # [ "$wlan" ] && (printf %b "${wlan} "|bat -ppflsyslog --theme Visual\ Studio\ Dark+; [ "$ssh" ] && printf %b "${ssh[*]:1,4}"|bat -ppflsyslog --theme DarkNeon;
 # printf %b "\e[0m\n"; dots; ); 
 dfree; 
@@ -203,7 +212,8 @@ command ps -A|cut -c25-|grep -e 'crond' &>/dev/null || crond 2>/dev/null;
 }; 
 [ $TMUX ] && [ -z "$new" ] && new || unset new; 
 # [ -z $TMUX ] && uptime; 
-# termux-api-start & 
-# termux-wake-lock & 
-# [ -z $PREFIX ] && (gum style --border normal --border-foreground 0 --bold --padding "1 3" --align center --margin 0 "$(hostnamectl |grep -E 'Chassis|Operating|Virtualization|Kernel|Hardware Model'|cut -f2- -d":"|cut -f2- -d" ")"|bat -ppfljava; dots; 
+[ $PREFIX ] && termux-api-start &>/dev/null & disown; 
+[ $PREFIX ] && (sleep 4; termux-wake-lock &>/dev/null) & disown; 
+# [ -z $PREFIX ] 
+#&& (gum style --border normal --border-foreground 0 --bold --padding "1 3" --align center --margin 0 "$(hostnamectl |grep -E 'Chassis|Operating|Virtualization|Kernel|Hardware Model'|cut -f2- -d":"|cut -f2- -d" ")"|bat -ppfljava; dots; 
 
