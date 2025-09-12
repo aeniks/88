@@ -43,6 +43,8 @@ printf %b "${wlan[*]}"|bat -ppfljs;
 }; 
 }; 
 iplanget; 
+ram() { free  -h|grep -v "Swap"|cut -c-44|sed -e 1s/\ \ \ \ /\ \\/-\\// -e "s/i//g"| tr -s " " " "|column --table|bat -|column --table --output-separator " | " | bat -ppljs --theme zenburn; }; 
+
 # iplan() {
 # printf %b "${wlan[*]}"|bat -ppfljs; 
 # }; 
@@ -158,6 +160,8 @@ dots;
 printf %b "${modo}\n[${os1} | ${os2}]\n"|bat -ppfljava; 
 dots; 
 printf %b "${cpu[*]} x $cpus\n" | tr -s "\n" " "| bat -ppfljava; printf %b "\n"; 
+dots; 
+ram 2>/dev/null && \
 dots; 
 printf %b "${0/-/} | $TERM | $TERM_PROGRAM | $LANG \n"|bat -ppflc++ --theme Coldark-Dark; 
 dots; 
