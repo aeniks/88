@@ -26,6 +26,7 @@ new() {
 # local IFS=$' '; 
 # date=($(date +%D\ %X)); 
 re='\e[0m'; cyan='\e[96m'; 
+. $HOME/88/f/dfree.sh; . $HOME/88/f/12calendar.sh; . $HOME/88/f/memram.sh; 
 dfree > $HOME/logs/df.md & disown; 
 
 # printf %b "$re··········${re}\n"; 
@@ -66,7 +67,7 @@ modo=($(cat \
 /sys/devices/virtual/dmi/id/sys_vendor \
 /sys/devices/virtual/dmi/id/bios_vendor \
 /sys/devices/virtual/dmi/id/product_sku \
-2>/dev/null)); 
+2>/dev/null|tr -s "\n" " ")); 
 ##
 # (uname --kernel-name --kernel-release|cut -f1 -d"-"|tr " " "-"; ); 
 # (uname --machine --operating-system)|sort|uniq -u|tr '\n' ' '); 
@@ -124,9 +125,6 @@ cpus=($(lscpu|grep -e 'CPU(s):' -m1|cut -f2 -d":"|tr -d " "));
 ##
 # dfree() { [ "$PREFIX" ]&& printf %b "$(df -h|grep -v "tmpfs"|grep -v "passthrough"|cut -f2- -d" "|tr -s " " " "|grep -E "sdcard/default|storage|Size"|column --table --table-columns-limit 5 --output-separator ' | '|bat -ppfljs --theme DarkNeon)"|| printf %b "$(df -h|grep -v "tmpfs"|tr -s " " " "|column --table --table-columns-limit 5 --output-separator ' | '|bat -ppfljs --theme DarkNeon)"; }; 
 ##
-. $HOME/88/f/dfree.sh; 
-. $HOME/88/f/12calendar.sh; 
-. $HOME/88/f/memram.sh; 
 # &>/dev/null;
 ####
 export LESS='-R --file-size --use-color --incsearch --mouse --prompt=%F(%T) [/]search [n]ext [p]rev ?f%f .?n?m(%T %i of %m) ..?lt %lt-%lb?L/%L. :byte %bB?s/%s.  .?e(END)  ?x-  Next\:   %x.:?pB  %pB\%..%t '; 
@@ -185,8 +183,8 @@ dots;
 ##
 # iplan; 
 [ $SSH_CLIENT ] && ssh=($(printf %b "$SSH_CLIENT"|sed -e "s/\ [0-9.]*//")); 
-[ "$wlan" ] && printf %b "${wlan[*]} $([ "$ssh" ] && printf %b " | ${ssh[*]}")" | bat -ppflsyslog --theme DarkNeon && resolveip $ssh 2>/dev/null; \
-printf %b "\e[0m\n" && dots || (printf %b "\e[91mno lan\n" && dots); 
+[ "$wlan" ] && printf %b "${wlan[*]} $([ "$ssh" ] && printf %b " | ${ssh[*]}")" | bat -ppflsyslog --theme DarkNeon && printf %b "\e[0m\n" && dots || (printf %b "\e[91mno lan\n" && dots); 
+# resolveip $ssh 2>/dev/null; 
 
 
 # [ "$wlan" ] && (printf %b "${wlan} "|bat -ppflsyslog --theme Visual\ Studio\ Dark+; [ "$ssh" ] && printf %b "${ssh[*]:1,4}"|bat -ppflsyslog --theme DarkNeon;
