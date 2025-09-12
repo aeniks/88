@@ -123,6 +123,7 @@ cpus=($(lscpu|grep -e 'CPU(s):' -m1|cut -f2 -d":"|tr -d " "));
 ##
 . $HOME/88/f/dfree.sh; 
 . $HOME/88/f/12calendar.sh; 
+. $HOME/88/f/memram.sh; 
 # &>/dev/null;
 ####
 export LESS='-R --file-size --use-color --incsearch --mouse --prompt=%F(%T) [/]search [n]ext [p]rev ?f%f .?n?m(%T %i of %m) ..?lt %lt-%lb?L/%L. :byte %bB?s/%s.  .?e(END)  ?x-  Next\:   %x.:?pB  %pB\%..%t ';
@@ -161,7 +162,11 @@ printf %b "${modo}\n[${os1} | ${os2}]\n"|bat -ppfljava;
 dots; 
 printf %b "${cpu[*]} x $cpus\n" | tr -s "\n" " "| bat -ppfljava; printf %b "\n"; 
 dots; 
+<<<<<<< HEAD
 ram 2>/dev/null && \
+=======
+memram; 
+>>>>>>> a3043e3a5cc8c6aa050eb63b0b830a3baa135100
 dots; 
 printf %b "${0/-/} | $TERM | $TERM_PROGRAM | $LANG \n"|bat -ppflc++ --theme Coldark-Dark; 
 dots; 
