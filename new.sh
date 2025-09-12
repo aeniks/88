@@ -162,12 +162,12 @@ printf %b "${modo}\n[${os1} | ${os2}]\n"|bat -ppfljava;
 dots; 
 printf %b "${cpu[*]} x $cpus\n" | tr -s "\n" " "| bat -ppfljava; printf %b "\n"; 
 dots; 
-<<<<<<< HEAD
-ram 2>/dev/null && \
-=======
-memram; 
->>>>>>> a3043e3a5cc8c6aa050eb63b0b830a3baa135100
+# <<<<<<< HEAD
+memram 2>/dev/null && \
 dots; 
+# =======
+# memram; 
+# >>>>>>> a3043e3a5cc8c6aa050eb63b0b830a3baa135100
 printf %b "${0/-/} | $TERM | $TERM_PROGRAM | $LANG \n"|bat -ppflc++ --theme Coldark-Dark; 
 dots; 
 12calendar; 
