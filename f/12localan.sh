@@ -3,6 +3,7 @@
 ## discover lan w ping & ssh 
 #ipt=$(mktemp; ); 
 mkdir -p $HOME/logs/iplocal/ 2>/dev/null; rm $HOME/logs/iplocal/* 2>/dev/null;  
+wlan="$(cat $HOME/logs/wlan.sh)"; 
 printf %b "\n\n\n\n\e[4A\n -- ip ok? "; read -ep '> ' -i "${wlan[*]}" "iploc"; 
 printf %b "\e[?25l\n -- checking ips ... \t\t [q]uit\n\n\n\n\e[4A\n\n"; 
 # ip -4 n
