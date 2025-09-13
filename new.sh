@@ -12,7 +12,8 @@ export tmp="$HOME/tmp"
 [ -z $TMPDIR ] && export TMPDIR="$HOME/tmp"
 export HISTTIMEFORMAT="%b-%d-%H:%M:%S "; 
 ####
-[ $PREFIX ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --height "~99%" --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls -pm {}" --wrap-sign "" --scroll-off 22 --color "list-bg:234,bg+:24,fg+:15,info:6" --ghost "0: change orientation"';
+[ $PREFIX ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --tmux "center,99%,95%" --height "~99%" --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls -pm {}" --wrap-sign "" --scroll-off 22 --color "list-bg:234,bg+:24,fg+:15,info:6"
+--border "top" --border-label "C-a:select-all | 0: change orientation | q:uit " --border-label-pos "top"';
 ####
 [ -z $PREFIX ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls --color always -pm {}" --scroll-off 22 --color "bg:0,preview-bg:16,bg+:24,fg+:15,info:6"';
 ####
@@ -31,7 +32,9 @@ re='\e[0m'; cyan='\e[96m';
 new() { 
 # local IFS=$' '; 
 # date=($(date +%D\ %X)); 
-. $HOME/88/f/dfree.sh; . $HOME/88/f/12calendar.sh; . $HOME/88/f/memram.sh; 
+. $HOME/88/f/dfree.sh; . $HOME/88/f/12calendar.sh; 
+. $HOME/88/f/memram.sh; 
+. $HOME/88/i/colors.sh; 
 # dfree > $HOME/logs/df.md & disown; 
 # dfree > $HOME/logs/df.md & disown; 
 # printf %b "$re··········${re}\n"; 
@@ -40,7 +43,6 @@ new() {
 ####
 # [ $PREFIX ] && [ -z $wlan ] && wlan=$(getprop vendor.arc.net.ipv4.host_address);
 iplanget() { 
-
 [ $PREFIX ] && wlan="$(getprop|grep -v "gateway"|grep -E "ipv4" -m1|tr -d "[]"|cut -f2 -d" ")"; 
 [ -z $wlan ] && wlan="$(ip -brief a 2>/dev/null|grep -v "127.0.0.1"|tr -s "/\t " "\n"|grep -E "UP" -A1 -m1|tail -n1)";
 [ -z $wlan ] && wlan="$($sudo ifconfig 2>/dev/null|grep -e "wlan" -A1|sed -e 1d|tr -s "a-z " "\n"|sed -e 1d -e 3,4d)"; 
@@ -48,7 +50,11 @@ iplan() { printf %b "${wlan[*]}"|bat -ppfljs; };
 }; 
 ##
 iplanget; 
-# ram() { free  -h|grep -v "Swap"|cut -c-44|sed -e 1s/\ \ \ \ /\ \\/-\\// -e "s/i//g"| tr -s " " " "|column --table|bat -|column --table --output-separator " | " | bat -ppljs --theme zenburn; }; 
+##
+[ "$wlan" ] && printf %b "${wlan[*]}" > $HOME/logs/wlan.sh || wlan="$(cat $HOME/logs/wlan.sh)"; 
+##
+idn="${wlan/*./}"; 
+## ram() { free  -h|grep -v "Swap"|cut -c-44|sed -e 1s/\ \ \ \ /\ \\/-\\// -e "s/i//g"| tr -s " " " "|column --table|bat -|column --table --output-separator " | " | bat -ppljs --theme zenburn; }; 
 # iplan() {
 # printf %b "${wlan[*]}"|bat -ppfljs; 
 # }; 
@@ -139,7 +145,6 @@ cpus=($(lscpu|grep -e 'CPU(s):' -m1|cut -f2 -d":"|tr -d " "));
 # local IFS=$'\n'; gum style --border normal --border-foreground 66  --margin "0 1" $(printf %b "${model[*]}\n"|tr -s "\n" " "|bat -ppfljava --theme DarkNeon; ); 
 ##
 # gum style --border thick --background 0 --border-foreground 6 --align center --padding "1 2" --margin "0 1" --trim "$(\
-printf %b "${wlan[*]}" > ~/logs/wlan.sh; 
 # printf %b "${wlan[*]}" > ~/logs/iploc.sh; 
 ##
 # [ $SSH_CONNECTION ] && ssh=(${SSH_CONNECTION}); 
@@ -150,10 +155,11 @@ dots() { printf %b "$re··········${re}\n"; };
 ##
 local IFS=$'\n\t '; 
 dots; 
-printf %b "[${modo[*]}] "|tr -s "\n" " "|bat -ppfljava; echo; 
-printf %b "[${os1} | ${os2}] "|tr -s "\n" " "|bat -ppfljava; echo; 
+printf %b "${modo[*]} "|tr -s "\n" " "|bat -ppfljava;  
+printf %b "-- [${os1} | ${os2}] "|tr -s "\n" " "|bat -ppfljava; echo; 
 dots; 
-printf %b "${cpu[*]} x $cpus | \n" | tr -s "\n" " "| bat -ppfljava; memram 2>/dev/null && \
+printf %b "${cpu[*]} x ${cpus}" | tr -s "\n" " "| bat -ppfljava; echo; 
+memram | bat -ppflgo --theme zenburn && \
 dots; 
 # printf %b "\n"; 
 # =======
@@ -167,17 +173,17 @@ dots;
 # bat -ppfljava --theme Sublime\ Snazzy; 
 # CALENDAR1
 # printf %b "\e[38;2m•\e[5b "; 
-date +%a\ %b\ %d\ %Y\ \|\ %X\ \ | tr -d "\n"|bat -ppflc++ --theme Coldark-Dark; printf %b "\n";
+(printf %b "$EPOCHSECONDS\t"; date +%a\ %b\ %d\ %Y\ \|\ %X\ \ | tr -d "\n")|bat -ppflc++ --theme Coldark-Dark; echo; 
 dots; 
 12calendar && 
 dots; 
-printf %b "$EPOCHSECONDS \n"|bat -ppflc++ --theme Coldark-Dark; 
+printf %b "${w[idn]}\e[7m $idn \e[0m"; echo; 
 dots; 
-##
-##
 # iplan; 
-[ "$wlan" ] && printf %b "${wlan[*]} "|bat -ppflsyslog --theme DarkNeon; 
-[ "$SSH_CLIENT" ] && printf %b "| $SSH_CLIENT"|cut -f1,2,4  -d" " | bat -ppfljs --theme GitHub && printf %b "\e[0m" && dots || (printf %b "\e[91mno lan\n" && dots); 
+[ "$wlan" ] && printf %b "${wlan[*]} "|bat -ppflsyslog --theme DarkNeon && \
+[ "$SSH_CLIENT" ] && printf %b "| $SSH_CLIENT"|cut -f1,2,4  -d" " | bat -ppfljs --theme GitHub && \
+printf %b "\e[0m\n" && dots || (printf %b "\e[0m\n"; dots; ); 
+# (printf %b "\e[91mno lan\n" && dots); 
 # resolveip $ssh 2>/dev/null; 
 # && printf %b "\e[0m\n"; 
 # [ "$wlan" ] && (printf %b "${wlan} "|bat -ppflsyslog --theme Visual\ Studio\ Dark+; [ "$ssh" ] && printf %b "${ssh[*]:1,4}"|bat -ppflsyslog --theme DarkNeon;

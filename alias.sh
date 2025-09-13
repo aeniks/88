@@ -1,15 +1,28 @@
 #!/bin/bash
 # alaaaaais
-[ -z $PREFIX ] && sudo=sudo; 
-alias kk='col -xb|bat -pfljava --theme DarkNeon'; 
+c2='\e[96m --\e[0m'; re='\e[0m'; gt=""; 
+[ -z "$PREFIX" ] && sudo=sudo; 
+alias kk='fmt -g 66|col -xb|bat -pfljava --theme DarkNeon'; 
+alias kkkk='col -xb|fmt --split-only --width=$((COLUMNS - 2)) --goal=66 --uniform-spacing --tagged-paragraph|bat -pfljava --theme TwoDark'; 
+alias cccc='crontab -e'; 
 alias 12alias='$EDITOR ~/88/alias.sh'; 
 alias 88='cd ~/88; echo; realpath ~/88|bat -ppfljava; echo; ls --color=always -GghtrAp --group-directories-first; echo; git status'; 
-alias 88pullpush='git add ./; git commit -a -m "${USER}_${mod}_$(date)" -v; git pull; git push; ls --color=always -trAmp --group-directories-first'; 
+alias 88pullpush='git add ./; git commit -a -m "${USER}_${mod//\ /}_$(date)" -v; git pull; git push; ls --color=always -trAmp --group-directories-first'; 
 # li=$(($(ps -A|wc -l)+6)); [ ${li} -gt ${LINES} ] && li=${LINES}; 
-alias 12_choose_logins_screen='read -n1 -ep "  $c2  g/t  $(systemctl get-default)  " "gt"; if [ $gt == t ]; then sudo systemctl set-default multi-user.target; else sudo systemctl set-default graphical.target; fi ; echo gg'
+alias 12_choose_logins_screen='
+printf %b "$re\n\n\n\n\n\e[4A"; 
+systemctl get-default; 
+printf %b "\n $c2 [\e[94mg\e[0m]raphical / [\e[95mt\e[0m]erminal ; 
+read -en1 "gt"; 
+case $gt in 
+g) sudo systemctl set-default graphical.target;; 
+t) sudo systemctl set-default multi-user.target;; 
+*) return 1;; esac; 
+'
+
 alias bb='if [ "$PREFIX" ]; then \
-tmux display-popup -E -w "98%" -h "98%" "htop"; else \
-tmux display-popup -E -w 98% -h 98% "btop"; fi '
+tmux display-popup -E -w 99% -h 98% "htop"; else \
+tmux display-popup -E -w 99% -h 98% "btop"; fi '
 alias qb='ssh aa@ants.ftp.sh "qbittorrent-nox -d" && xdg-open https://qb.aeniks.com'; 
 alias l='lf -last-dir-path $HOME/logs/ll.log; cd $(cat $HOME/logs/ll.log); '
 alias jacketts='/home/aa/gh/jackett/jackett &'
@@ -130,3 +143,5 @@ printf %b "\e[0m\n  $pa \n  $phs \n  $ph \n";printf %q "  $pan"|tr -d "\\\\";pri
 
 alias hellllo='printf %b "\n\n\n\n\n\n\e[6A\e[?25l"; for i in {1..28}; do printf %b "\e[s\e[38;5;$((RANDOM%229))m \e[s\e[98;5;$((RANDOM%22))m\n"; figlet -o -f sub-zero "hello"; sleep .12; printf %b "\e[u"; done; printf %b "\e[?25h"; printf %b "\n\n" '; 
 alias toppo="top -b -n1 -s2 -H -o s,%mem,%cpu,args" 
+ghclone() { 
+[ -z "$1" ] && echo && read -rep ' -- repo: ' 'ghc' || ghc="$1"; gh repo clone "$ghc" $HOME/gh/"$ghc"; cd "$HOME"/gh/"$ghc"; ls -lGgp --color=always; }; 
