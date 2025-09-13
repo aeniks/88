@@ -9,7 +9,7 @@
 # cat $HOME/logs/bp.log 2>/dev/null && printf %b "\e[0m "; cat "/sys/class/power_supply/BAT0/capacity" 2>/dev/null;
 # }; 
 
-# bc=0; 
+bc=0; 
 # HOME="~"
 wlan="$(cat "$HOME/logs/wlan.sh" 2>/dev/null)"; 
 yellow='\e[93m'; 
@@ -47,7 +47,7 @@ hh=1$(date +%H;); mm=1$(date +%M;); ss=1$(date +%S);
 printf %b "\e[38;5;$((hh + 22))m${hh:1:2}$re:\e[38;5;$((mm + 22))m${mm:1:2}$re:\e[38;5;$((ss + 22))m${ss:1:2}"; 
 }; 
 _etime() { 
-printf %b "\e[38;5;$((${EPOCHSECONDS: -2} * 2))m${EPOCHSECONDS}" 2>/dev/null;  
+printf %b "\e[38;5;$((${EPOCHSECONDS: -2}+9))m${EPOCHSECONDS}" 2>/dev/null;  
 }; 
 
 . "$HOME/88/i/colors.sh"; 

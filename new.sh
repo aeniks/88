@@ -20,10 +20,10 @@ export HISTTIMEFORMAT="%b-%d-%H:%M:%S ";
 if echo $HOME|grep -w "termux"; 
 then alias sudo='command'; else sudo=sudo; fi; 
 ####
-[ -e $HOME/.config/gemini_api_id.conf ] 2 >/dev/null && . $HOME/.config/gemini_api_id.conf 2 >/dev/null; 
-
-[ -e $HOME/.config/cloudflare_id.conf ] 2 >/dev/null && . $HOME/.config/cloudflare_id.conf 2 >/dev/null; 
-
+# [ -e $HOME/.config/gemini_api_id.conf ] 2 >/dev/null && 
+# [ -e $HOME/.config/cloudflare_id.conf ] 2 >/dev/null && 
+. $HOME/.config/gemini_api_id.conf 2 >/dev/null; 
+. $HOME/.config/cloudflare_id.conf 2 >/dev/null; 
 ####
 [ -e $HOME/.config/lesskey ] || ln -s $HOME/88/c/lesskey $HOME/.config/lesskey; 
 [ -e $HOME/.config/path.sh ] && export PATH=$(cat $HOME/.config/path.sh);
@@ -175,7 +175,7 @@ dots;
 # bat -ppfljava --theme Sublime\ Snazzy; 
 # CALENDAR1
 # printf %b "\e[38;2m•\e[5b "; 
-(printf %b "$EPOCHSECONDS\t"; date +%a\ %b\ %d\ %Y\ \|\ %X\ \ | tr -d "\n")|bat -ppflc++ --theme Coldark-Dark; echo; 
+(printf %b "$EPOCHSECONDS | "; date +%a\ %b\ %d\ %Y\ \|\ %X\ \ | tr -d "\n")|bat -ppflc++ --theme Coldark-Dark; echo; 
 dots; 
 12calendar && 
 dots; 
@@ -183,7 +183,7 @@ printf %b "${w[idn]}\e[7m $idn \e[0m"; echo;
 dots; 
 # iplan; 
 [ "$wlan" ] && printf %b "${wlan[*]} "|bat -ppflsyslog --theme DarkNeon && \
-[ "$SSH_CLIENT" ] && printf %b "| $SSH_CLIENT"|cut -f1,2,4  -d" " | bat -ppflsyslog --theme GitHub; printf %b "\e[0m\n" && dots; 
+[ "$SSH_CLIENT" ] && printf %b "| $SSH_CLIENT"|cut -f1,2,4  -d" " |tr "\n" "\t"| bat -ppflsyslog --theme GitHub; printf %b "\e[0m\n" && dots; 
 # (printf %b "\e[91mno lan\n" && dots); 
 # resolveip $ssh 2>/dev/null; 
 # && printf %b "\e[0m\n"; 
