@@ -2,20 +2,16 @@
 # very good bash enviorment 
 shopt -s histappend; 
 shopt -s histverify; 
-export IFS=$'\n\t '; 
-export EDITOR="micro"; 
-export BAT_THEME="Coldark-Dark"; 
-export HISTCONTROL="ignoreboth"; 
-export PROMPT_COMMAND="history -a; history -n; "; 
-export LESS='-R --file-size --use-color --incsearch --mouse --prompt=%F(%T) [/]search [n]ext [p]rev ?f%f .?n?m(%T %i of %m) ..?lt %lt-%lb?L/%L. :byte %bB?s/%s.  .?e(END)  ?x-  Next\:   %x.:?pB  %pB\%..%t '; 
-export tmp="$HOME/tmp"
-[ -z $TMPDIR ] && export TMPDIR="$HOME/tmp"
+export HISTCONTROL="ignoreboth"; export PROMPT_COMMAND="history -a; history -n; "; 
+export IFS=$'\n\t '; export EDITOR="micro"; export BAT_THEME="Coldark-Dark"; 
+export tmp="$HOME/tmp"; [ -z $TMPDIR ] && export TMPDIR="$HOME/tmp"; 
 export HISTTIMEFORMAT="%b-%d-%H:%M:%S "; 
+export LESS='-R --file-size --use-color --incsearch --mouse --prompt=%F(%T) [/]search [n]ext [p]rev ?f%f .?n?m(%T %i of %m) ..?lt %lt-%lb?L/%L. :byte %bB?s/%s.  .?e(END)  ?x-  Next\:   %x.:?pB  %pB\%..%t '; 
 ####
-[ $PREFIX ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --tmux "center,99%,95%" --height "~99%" --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls -pm {}" --wrap-sign "" --scroll-off 22 --color "list-bg:234,bg+:24,fg+:15,info:6"
+[ $PREFIX ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --tmux "center,99%,95%" --height "~99%" --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder" --preview "bat -ppf {} 2>/dev/null||ls -pm {}" --wrap-sign "" --scroll-off 22 --color "list-bg:234,bg+:24,fg+:15,info:6"
 --border "top" --border-label "C-a:select-all | 0: change orientation | q:uit " --border-label-pos "top"';
 ####
-[ -z $PREFIX ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls --color always -p {}" --scroll-off 22 --color "bg:0,preview-bg:16,bg+:24,fg+:15,info:6"';
+[ -z $PREFIX ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder" --preview "bat -ppf {} 2>/dev/null||ls --color always -p {}" --scroll-off 22 --color "bg:0,preview-bg:16,bg+:24,fg+:15,info:6"';
 ####
 if echo $HOME|grep -w "termux"; 
 then alias sudo='command'; else sudo=sudo; fi; 
@@ -30,192 +26,61 @@ then alias sudo='command'; else sudo=sudo; fi;
 [ -z $TMUX ] && tmux; 
 ####
 re='\e[0m'; cyan='\e[96m'; 
-# . $HOME/88/s/sig.sh &>/dev/null; 
 new() { 
-# local IFS=$' '; 
-# date=($(date +%D\ %X)); 
 . $HOME/88/f/dfree.sh; . $HOME/88/f/12calendar.sh; 
-. $HOME/88/f/memram.sh; 
-. $HOME/88/i/colors.sh; 
-# dfree > $HOME/logs/df.md & disown; 
-# dfree > $HOME/logs/df.md & disown; 
-# printf %b "$re··········${re}\n"; 
-# printf %b "\e[A"; 
-# printf %b "${date[*]}"|bat -ppflgo --theme Visual\ Studio\ Dark+; 
-####
-# [ $PREFIX ] && [ -z $wlan ] && wlan=$(getprop vendor.arc.net.ipv4.host_address);
-iplanget() { 
+. $HOME/88/f/memram.sh; . $HOME/88/i/colors.sh; 
+## ____ IP _ GET ____
 [ $PREFIX ] && wlan="$(getprop|grep -v "gateway"|grep -E "ipv4" -m1|tr -d "[]"|cut -f2 -d" ")"; 
 [ -z $wlan ] && wlan="$(ip -brief a 2>/dev/null|grep -v "127.0.0.1"|tr -s "/\t " "\n"|grep -E "UP" -A1 -m1|tail -n1)";
 [ -z $wlan ] && wlan="$($sudo ifconfig 2>/dev/null|grep -e "wlan" -A1|sed -e 1d|tr -s "a-z " "\n"|sed -e 1d -e 3,4d)"; 
-iplan() { printf %b "${wlan[*]}"|bat -ppfljs; }; 
-}; 
-##
-iplanget; 
-##
-[ "$wlan" ] && printf %b "${wlan[*]}" > $HOME/logs/wlan.sh || wlan="$(cat $HOME/logs/wlan.sh)"; 
-##
+[ "$wlan" ] && printf %b "${wlan[*]}" > $HOME/logs/wlan.sh || wlan="$(cat $HOME/logs/wlan.log)"; 
 idn="${wlan/*./}"; 
-## ram() { free  -h|grep -v "Swap"|cut -c-44|sed -e 1s/\ \ \ \ /\ \\/-\\// -e "s/i//g"| tr -s " " " "|column --table|bat -|column --table --output-separator " | " | bat -ppljs --theme zenburn; }; 
-# iplan() {
-# printf %b "${wlan[*]}"|bat -ppfljs; 
-# }; 
-####
-# [ $iploc ] && wlan="${iploc[-1]}"; 
-# [ -z $wlan ] && \
-# wlan=($(ip -brief -4 a 2>/dev/null|grep -vE "lo|127.0.0.1|valid|altname|BROADCAST"|tr -s " /" " "|cut -f1,3 -d" " 2>/dev/null));
-# [ -z "${HOST}" ]&& HOST="$(uname --kernel-name --kernel-release);";
-# iplo=${wlan}; iploc=${wlan}; 
-# [ $PREFIX ] && model=($(getprop ro.product.vendor.marketname; getprop ro.product.manufacturer; ####
-## bios_vendor sys_vendor product_sku; 
-####
+## ____ MODEL _ GET ____
 [ -z $PREFIX ] && [ -e /sys/devices/virtual/dmi/id/product_family ] && \
-modo=($(for bb in board_vendor board_name; do cat /sys/devices/virtual/dmi/id/${bb} 2>/dev/null|tr -s "\n" " "; done)); 
-# && modo=($(printf %b "${modo[*]}"|tr -s "\n" " ")); 
-##
-# (uname --kernel-name --kernel-release|cut -f1 -d"-"|tr " " "-"; ); 
-# (uname --machine --operating-system)|sort|uniq -u|tr '\n' ' '); 
-##
-##
-[ $PREFIX ] && modo="$((getprop|grep -E "vendor.manufacturer|product.manufacturer" -m1 -A1 --group-separator=""|cut -f2- -d" "|tr -s "\n" " "; printf %b "\b")|col -xb)"; 	
-# [ $PREFIX ] && unset -v modelx && \
-# modelx=($((\
-# getprop |grep -E "vendor.manufacturer|product.manufacturer" -m1 -A1 --group-separator=""|cut -f2- -d" "; 
-# getprop ro.product.manufacturer; 
-# getprop ro.product.marketname; 
-# getprop ro.product.name; 
-# getprop ro.build.product; 
-# getprop ro.product.model; 
-# getprop ro.product.vendor.model; 
-# )|uniq)); 
-####
-[ $PREFIX ] && \
-osx1=($(\
-uname --operating-system; \
-getprop ro.build.version.release; \
-getprop ro.build.version.codename; \
-)); 
-##
-[ $PREFIX ] && \
-osx2=($((\
-uname --kernel-name; 
-uname --kernel-release|cut -f1 -d"-"|uniq; 
-uname --machine)|tr -s "\n" " "; 
-)); 
-####
-####
-[ -z $PREFIX ] && \
-osx1=($(uname --operating-system; uname --machine; uname --kernel-release|cut -f1 -d"-")); 
-[ -z $PREFIX ] && \
-osx2=($(lsb_release -sirc|tr -s "\n" " ")); 
-# 2>/dev/null; 
-# [ $PREFIX ] && model=($((getprop ro.product.model; getprop ro.product.name; getprop ro.product.manufacturer; getprop ro.build.product; getprop ro.build.version.release; getprop ro.build.version.codename; printf %b "\n\n------------\n\n"; uname --operating-system; uname --kernel-name; uname --kernel-release|cut -f1 -d"-"; uname --machine)|tr -s "\n" " ")); 
-# local IFS=$' '; 
-# model1="$(printf %b "${modelx[*]:0:4}"|uniq|tr -s "\n" " "; printf %b "\b"|col -xb)"; 
-# model2="$(printf %b "${modelx[*]:4:4}"|uniq|tr -s "\n" " "; printf %b "\b"|col -xb)"; 
-# mod1="$(printf %b "${model1}\b"|col -xb)";
-# mod2="$(printf %b "${model2}\b"|col -xb)";
+modo=($(for bb in board_vendor board_name bios_vendor sys_vendor; 
+do cat /sys/devices/virtual/dmi/id/${bb} 2>/dev/null|tr -s "\n" " "; done)); 
+[ $PREFIX ] && modo="$((getprop|grep -E "vendor.manufacturer|product.manufacturer" -m1 -A1 --group-separator=""|cut -f2- -d" "|tr -s "\n" " "; printf %b "\b")|col -xb)"; 
+## ____ OS __ GET _____
+[ $PREFIX ] && osx1=($(uname --operating-system; getprop ro.build.version.release; getprop ro.build.version.codename; )); 
+[ $PREFIX ] && osx2=($((uname --kernel-name; uname --kernel-release|cut -f1 -d"-"|uniq -u; uname --machine)|tr -s "\n" " "; )); 
+[ -z $PREFIX ] && osx1=($(uname --operating-system; uname --machine; uname --kernel-release|cut -f1 -d"-")); 
+[ -z $PREFIX ] && osx2=($(lsb_release -sirc|tr -s "\n" " ")); 
 osa1="$(printf %b "${osx1[*]}"|uniq|tr -s "\n" " "; printf %b "\b"|col -xb)"; 
 osa2="$(printf %b "${osx2[*]}"|uniq|tr -s "\n" " "; printf %b "\b"|col -xb)"; 
-os1="$(printf %b "${osa1}\b"|col -xb)";
-os2="$(printf %b "${osa2}\b"|col -xb)";
+os1="$(printf %b "${osa1}\b"|col -xb)";os2="$(printf %b "${osa2}\b"|col -xb)";
 local IFS=$'\n\t '; 
-# model=($(uname --kernel-name; uname --kernel-release|head -c8; uname --machine --operating-system)); 
-####
+## __ CPU __ GET _____
 cpu=($(lscpu |grep -E 'Model name'|tr -s "\t" " "|cut -f3- -d" ")); 
 cpus=($(lscpu|grep -e 'CPU(s):' -m1|cut -f2 -d":"|tr -d " ")); 
-##
-# dfree() { [ "$PREFIX" ]&& printf %b "$(df -h|grep -v "tmpfs"|grep -v "passthrough"|cut -f2- -d" "|tr -s " " " "|grep -E "sdcard/default|storage|Size"|column --table --table-columns-limit 5 --output-separator ' | '|bat -ppfljs --theme DarkNeon)"|| printf %b "$(df -h|grep -v "tmpfs"|tr -s " " " "|column --table --table-columns-limit 5 --output-separator ' | '|bat -ppfljs --theme DarkNeon)"; }; 
-##
-# &>/dev/null;
-####
-# export LESSKEY='m toggle-option --mouse\n\r';
-# export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "q:abort" --info inline --inline-info';
-# portlocal=($(netstat -tl4 2>/dev/null|tail -n+2|tr -s "A-z:/ " " "|cut -f5 -d" ")); 
-##
-# dots; printf %b "$cyan[\e[38;5;$((lopa + 88))m\e[1m${model[*]}$re${cyan}]"; 
-# load() { 
-# unset -v load ll; 
-# printf %b "\e[37;2m|\e[10b\e[1G"; 
-# load=$(uptime | cut -f 11 -d " " | tr -d ",. "); 
-# ll=($(seq "$((load / ${cpus}00))")); 
-# ##
-# for i in ${ll[*]}; do case $i in 0|1) o=2;; 2|3) o=4;; 4|5) o=3;; 6|7) o=5;; 8|9) o=1;; esac; printf %b "\e[0m\e[38;5;${o}m|"; done; 
-# l1="$((load / 8))"; printf %b "\e[12G ${l1:0:2}.${l1:(-1)}\e[0m";
-# }; 
-# 
-# local IFS=$'\n'; gum style --border normal --border-foreground 66  --margin "0 1" $(printf %b "${model[*]}\n"|tr -s "\n" " "|bat -ppfljava --theme DarkNeon; ); 
-##
-# gum style --border thick --background 0 --border-foreground 6 --align center --padding "1 2" --margin "0 1" --trim "$(\
-# printf %b "${wlan[*]}" > ~/logs/iploc.sh; 
-##
-# [ $SSH_CONNECTION ] && ssh=(${SSH_CONNECTION}); 
-##
-##
-# unalias dots 2>/dev/null;  
+########
 dots() { printf %b "$re··········${re}\n"; }; 
-##
 local IFS=$'\n\t '; 
 dots; 
 printf %b "${modo[*]} "|tr -s "\n" " "|bat -ppfljava;  
-printf %b "-- [${os1} | ${os2}] "|tr -s "\n" " "|bat -ppfljava; echo; 
+printf %b "[${os1} | ${os2}]"|tr -s "\n" " "|bat -ppfljava; echo; 
 dots; 
 printf %b "${cpu[*]} x ${cpus}" | tr -s "\n" " "| bat -ppfljava; echo; 
 memram | bat -ppflgo --theme zenburn && \
 dots; 
-# printf %b "\n"; 
-# =======
-# memram; 
-# >>>>>>> a3043e3a5cc8c6aa050eb63b0b830a3baa135100
-# printf %b "${0/-/} | $TERM | $TERM_PROGRAM | $LANG \n"|bat -ppflc++ --theme Coldark-Dark; dots; 
-##
-# date|bat -ppfljava 
-# dots; 
-# printf %b "\e[0m"; 
-# bat -ppfljava --theme Sublime\ Snazzy; 
-# CALENDAR1
-# printf %b "\e[38;2m•\e[5b "; 
-(printf %b "\t  $(date +%a\ %b\ %d\ %Y\ \|\ %X\ \ | tr -d "\n")")|bat -ppflc++ --theme Coldark-Dark; echo; 
+(printf %b "$(date +%a\ %b\ %d\ %Y\ \|\ %X\ \ | tr -d "\n"; echo)")|bat -ppflc++ --theme zenburn; 
 dots; 
-12calendar && 
+12calendar && \
 dots; 
-printf %b "${w[idn]}\e[7m $idn \e[27m $EPOCHSECONDS \e[0m"; echo; 
+printf %b "${w[idn]}\e[7m $idn \e[27m $EPOCHSECONDS \e[0m \e[38;5;${idn}m idn: $idn  \e[0m"; echo; 
 dots; 
-# iplan; 
 [ "$wlan" ] && printf %b "${wlan[*]} "|bat -ppflsyslog --theme DarkNeon && \
-[ "$SSH_CLIENT" ] && printf %b "| $SSH_CLIENT"|cut -f1,2,4  -d" " |tr "\n" "\t"| bat -ppflsyslog --theme GitHub; printf %b "\e[0m\n" && dots; 
-# (printf %b "\e[91mno lan\n" && dots); 
-# resolveip $ssh 2>/dev/null; 
-# && printf %b "\e[0m\n"; 
-# [ "$wlan" ] && (printf %b "${wlan} "|bat -ppflsyslog --theme Visual\ Studio\ Dark+; [ "$ssh" ] && printf %b "${ssh[*]:1,4}"|bat -ppflsyslog --theme DarkNeon;
-# printf %b "\e[0m\n"; dots; ); 
+[ "$SSH_CLIENT" ] && printf %b "| $SSH_CLIENT"|cut -f1,2,4  -d" " |tr "\n" "\t"| bat -ppflsyslog --theme GitHub; 
+printf %b "\e[0m\n" && dots; 
 dfree; 
-# cat $HOME/logs/df.md; 
 dots; 
-##
-# PS1='\e[38;5;$((${?} + 112 / 8))m$? \e[0;2m\t\e[93m ${model[@]:0:4}\e[92m \h \e[0m\e[96m\u\e[0m \w \n'
-# local IFS=$' '; 	
-# mod="$(printf %b "${modelx[*]}"|grep -E "[A-Za-z0-9]"|tr -s "\n" " ")"; 
-moda="$(printf %b "${modo}"|tr -d "[]"|head -c14)"; 
-model="${moda/%\ /}"; 
-. $HOME/88/_ps1.sh; 	
-# PS1='$s\e[38;5;$((${?} + 112 / 8))m$? \e[0;2m\t\e[93m ${model[@]:0:4}\e[92m \h \e[0m\e[96m\u\e[0m \w \n'
 printf '\e]12;red\e\\'; 
 ####
+moda="$(printf %b "${modo}"|tr -d "[]"|head -c14)"; model="${moda/%\ /}"; . $HOME/88/_ps1.sh; . ${HOME}/88/alias.sh; 
 ####
-# . ${HOME}/start/alias.sh; 
-. ${HOME}/88/alias.sh; 
 for i in ~/88/f/*.sh; do . $i; done; 
-# command ps -A|cut -c25-|grep -e 'sshd' &>/dev/null || 
-sshd 2>/dev/null; 
-command ps -A|cut -c25-|grep -e 'crond' &>/dev/null || crond 2>/dev/null; 
-# [ -z "$new" ] && export new=yes && cd || cd; 
-# . ${HOME}/88/s/sig.sh &>/dev/null; 
+####
+sshd 2>/dev/null; command ps -A|cut -c25-|grep -e 'crond' &>/dev/null || crond 2>/dev/null; 
 }; 
-[ $TMUX ] && [ -z "$new" ] && new || unset new; 
-# [ -z $TMUX ] && uptime; 
 [ $PREFIX ] && termux-api-start &>/dev/null & disown; 
 [ $PREFIX ] && (sleep 4; termux-wake-lock &>/dev/null) & disown; 
-# [ -z $PREFIX ] 
-#&& (gum style --border normal --border-foreground 0 --bold --padding "1 3" --align center --margin 0 "$(hostnamectl |grep -E 'Chassis|Operating|Virtualization|Kernel|Hardware Model'|cut -f2- -d":"|cut -f2- -d" ")"|bat -ppfljava; dots; 
-
+[ $TMUX ] && [ -z "$new" ] && new || unset new; 
