@@ -2,7 +2,7 @@ dfree() {
 local IFS=$'\n\t '; 
 if [ $PREFIX ]; 
 then df=($(df -h|rg -e "sdcard/default|storage|Size"|tr -s " " " "|cut -f2,4,5,6 -d" ")); 
-else df=($(df -h|rg -v "tmpfs|\*tmpfs|9p|fonts|none|run| 0 "|tr -s " " " "|cut -f2,4,5,6 -d" ")); 
+else df=($(df -h|rg -v "efi|tmpfs|\*tmpfs|9p|fonts|none|run| 0 "|tr -s " " " "|cut -f2,4,5,6 -d" ")); 
 fi; 
 plup='■'; 
 aa=0; kk=0; a=0; dflines="$((${#df[*]} / 4))"; 

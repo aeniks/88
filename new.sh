@@ -15,16 +15,18 @@ export HISTTIMEFORMAT="%b-%d-%H:%M:%S ";
 [ $PREFIX ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --tmux "center,99%,95%" --height "~99%" --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls -pm {}" --wrap-sign "" --scroll-off 22 --color "list-bg:234,bg+:24,fg+:15,info:6"
 --border "top" --border-label "C-a:select-all | 0: change orientation | q:uit " --border-label-pos "top"';
 ####
-[ -z $PREFIX ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls --color always -pm {}" --scroll-off 22 --color "bg:0,preview-bg:16,bg+:24,fg+:15,info:6"';
+[ -z $PREFIX ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder,hidden" --preview "bat -ppf {} 2>/dev/null||ls --color always -p {}" --scroll-off 22 --color "bg:0,preview-bg:16,bg+:24,fg+:15,info:6"';
 ####
 if echo $HOME|grep -w "termux"; 
 then alias sudo='command'; else sudo=sudo; fi; 
 ####
-[ -e $HOME/.config/gemini_api_id.conf ] && . $HOME/.config/gemini_api_id.conf;
-[ -e $HOME/.config/cloudflare_id.conf ] && . $HOME/.config/cloudflare_id.conf; 
+[ -e $HOME/.config/gemini_api_id.conf ] 2 >/dev/null && . $HOME/.config/gemini_api_id.conf 2 >/dev/null; 
+
+[ -e $HOME/.config/cloudflare_id.conf ] 2 >/dev/null && . $HOME/.config/cloudflare_id.conf 2 >/dev/null; 
+
 ####
 [ -e $HOME/.config/lesskey ] || ln -s $HOME/88/c/lesskey $HOME/.config/lesskey; 
-[ -e $HOME/.config/path.sh ]&& export PATH=$(cat $HOME/.config/path.sh);
+[ -e $HOME/.config/path.sh ] && export PATH=$(cat $HOME/.config/path.sh);
 [ -z $TMUX ] && tmux; 
 ####
 re='\e[0m'; cyan='\e[96m'; 
@@ -181,8 +183,7 @@ printf %b "${w[idn]}\e[7m $idn \e[0m"; echo;
 dots; 
 # iplan; 
 [ "$wlan" ] && printf %b "${wlan[*]} "|bat -ppflsyslog --theme DarkNeon && \
-[ "$SSH_CLIENT" ] && printf %b "| $SSH_CLIENT"|cut -f1,2,4  -d" " | bat -ppfljs --theme GitHub && \
-printf %b "\e[0m\n" && dots || (printf %b "\e[0m\n"; dots; ); 
+[ "$SSH_CLIENT" ] && printf %b "| $SSH_CLIENT"|cut -f1,2,4  -d" " | bat -ppflsyslog --theme GitHub; printf %b "\e[0m\n" && dots; 
 # (printf %b "\e[91mno lan\n" && dots); 
 # resolveip $ssh 2>/dev/null; 
 # && printf %b "\e[0m\n"; 
