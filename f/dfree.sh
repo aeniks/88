@@ -20,7 +20,7 @@ disk="$(printf %b "${df[((a+aa))]}")";
 [ $aa -gt 0 ] && \
 (sa="${df[((a+aa))]}"; 
 ####
-[ ${#sa} -lt 2 ] && as=${sa:0:1}; 
+[ ${#sa} -gt 1 ] && as=${sa:0:1}; 
 ## percent in number
 ####
 # printf %b " "; 
