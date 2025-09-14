@@ -1,11 +1,13 @@
 #!/bin/bash
 # very good bash enviorment 
-shopt -s histappend; 
-shopt -s histverify; 
-export HISTCONTROL="ignoreboth"; export PROMPT_COMMAND="history -a; history -n; "; 
-export IFS=$'\n\t '; export EDITOR="micro"; export BAT_THEME="Coldark-Dark"; 
+export IFS=$'\n\t '; 
+export HISTCONTROL="ignoreboth"; 
+#export PROMPT_COMMAND="history -a; history -n; "; 
+shopt -s histappend; shopt -s histverify; 
+export EDITOR="micro"; 
+export BAT_THEME="Coldark-Dark"; 
 export tmp="$HOME/tmp"; [ -z $TMPDIR ] && export TMPDIR="$HOME/tmp"; 
-export HISTTIMEFORMAT="%b-%d-%H:%M:%S "; 
+# export HISTTIMEFORMAT="%b-%d-%H:%M:%S "; 
 export LESS='-R --file-size --use-color --incsearch --mouse --prompt=%F(%T) [/]search [n]ext [p]rev ?f%f .?n?m(%T %i of %m) ..?lt %lt-%lb?L/%L. :byte %bB?s/%s.  .?e(END)  ?x-  Next\:   %x.:?pB  %pB\%..%t '; 
 ####
 [ $PREFIX ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --tmux "center,99%,95%" --height "~99%" --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder" --preview "bat -ppf {} 2>/dev/null||ls -pm {}" --wrap-sign "" --scroll-off 22 --color "list-bg:234,bg+:24,fg+:15,info:6"
