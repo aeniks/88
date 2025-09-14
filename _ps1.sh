@@ -49,8 +49,10 @@ printf %b "\e[38;5;$((hh + 22))m${hh:1:2}$re:\e[38;5;$((mm + 22))m${mm:1:2}$re:\
 _etime() { 
 printf %b "\e[38;5;$((${EPOCHSECONDS: -2}+9))m${EPOCHSECONDS}" 2>/dev/null;  
 }; 
-
+alias gitstats='[ -e $PWD/.git ] && (printf %b "\e7\e[8H-\e[222b\n\n\n\e[2A$(git status --short|tr "\n" "|"|bat -ppfld --theme Coldark-Dark)\n-\e[222b\e8");'; 
+####
 . "$HOME/88/i/colors.sh"; 
+####
 # _ps1() { 
 # mod=${model:1:12}
 PS1=''$re'\e[0m[\e[0;1;38;5;$((2 + $?))m$?'$re'] \
@@ -60,7 +62,7 @@ PS1=''$re'\e[0m[\e[0;1;38;5;$((2 + $?))m$?'$re'] \
 ['$re'\e[0m'${w[${wlan/*./}]}'\e[7;47;1m${model:0:12}'$re'] \
 ['$re$cyan'\u'$re']'$re' \
 $_host\
-['$re$yellow'\w'$re']\e[?25h\e[0m\n'; 
+['$re$yellow'\w'${re}]'$(gitstats)\e[?25h\e[0m\n'; 
 # };
 
 # ['$re'\e[1m\e[38;5;$((RANDOM%88 + 88))m${model:0:12}'$re'] \

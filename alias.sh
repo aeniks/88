@@ -6,13 +6,15 @@ alias kk='fmt -g 66|col -xb|bat -pfljava --theme DarkNeon';
 alias kkkk='col -xb|fmt --split-only --width=$((COLUMNS - 2)) --goal=66 --uniform-spacing --tagged-paragraph|bat -pfljava --theme TwoDark'; 
 alias cccc='crontab -e'; 
 alias 12alias='$EDITOR ~/88/alias.sh'; 
+alias ss='history -s "$(printf %b "sudo "; tail -n1 "$HISTFILE")"; history -w; read -ei "$(tail -n1 "$HISTFILE")" "ssss" && ${ssss} || echo ok; '; 
 alias 88='cd ~/88; echo; realpath ~/88|bat -ppfljava; echo; ls --color=always -GghtrAp --group-directories-first; echo; git status'; 
 alias 88pullpush='git add ./; git commit -a -m "${USER}_${mod//\ /}_$(date)" -v; git pull; git push; ls --color=always -trAmp --group-directories-first'; 
 # li=$(($(ps -A|wc -l)+6)); [ ${li} -gt ${LINES} ] && li=${LINES}; 
+alias gitstatshort='[ -e $PWD/.git ] && (printf %b "$(git status --short| bat -ppfld --theme Coldark-Dark)\n");'; 
 alias 12_choose_logins_screen='
 printf %b "$re\n\n\n\n\n\e[4A"; 
 systemctl get-default; 
-printf %b "\n $c2 [\e[94mg\e[0m]raphical / [\e[95mt\e[0m]erminal ; 
+printf %b "\n $c2 [\e[94mg\e[0m]raphical / [\e[95mt\e[0m]erminal "; 
 read -en1 "gt"; 
 case $gt in 
 g) sudo systemctl set-default graphical.target;; 
@@ -32,7 +34,7 @@ alias mm='micro'
 #!/bin/bash
 ## aaaaaa
 # alias yno='nyo'; 
-alias zz='cd $zz'; 
+alias zz='cd $HOME/zz'; 
 # alias zz='col -b|tr -s "\n\t " "\n\t "|bat -pfljava --pager "more"'; 
 alias f='fff; cd $(cat $HOME/.cache/fff/.fff_d)'; 
 alias sshaa='mosh aa@ants.ftp.sh||ssh aa@ants.ftp.sh'; 
