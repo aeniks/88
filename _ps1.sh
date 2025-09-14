@@ -44,24 +44,23 @@ unset HOSTNAME || printf -v "_host" %b "[\e[95m$HOSTNAME\e[0m] ";
 # ['$re$pink'$HOSTNAME'$re']'$re' \
 _dtime() { 
 hh=1$(date +%H;); mm=1$(date +%M;); ss=1$(date +%S); 
-printf %b "\e[38;5;$((hh + 22))m${hh:1:2}$re:\e[38;5;$((mm + 22))m${mm:1:2}$re:\e[38;5;$((ss + 22))m${ss:1:2}"; 
+printf %b "\e[38;5;$((hh + 22))m${hh:1:2}$re:\e[38;5;$((mm + 22))m${mm:1:2}$re:\e[38;5;${ss/0/1}m${ss:1:2}\e[0m" 2>/dev/null; 
 }; 
 _etime() { 
-printf %b "\e[38;5;$((${EPOCHSECONDS: -2}+9))m${EPOCHSECONDS}" 2>/dev/null;  
+printf %b "\e[38;5;$((${EPOCHSECONDS:8:2}))m${EPOCHSECONDS:6:4}\e[0m";  
 }; 
-
+alias gitstats='[ -e $PWD/.git ] && printf -v "gitst" %b "\e[0m[\e[46;97mgit\e[0m]" && (printf %b "${gitst}\t$(git status --short|tr "\n" "\t"|bat -ppfld --theme Coldark-Dark)")'; 
+####
 . "$HOME/88/i/colors.sh"; 
+####
 # _ps1() { 
 # mod=${model:1:12}
 PS1=''$re'\e[0m[\e[0;1;38;5;$((2 + $?))m$?'$re'] \
-['$re'$(_dtime)'$re'-$(_etime)'$re']'$re'\
-'$re'$(_bat) \
+['$re'$(_dtime 2>/dev/null)'$re'] \
+['$re'$(_etime)'$re']'$re'$(_bat) \
 ['$re'\e[0;2m'${wlan%.*}'.\e[0;1m'${w[${wlan/*./}]}'${wlan/*./}'$re'] \
 ['$re'\e[0m'${w[${wlan/*./}]}'\e[7;47;1m${model:0:12}'$re'] \
-['$re$cyan'\u'$re']'$re' \
-$_host\
-['$re$yellow'\w'$re']\e[?25h\e[0m\n'; 
+['$re$cyan'\u'$re']'$re' '${_host}'['$re$yellow'\w'${re}]' $(gitstats)\e[?25h\e[0m\n'; 
 # };
 
-# ['$re'\e[1m\e[38;5;$((RANDOM%88 + 88))m${model:0:12}'$re'] \
 

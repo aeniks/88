@@ -2,24 +2,28 @@
 # very good bash enviorment 
 shopt -s histappend; 
 shopt -s histverify; 
-export HISTCONTROL="ignoreboth"; export PROMPT_COMMAND="history -a; history -n; "; 
-export IFS=$'\n\t '; export EDITOR="micro"; export BAT_THEME="Coldark-Dark"; 
+export IFS=$'\n\t '; 
+export HISTCONTROL="ignoreboth"; 
+export PROMPT_COMMAND="history -a; history -n; "; 
+export EDITOR="micro"; 
+export BAT_THEME="Coldark-Dark"; 
 export tmp="$HOME/tmp"; [ -z $TMPDIR ] && export TMPDIR="$HOME/tmp"; 
-export HISTTIMEFORMAT="%b-%d-%H:%M:%S "; 
 export LESS='-R --file-size --use-color --incsearch --mouse --prompt=%F(%T) [/]search [n]ext [p]rev ?f%f .?n?m(%T %i of %m) ..?lt %lt-%lb?L/%L. :byte %bB?s/%s.  .?e(END)  ?x-  Next\:   %x.:?pB  %pB\%..%t '; 
+# export HISTTIMEFORMAT="%b-%d-%H:%M:%S "; 
+unset HISTTIMEFORMAT; 
 ####
 [ $PREFIX ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --tmux "center,99%,95%" --height "~99%" --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder" --preview "bat -ppf {} 2>/dev/null||ls -pm {}" --wrap-sign "" --scroll-off 22 --color "list-bg:234,bg+:24,fg+:15,info:6"
 --border "top" --border-label "C-a:select-all | 0: change orientation | q:uit " --border-label-pos "top"';
 ####
-[ -z $PREFIX ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder" --preview "bat -ppf {} 2>/dev/null||ls --color always -p {}" --scroll-off 22 --color "bg:0,preview-bg:16,bg+:24,fg+:15,info:6"';
+[ -z $PREFIX ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder" --scroll-off 22 --color "bg:0,preview-bg:16,bg+:24,fg+:15,info:6"'; 
 ####
 if echo $HOME|grep -w "termux"; 
 then alias sudo='command'; else sudo=sudo; fi; 
 ####
-[ -x $HOME/.config/gemini_api_id.conf ] 2>/dev/null && \
-. $HOME/.config/gemini_api_id.conf 2>/dev/null; 
-[ -x $HOME/.config/cloudflare_id.conf ] 2>/dev/null && \
-. $HOME/.config/cloudflare_id.conf 2>/dev/null; 
+[ -x $HOME/.config/gemini_api_id.conf ] && . $HOME/.config/gemini_api_id.conf 2>/dev/null; 
+[ -x $HOME/.config/cloudflare_id.conf ] && . $HOME/.config/cloudflare_id.conf 2>/dev/null; 
+# 2>/dev/null 
+# 2>/dev/null 
 ####
 [ -e $HOME/.config/lesskey ] || ln -s $HOME/88/c/lesskey $HOME/.config/lesskey; 
 [ -e $HOME/.config/path.sh ] && export PATH=$(cat $HOME/.config/path.sh);
@@ -53,31 +57,34 @@ local IFS=$'\n\t ';
 cpu=($(lscpu |grep -E 'Model name'|tr -s "\t" " "|cut -f3- -d" ")); 
 cpus=($(lscpu|grep -e 'CPU(s):' -m1|cut -f2 -d":"|tr -d " ")); 
 ########
-dots() { printf %b "$re··········${re}\n"; }; 
+dots() { printf %b "${re}·········${re}"; }; 
 local IFS=$'\n\t '; 
-dots; 
-printf %b "${modo[*]} "|tr -s "\n" " "|bat -ppfljava;  
+dots; echo; 
+printf %b "${modo[*]} "|tr -s "\n" " "|bat -ppfljava; echo; 
+printf %b "${cpu[*]} x ${cpus}" | tr -s "\n" " "| bat -ppfljava; printf %b " || "; memram | bat -ppflc --theme GitHub; 
 printf %b "[${os1} | ${os2}]"|tr -s "\n" " "|bat -ppfljava; echo; 
-dots; 
-printf %b "${cpu[*]} x ${cpus}" | tr -s "\n" " "| bat -ppfljava; echo; 
-memram | bat -ppflgo --theme zenburn && \
-dots; 
-(printf %b "$(date +%a\ %b\ %d\ %Y\ \|\ %X\ \ | tr -d "\n"; echo)")|bat -ppflc++ --theme zenburn; 
-dots; 
+########## DATE // CALENDAR ##########
+printf %b "${re}·\e[45b${re}"; echo;
+dots; (printf %b " $(date +%a\ %b\ %d\ %Y\ \|\ %X| tr -d "\n") ")|bat -ppflc++ --theme zenburn; dots; echo;
 12calendar && \
-dots; 
+printf %b "${re}·\e[45b${re}"; echo;
+# dots; dots; dots; dots; dots; 
 printf %b "${w[idn]}\e[7m $idn \e[27m $EPOCHSECONDS \e[0m \e[38;5;${idn}m idn: $idn  \e[0m"; echo; 
-dots; 
+dots; echo; 
+######### IP##########################
 [ "$wlan" ] && printf %b "${wlan[*]} "|bat -ppflsyslog --theme DarkNeon && \
 [ "$SSH_CLIENT" ] && printf %b "| $SSH_CLIENT"|cut -f1,2,4  -d" " |tr "\n" "\t"| bat -ppflsyslog --theme GitHub; 
-printf %b "\e[0m\n" && dots; 
+echo; 
+dots; echo;
 dfree; 
-dots; 
+dots; echo;
 printf '\e]12;red\e\\'; 
 ####
-moda="$(printf %b "${modo}"|tr -d "[]"|head -c14)"; model="${moda/%\ /}"; . $HOME/88/_ps1.sh; . ${HOME}/88/alias.sh; 
+moda="$(printf %b "${modo}"|tr -d "[]"|head -c14)"; model="${moda/%\ /}"; 
+. ${HOME}/88/alias.sh; 
+. $HOME/88/_ps1.sh; 
 ####
-for i in ~/88/f/*.sh; do . $i; done; 
+#for i in $HOME/88/f/*.sh; do . $i; done; 
 ####
 sshd 2>/dev/null; command ps -A|cut -c25-|grep -e 'crond' &>/dev/null || crond 2>/dev/null; 
 }; 

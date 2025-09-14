@@ -13,23 +13,25 @@ h1="$tmp/$(id -nu|tr -d "\n"; date +__%__y%m%d_%H_%M_%S).sh"; touch $h1;
 if [ $PREFIX ]; 
 ####
 then \
-history -s "$(bat -ppfljava $HISTFILE|tr -s "\n" "\n"|uniq -u|fzf --tac -i -m --wrap --cycle --highlight-line --wrap-sign="" --bind "q:abort" --style="minimal" --info inline; if [ $? != 0 ]; then $(return 1); echo; else history -a; history -n; fi; )"||return 1 >> $HISTFILE; if [ $? != 0 ]; then echo okok; return 1; else history -a; history -n; fi; 
+history -s "$(unset FZF_DEFAULT_OPTS; bat -ppfljava $HISTFILE|tr -s "\n" "\n"|uniq -u|fzf --tac -i -m --wrap --cycle --highlight-line --wrap-sign="" --bind "q:abort" --style="minimal" --info inline; if [ $? != 0 ]; then $(return 1); echo; else history -a; history -n; fi; )"||return 1 >> $HISTFILE; if [ $? != 0 ]; then echo okok; return 1; else history -a; history -n; fi; 
 ####
 # [ "${hh}" ] && printf %b "\n${hh[*]}\n"|tee -a $HISTFILE; 
 ####
 ####
 else \
-history -s "$(bat -ppfljava $HISTFILE|tr -s "\n" "\n"|uniq -u|fzf --tac -i -m --cycle --bind "q:abort" --scheme history --no-inline-info --no-border || return 1 >> $HISTFILE || return 1; )"; 
+#history -s "$(unset FZF_DEFAULT_OPTS; bat -ppfljava $HISTFILE|tr -s "\n" "\n"|uniq -u|fzf --tac -i -m --cycle --bind "q:abort" --scheme history --no-inline-info --no-border || return 1 >> $HISTFILE || return 1; )"; 
+hists="$(unset FZF_DEFAULT_OPTS; bat -ppfljava $HISTFILE|fzf --tac -i -m --cycle --ansi --bind "q:abort" --scheme history --no-inline-info --no-border)"; 
 fi; 
 ####
 # [ "${hh}" ] && printf %b "${hh}" | tr -s "\n" " "; tee -a $HISTFILE; fi; 
 ####
 ####
-# history -s "$(printf %b "${hh} \n") "; history -a; history -n; 
-# [ -z "${hh}" ] && return 0;
+history -s "$(printf %b "${hists} \n") "; 
+history -a; history -n; 
+[ -z "${hists}" ] && return 0; 
 if [ "$(tail -n 1 $HISTFILE)" ]; then 
 printf %b "\n\e[96m-\e[222b\e[0m\n"; 
-tail -n1 $HISTFILE; 
+tail -n1 $HISTFILE | tee $h1; 
 printf %b "\e[96m-\e[222b\e[0m\nsaved to: \n$dim$h1$re
 \e[96m-\e[222b\e[0m
 1) open/edit\n\
