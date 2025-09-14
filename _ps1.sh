@@ -49,7 +49,7 @@ printf %b "\e[38;5;$((hh + 22))m${hh:1:2}$re:\e[38;5;$((mm + 22))m${mm:1:2}$re:\
 _etime() { 
 printf %b "\e[38;5;$((${EPOCHSECONDS: -2}+9))m${EPOCHSECONDS}" 2>/dev/null;  
 }; 
-alias gitstats='[ -e $PWD/.git ] && (printf %b "\e7\e[8H-\e[222b\n\n\n\e[2A$(git status --short|tr "\n" "|"|bat -ppfld --theme Coldark-Dark)\n-\e[222b\e8");'; 
+alias gitstats='[ -e $PWD/.git ] && (printf %b "\e7\e[A-\e[55b\n\e[A$(git status --short|tr "\n" "|"|bat -ppfld --theme Coldark-Dark)  \e8");'; 
 ####
 . "$HOME/88/i/colors.sh"; 
 ####
