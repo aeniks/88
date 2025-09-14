@@ -60,16 +60,18 @@ cpus=($(lscpu|grep -e 'CPU(s):' -m1|cut -f2 -d":"|tr -d " "));
 dots() { printf %b "${re}·········${re}"; }; 
 local IFS=$'\n\t '; 
 dots; echo; 
-printf %b "${modo[*]} "|tr -s "\n" " "|bat -ppfljava;  
+printf %b "${modo[*]} "|tr -s "\n" " "|bat -ppfljava; echo; 
+printf %b "${cpu[*]} x ${cpus}" | tr -s "\n" " "| bat -ppfljava; printf %b " || "; memram | bat -ppflc --theme GitHub; 
 printf %b "[${os1} | ${os2}]"|tr -s "\n" " "|bat -ppfljava; echo; 
-dots; echo;
-printf %b "${cpu[*]} x ${cpus}" | tr -s "\n" " "| bat -ppfljava; echo; 
-memram | bat -ppflgo --theme zenburn && \
-dots; (printf %b " $(date +%a\ %b\ %d\ %Y\ \|\ %X\ \ | tr -d "\n") ")|bat -ppflc++ --theme zenburn; dots; echo;
+########## DATE // CALENDAR ##########
+printf %b "${re}·\e[45b${re}"; echo;
+dots; (printf %b " $(date +%a\ %b\ %d\ %Y\ \|\ %X| tr -d "\n") ")|bat -ppflc++ --theme zenburn; dots; echo;
 12calendar && \
-dots; echo;
+printf %b "${re}·\e[45b${re}"; echo;
+# dots; dots; dots; dots; dots; 
 printf %b "${w[idn]}\e[7m $idn \e[27m $EPOCHSECONDS \e[0m \e[38;5;${idn}m idn: $idn  \e[0m"; echo; 
-dots; echo;
+dots; echo; 
+######### IP##########################
 [ "$wlan" ] && printf %b "${wlan[*]} "|bat -ppflsyslog --theme DarkNeon && \
 [ "$SSH_CLIENT" ] && printf %b "| $SSH_CLIENT"|cut -f1,2,4  -d" " |tr "\n" "\t"| bat -ppflsyslog --theme GitHub; 
 echo; 
