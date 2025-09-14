@@ -47,9 +47,9 @@ hh=1$(date +%H;); mm=1$(date +%M;); ss=1$(date +%S);
 printf %b "\e[38;5;$((hh + 22))m${hh:1:2}$re:\e[38;5;$((mm + 22))m${mm:1:2}$re:\e[38;5;${ss/0/1}m${ss:1:2}\e[0m" 2>/dev/null; 
 }; 
 _etime() { 
-printf %b "\e[38;5;$((${EPOCHSECONDS:8:2}))m${EPOCHSECONDS:6:4}\e[0m" 2>/dev/null;  
+printf %b "\e[38;5;$((${EPOCHSECONDS:8:2}))m${EPOCHSECONDS:6:4}\e[0m";  
 }; 
-alias gitstats='[ -e $PWD/.git ] && (printf %b "$(git status --short|tr "\n" "|"|bat -ppfld --theme Coldark-Dark)")'; 
+alias gitstats='[ -e $PWD/.git ] && (printf %b "$(git status --short|tr "\n" "\t"|bat -ppfld --theme Coldark-Dark)")'; 
 ####
 . "$HOME/88/i/colors.sh"; 
 ####
@@ -57,11 +57,10 @@ alias gitstats='[ -e $PWD/.git ] && (printf %b "$(git status --short|tr "\n" "|"
 # mod=${model:1:12}
 PS1=''$re'\e[0m[\e[0;1;38;5;$((2 + $?))m$?'$re'] \
 ['$re'$(_dtime 2>/dev/null)'$re'] \
-['$re'$(_etime)'$re'] \
-'$re'$(_bat) \
+['$re'$(_etime)'$re']'$re'$(_bat) \
 ['$re'\e[0;2m'${wlan%.*}'.\e[0;1m'${w[${wlan/*./}]}'${wlan/*./}'$re'] \
 ['$re'\e[0m'${w[${wlan/*./}]}'\e[7;47;1m${model:0:12}'$re'] \
-['$re$cyan'\u'$re']'$re'$_host['$re$yellow'\w'${re}]'$(gitstats)\e[?25h\e[0m\n'; 
+['$re$cyan'\u'$re']'$re' '${_host}'['$re$yellow'\w'${re}]'$(gitstats)\e[?25h\e[0m\n'; 
 # };
 
 
