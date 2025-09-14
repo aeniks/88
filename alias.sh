@@ -10,7 +10,7 @@ alias ss='history -s "$(printf %b "sudo "; tail -n1 "$HISTFILE")"; history -w; r
 alias 88='cd ~/88; echo; realpath ~/88|bat -ppfljava; echo; ls --color=always -GghtrAp --group-directories-first; echo; git status'; 
 alias 88pullpush='git add ./; git commit -a -m "${USER}_${mod//\ /}_$(date)" -v; git pull; git push; ls --color=always -trAmp --group-directories-first'; 
 # li=$(($(ps -A|wc -l)+6)); [ ${li} -gt ${LINES} ] && li=${LINES}; 
-alias gitstatshort='[ -e $PWD/.git ] && (printf %b "$(git status --short| bat -ppfld --theme Coldark-Dark)\n");'; 
+alias gitstats='[ -e $PWD/.git ] && (printf %b "$(git status --short| bat -ppfld --theme Coldark-Dark)\n");';
 alias 12_choose_logins_screen='
 printf %b "$re\n\n\n\n\n\e[4A"; 
 systemctl get-default; 
