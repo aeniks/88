@@ -1,16 +1,20 @@
 #!/bin/bash
 # very good bash enviorment 
-shopt -s histappend; 
-shopt -s histverify; 
+shopt -s histappend; shopt -s histverify; 
 export IFS=$'\n\t '; 
 export HISTCONTROL="ignoreboth"; 
 export PROMPT_COMMAND="history -a; history -n; "; 
 export EDITOR="micro"; 
 export BAT_THEME="Coldark-Dark"; 
 export tmp="$HOME/tmp"; [ -z $TMPDIR ] && export TMPDIR="$HOME/tmp"; 
-export LESS='-R --file-size --use-color --incsearch --mouse --prompt=%F(%T) [/]search [n]ext [p]rev ?f%f .?n?m(%T %i of %m) ..?lt %lt-%lb?L/%L. :byte %bB?s/%s.  .?e(END)  ?x-  Next\:   %x.:?pB  %pB\%..%t '; 
+export logs="$HOME/logs"; [ -d $logs ] || mkdir -p -m 775 $logs 2>/dev/null; 
+[ PREFIX  ] && lessprefix='--redraw-on-quit --quit-if-one-screen'; 
+export LESS=''${lessprefix}' -R --file-size --use-color --incsearch --mouse --prompt=%F(%T) [/]search [n]ext [p]rev ?f%f .?n?m(%T %i of %m) ..?lt %lt-%lb?L/%L. :byte %bB?s/%s.  .?e(END)  ?x-  Next\:   %x.:?pB  %pB\%..%t '; 
+####
+re='\e[0m'; cyan='\e[96m'; 
 # export HISTTIMEFORMAT="%b-%d-%H:%M:%S "; 
 unset HISTTIMEFORMAT; 
+alias ll='> lsd --group-directories-first --icon never --classify --date +%y.%m.%d_%M.%H.%S --sort time --blocks date,size,name --total-size iploc.sh'; 
 ####
 [ $PREFIX ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --tmux "center,99%,95%" --height "~99%" --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder" --preview "bat -ppf {} 2>/dev/null||ls -pm {}" --wrap-sign "" --scroll-off 22 --color "list-bg:234,bg+:24,fg+:15,info:6"
 --border "top" --border-label "C-a:select-all | 0: change orientation | q:uit " --border-label-pos "top"';
@@ -29,8 +33,10 @@ then alias sudo='command'; else sudo=sudo; fi;
 [ -e $HOME/.config/path.sh ] && export PATH=$(cat $HOME/.config/path.sh);
 [ -z $TMUX ] && tmux; 
 ####
-re='\e[0m'; cyan='\e[96m'; 
 new() { 
+##
+local IFS=$'\n\t '; 
+##
 . $HOME/88/f/dfree.sh; . $HOME/88/f/12calendar.sh; 
 . $HOME/88/f/memram.sh; . $HOME/88/i/colors.sh; 
 ## ____ IP _ GET ____
@@ -51,35 +57,40 @@ do cat /sys/devices/virtual/dmi/id/${bb} 2>/dev/null|tr -s "\n" " "; done));
 [ -z $PREFIX ] && osx2=($(lsb_release -sirc|tr -s "\n" " ")); 
 osa1="$(printf %b "${osx1[*]}"|uniq|tr -s "\n" " "; printf %b "\b"|col -xb)"; 
 osa2="$(printf %b "${osx2[*]}"|uniq|tr -s "\n" " "; printf %b "\b"|col -xb)"; 
-os1="$(printf %b "${osa1}\b"|col -xb)";os2="$(printf %b "${osa2}\b"|col -xb)";
+os1="$(printf %b "${osa1}\b"|col -xb|tr -d "\n")"; os2="$(printf %b "${osa2}\b"|col -xb|tr -d "\n")";
 local IFS=$'\n\t '; 
 ## __ CPU __ GET _____
 cpu=($(lscpu |grep -E 'Model name'|tr -s "\t" " "|cut -f3- -d" ")); 
 cpus=($(lscpu|grep -e 'CPU(s):' -m1|cut -f2 -d":"|tr -d " ")); 
 ########
+memram="$(memram)"; 
+########
 dots() { printf %b "${re}·········${re}"; }; 
-local IFS=$'\n\t '; 
-printf %b "${re}·\e[45b${re}"; echo;
-printf %b "${modo[*]} "|tr -s "\n" " "|bat -ppfljava; echo; 
-printf %b "["; 
-printf %b "${cpu[*]} x ${cpus}" | tr -s "\n" " "| bat -ppfljava; 
-printf %b "]"; 
+dott() { printf %b "\e[0m"; for i in $(seq ${1-45}); do printf %b "·"; done; printf %b "\e[0m"; }; 
 echo; 
-printf %b "[\e[96mmemory: "; memram |bat -ppflc# --theme DarkNeon; printf %b "]\n"; 
-# printf %b " || "; 
-# memram | bat -ppflc --theme ; 
-printf %b "[${os1} | ${os2}]"|tr -s "\n" " "|bat -ppfljava; echo; 
+dott; echo; 
+dott; printf %b "\e[G"; 
+printf %b "${modo[*]} "|sort -u|tr -s "\n" " "|bat -ppfljava --theme DarkNeon; echo; 
+dott; printf %b "\e[G"; 
+printf %b "[${cpu[*]} x ${cpus}] "|tr -s "\n" " "|bat -ppfljava --theme Dracula; echo; 
+dott; printf %b "\e[G"; 
+printf %b "[memory: ${memram}] "|bat -ppflc# --theme Sublime\ Snazzy; echo; 
+dott; printf %b "\e[G"; 
+printf %b "[${os1} | ${os2}] "|tr -s "\n" " "|bat -ppfljava --theme zenburn; echo; 
 ########## DATE // CALENDAR ##########
-printf %b "${re}·\e[45b${re}"; echo;
-dots; (printf %b " $(date +%a\ %b\ %d\ %Y\ \|\ %X| tr -d "\n") ")|bat -ppflc++ --theme zenburn; dots; echo;
+dott; echo; echo; 
+dott; printf %b "\e[G"; dots; 
+(printf %b " $(date +%a\ %b\ %d\ %Y\ \|\ %X| tr -d "\n") ")|bat -ppflc++ --theme zenburn; 
+echo;
 12calendar && \
-printf %b "${re}·\e[45b${re}"; echo;
+dott; 
+echo;
 # dots; dots; dots; dots; dots; 
 printf %b "${w[idn]}\e[7m $idn \e[27m $EPOCHSECONDS \e[0m \e[38;5;${idn}m idn: $idn  \e[0m"; echo; 
 dots; echo; 
 ######### IP##########################
 [ "$wlan" ] && printf %b "${wlan[*]} "|bat -ppflsyslog --theme DarkNeon && \
-[ "$SSH_CLIENT" ] && printf %b "| $SSH_CLIENT"|cut -f1,2,4  -d" " |tr "\n" "\t"| bat -ppflsyslog --theme GitHub; 
+[ "$SSH_CLIENT" ] && printf %b "| $SSH_CLIENT"|cut -f1,2,4  -d" " |tr "\n" "\t"| bat -ppflsyslog --theme zenburn; 
 echo; 
 dots; echo;
 dfree; 
