@@ -59,9 +59,15 @@ cpus=($(lscpu|grep -e 'CPU(s):' -m1|cut -f2 -d":"|tr -d " "));
 ########
 dots() { printf %b "${re}·········${re}"; }; 
 local IFS=$'\n\t '; 
-dots; echo; 
+printf %b "${re}·\e[45b${re}"; echo;
 printf %b "${modo[*]} "|tr -s "\n" " "|bat -ppfljava; echo; 
-printf %b "${cpu[*]} x ${cpus}" | tr -s "\n" " "| bat -ppfljava; printf %b " || "; memram | bat -ppflc --theme GitHub; 
+printf %b "["; 
+printf %b "${cpu[*]} x ${cpus}" | tr -s "\n" " "| bat -ppfljava; 
+printf %b "]"; 
+echo; 
+printf %b "[\e[96mmemory: "; memram |bat -ppflc# --theme DarkNeon; printf %b "]\n"; 
+# printf %b " || "; 
+# memram | bat -ppflc --theme ; 
 printf %b "[${os1} | ${os2}]"|tr -s "\n" " "|bat -ppfljava; echo; 
 ########## DATE // CALENDAR ##########
 printf %b "${re}·\e[45b${re}"; echo;
