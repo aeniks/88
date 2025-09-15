@@ -38,15 +38,18 @@ command ls "$HOME/logs/iplocal"; echo;
 printf %b "\e[?25h"; 
 ## selection menu 
 lomenu() { 
-local prompt="$1" index="0" cur="0" count="${#ops[@]}" iplogs=$HOME/logs/iplocal;
-local IFS=$'\n\t ' ops=($2); [ "$2" ] || ops=($(for i in  $(command ls -1 $iplogs); do [ "$(command ls ${i} -s|cut -c1-2)" -gt 0 ] && printf %b "$i:$(cat $i)\n"; done; ));
+local IFS=$'\n\t '; 
+local prompt="$1" index="0" cur="0" count="${#ops[@]}";  
+iplogs=$HOME/logs/iplocal;
+ops=($2); [ "$2" ] || \
+ops=($(for i in  $(command ls -1 $iplogs); do [ "$(command ls ${iplogs}/${i} -s|cut -c1-2)" -gt 0 ] && printf %b "$i:$(cat $iplogs/$i)\n"; done));
 # ops=($(command ls -1 $HOME/logs/iplocal)); 
 # local desc=()
 
 printf "\e[?25l$c5 $prompt $c6\n"; ## print prompt
 while true; 
 do local index="0"; 
-for o in "${ops[@]}"; ## print option
+for o in ${ops[*]}; ## print option
 do if [ "$index" = "$cur" ]; 
 then printf %b " > \e[7m ${o} \e[0m\n"; ## mark & highlight the current option
 else printf %b "    ${o} \e[0m\n"; fi; 
