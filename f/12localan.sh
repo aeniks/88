@@ -39,13 +39,14 @@ printf %b "\e[?25h";
 ## selection menu 
 lomenu() { 
 local IFS=$'\n\t '; 
-local prompt="$1" index="0" cur="0" count="${#ops[@]}";  
+
 iplogs=$HOME/logs/iplocal;
 ops=($2); [ "$2" ] || \
 ops=($(for i in  $(command ls -1 $iplogs); do [ "$(command ls ${iplogs}/${i} -s|cut -c1-2)" -gt 0 ] && printf %b "$i:$(cat $iplogs/$i)\n"; done));
+local prompt="$1" index="0" cur="0" count="${#ops[@]}";  
 # ops=($(command ls -1 $HOME/logs/iplocal)); 
 # local desc=()
-
+for i in "${!ops[*]}"; do echo; done; printf %b "\e[${#ops[*]}A"; 
 printf "\e[?25l$c5 $prompt $c6\n"; ## print prompt
 while true; 
 do local index="0"; 
@@ -79,7 +80,7 @@ read -re -i "aa" "u"; [ -z $u ]&& u=$UID;
 printf %b "\e[?25h$c5 connecting to: \e[7m ${u}@${sel} \e[0m\n\n"; 
 # -p $(cat $logs/$o) 
 echo; 
-sshlatest="${sel/:*/} -l $u -p ${sel/*:/} "; 
+sshlatest="${sel/:*/} -l $u -p ${sel/*:/}"; 
 printf %b "${sshlatest}"|tr -s "\n" " " > $logs/$sel; 
 sleep .5; 
 # printf %b "ssh ${sshlatest[*]}" >> ~/.bash_history; 
@@ -88,5 +89,5 @@ ssh ${sshlatest};
 }; 
 lomenu " open lan ip:s "; 
 history -a; history -n; 
-history -s "ssh ${sshlatest[@]}"; 
+history -s "ssh ${sshlatest}"; 
 }; 
