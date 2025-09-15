@@ -12,6 +12,7 @@ export logs="$HOME/logs"; [ -d $logs ] || mkdir -p -m 775 $logs 2>/dev/null;
 export LESS=''${lessprefix}' -R --file-size --use-color --incsearch --mouse --prompt=%F(%T) [/]search [n]ext [p]rev ?f%f .?n?m(%T %i of %m) ..?lt %lt-%lb?L/%L. :byte %bB?s/%s.  .?e(END)  ?x-  Next\:   %x.:?pB  %pB\%..%t '; 
 ####
 re='\e[0m'; cyan='\e[96m'; 
+[ -e $HOME/logs/fzf_completions_bash.sh ] && $HOME/logs/fzf_completions_bash.sh || fzf --bash > $HOME/logs/fzf_completions_bash.sh; 
 # export HISTTIMEFORMAT="%b-%d-%H:%M:%S "; 
 unset HISTTIMEFORMAT; 
 alias ll='> lsd --group-directories-first --icon never --classify --date +%y.%m.%d_%M.%H.%S --sort time --blocks date,size,name --total-size iploc.sh'; 
