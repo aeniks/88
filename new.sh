@@ -1,7 +1,7 @@
 #!/bin/bash
 # very good bash enviorment 
 shopt -s histappend; shopt -s histverify; 
-export IFS=$'\n\t '; 
+export IFS=$' \n\t'; 
 export HISTCONTROL="ignoreboth"; 
 export PROMPT_COMMAND="history -a; history -n; "; 
 export EDITOR="micro"; 
@@ -11,11 +11,13 @@ export logs="$HOME/logs"; [ -d $logs ] || mkdir -p -m 775 $logs 2>/dev/null;
 [ PREFIX  ] && lessprefix='--redraw-on-quit --quit-if-one-screen'; 
 export LESS=''${lessprefix}' -R --file-size --use-color --incsearch --mouse --prompt=%F(%T) [/]search [n]ext [p]rev ?f%f .?n?m(%T %i of %m) ..?lt %lt-%lb?L/%L. :byte %bB?s/%s.  .?e(END)  ?x-  Next\:   %x.:?pB  %pB\%..%t '; 
 ####
-re='\e[0m'; cyan='\e[96m'; 
-[ -e $HOME/logs/fzf_completions_bash.sh ] && . $HOME/logs/fzf_completions_bash.sh || (fzf --bash > $HOME/logs/fzf_completions_bash.sh; chmod 775 $HOME/logs/fzf_completions_bash.sh; . $HOME/logs/fzf_completions_bash.sh); 
+re='\e[0m'; cyan='\e[96m'; log="$HOME/logs"; c2="\e[96m -- \e[0m"; 
+####
+if fzf --bash &>/dev/null; then [ -x $HOME/logs/fzf_completions_bash.sh ] || (fzf --bash > $HOME/logs/fzf_completions_bash.sh;  chmod 775 $HOME/logs/fzf_completions_bash.sh); . $HOME/logs/fzf_completions_bash.sh; fi; 
+####
 # export HISTTIMEFORMAT="%b-%d-%H:%M:%S "; 
 unset HISTTIMEFORMAT; 
-alias ll='> lsd --group-directories-first --icon never --classify --date +%y.%m.%d_%M.%H.%S --sort time --blocks date,size,name --total-size iploc.sh'; 
+alias ll='lsd --group-directories-first --icon never --classify --date +%y.%m.%d_%M.%H.%S --sort time --blocks date,size,name --total-size iploc.sh'; 
 ####
 [ $PREFIX ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --tmux "center,99%,95%" --height "~99%" --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder" --preview "bat -ppf {} 2>/dev/null||ls -pm {}" --wrap-sign "" --scroll-off 22 --color "list-bg:234,bg+:24,fg+:15,info:6"
 --border "top" --border-label "C-a:select-all | 0: change orientation | q:uit " --border-label-pos "top"';
@@ -42,10 +44,12 @@ local IFS=$'\n\t ';
 . $HOME/88/f/memram.sh; . $HOME/88/i/colors.sh; 
 ## ____ IP _ GET ____
 [ $PREFIX ] && wlan="$(getprop|grep -v "gateway"|grep -E "ipv4" -m1|tr -d "[]"|cut -f2 -d" ")"; 
-[ -z $wlan ] && wlan="$(ip -brief a 2>/dev/null|grep -v "127.0.0.1"|tr -s "/\t " "\n"|grep -E "UP" -A1 -m1|tail -n1)";
+[ -z $wlan ] && wlan="$(ip -brief a 2>/dev/null|grep -v "127.0.0.1"|tr -s "/\t " "\n"|grep -E "UP" -A1 -m1|tail -n1)"; 
 [ -z $wlan ] && wlan="$($sudo ifconfig 2>/dev/null|grep -e "wlan" -A1|sed -e 1d|tr -s "a-z " "\n"|sed -e 1d -e 3,4d)"; 
 [ "$wlan" ] && printf %b "${wlan[*]}" > $HOME/logs/wlan.sh || wlan="$(cat $HOME/logs/wlan.log)"; 
 idn="${wlan/*./}"; 
+[ -z $PREFIX ] && mac=($(ip a show dynamic | grep --color=no -e 'ether' -B1|tr -s " " " "|cut -f2-3 -d" "|sed -e "s/\: <.*//g" -e "s/link\/ether\ //g"|tac));
+# mac="$(ip a 2>/dev/null|grep -e "state UP" -A2|grep -e "link/ether "|tr -s " " " "|cut -c 13-29)"; mac2="$(ip  a|grep -e "state UP" -A2|grep -e "link/ether "|tr -s " " " "|cut -f3 -d" ")"; 
 ## ____ MODEL _ GET ____
 [ -z $PREFIX ] && [ -e /sys/devices/virtual/dmi/id/product_family ] && \
 modo=($(for bb in board_vendor board_name bios_vendor sys_vendor; 
@@ -71,11 +75,11 @@ dott() { printf %b "\e[0m"; for i in $(seq ${1-45}); do printf %b "·"; done; pr
 echo; 
 dott; echo; 
 dott; printf %b "\e[G"; 
-printf %b "${modo[*]} "|sort -u|tr -s "\n" " "|bat -ppfljava --theme DarkNeon; echo; 
+printf %b "${modo[*]:0:8} "|uniq -u|tr -s "\n" " "|bat -ppfljava --theme DarkNeon; echo; 
 dott; printf %b "\e[G"; 
-printf %b "[${cpu[*]} x ${cpus}] "|tr -s "\n" " "|bat -ppfljava --theme Dracula; echo; 
+printf %b "[cpu: ${cpu[*]} x ${cpus}] "|tr -s "\n" " "|bat -ppfljava --theme Dracula; echo; 
 dott; printf %b "\e[G"; 
-printf %b "[memory: ${memram}] "|bat -ppflc# --theme Sublime\ Snazzy; echo; 
+printf %b "[mem: ${memram}] "|bat -ppfljs --theme Sublime\ Snazzy; echo; 
 dott; printf %b "\e[G"; 
 printf %b "[${os1} | ${os2}] "|tr -s "\n" " "|bat -ppfljava --theme zenburn; echo; 
 ########## DATE // CALENDAR ##########
@@ -91,6 +95,7 @@ printf %b "${w[idn]}\e[7m $idn \e[27m $EPOCHSECONDS \e[0m \e[38;5;${idn}m idn: $
 dots; echo; 
 ######### IP##########################
 [ "$wlan" ] && printf %b "${wlan[*]} "|bat -ppflsyslog --theme DarkNeon && \
+[ "$mac" ] && printf %b "| ${mac[1]} | ${mac}" |tr -d "\n"| bat -ppflsyslog --theme zenburn; 
 [ "$SSH_CLIENT" ] && printf %b "| $SSH_CLIENT"|cut -f1,2,4  -d" " |tr "\n" "\t"| bat -ppflsyslog --theme zenburn; 
 echo; 
 dots; echo;
