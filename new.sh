@@ -77,7 +77,7 @@ dott() { printf %b "\e[0m"; for i in $(seq ${1-45}); do printf %b "·"; done; pr
 echo; 
 dott; echo; 
 dott; printf %b "\e[G"; 
-printf %b "${modo[*]:0:8} "|uniq -u|tr -s "\n" " "|bat -ppfljava --theme DarkNeon; echo; 
+printf %b "${modo[*]:0:7} "|uniq -u|tr -s "\n" " "|bat -ppfljava --theme DarkNeon; echo; 
 dott; printf %b "\e[G"; 
 printf %b "[cpu: ${cpu[*]} x ${cpus}] "|tr -s "\n" " "|bat -ppfljava --theme Dracula; echo; 
 dott; printf %b "\e[G"; 
