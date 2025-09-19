@@ -8,11 +8,16 @@ export EDITOR="micro";
 export BAT_THEME="Coldark-Dark"; 
 export wolenonel='0c:9d:92:76:52:0d';
 export wolaeniks='9c:5c:8e:bb:ce:5e'; 
+export logs="$HOME/logs"; 
 export tmp="$HOME/tmp"; [ -z $TMPDIR ] && export TMPDIR="$HOME/tmp"; 
-export logs="$HOME/logs"; [ -d $logs ] || mkdir -p -m 775 $logs 2>/dev/null; 
-[ PREFIX  ] && lessprefix='--redraw-on-quit --quit-if-one-screen'; 
-export LESS=''${lessprefix}' -R --file-size --use-color --incsearch --mouse --prompt=%F(%T) [/]search [n]ext [p]rev ?f%f .?n?m(%T %i of %m) ..?lt %lt-%lb?L/%L. :byte %bB?s/%s.  .?e(END)  ?x-  Next\:   %x.:?pB  %pB\%..%t '; 
 unset HISTTIMEFORMAT; 
+########
+[ PREFIX  ] && lessprefix='--redraw-on-quit --quit-if-one-screen'; 
+########
+export LESS=''${lessprefix}' -R --file-size --use-color --incsearch --mouse --prompt=%F(%T) [/]search [n]ext [p]rev ?f%f .?n?m(%T %i of %m) ..?lt %lt-%lb?L/%L. :byte %bB?s/%s.  .?e(END)  ?x-  Next\:   %x.:?pB  %pB\%..%t '; 
+########
+########
+mkdir $HOME/logs $HOME/tmp $HOME/gh $HOME/dl -m 775 -p 2>/dev/null; 
 ####
 re='\e[0m'; cyan='\e[96m'; log="$HOME/logs"; c2="\e[96m -- \e[0m"; 
 alias ll='lsd --group-directories-first --icon never --classify --date +%y.%m.%d_%M.%H.%S --sort time --blocks date,size,name --total-size iploc.sh'; 
@@ -85,15 +90,19 @@ dott() { printf %b "\e[0m"; for i in $(seq ${1-45}); do printf %b "·"; done; pr
 echo; 
 dott; echo; 
 dott; printf %b "\e[G"; 
-printf %b "${modo[*]:0:7} "|uniq -u|tr -s "\n" " "|bat -ppfljava --theme DarkNeon; echo; 
+
+printf %b "[${modo[*]:0:7}] "|uniq -u|tr -s "\n" " "|bat -ppfljava --theme DarkNeon; echo; 
 dott; printf %b "\e[G"; 
+
 printf %b "[cpu: ${cpu[*]} x ${cpus}] "|tr -s "\n" " "|bat -ppfljava --theme Dracula; echo; 
 dott; printf %b "\e[G"; 
-printf %b "[mem: ${memram}] "|bat -ppfljs --theme Sublime\ Snazzy; echo; 
+
+printf %b "[${memram}] "|bat -ppfljava --theme light; echo; 
 dott; printf %b "\e[G"; 
+
 printf %b "[${os1} | ${os2}] "|tr -s "\n" " "|bat -ppfljava --theme zenburn; echo; 
-########## DATE // CALENDAR ##########
 dott; echo; echo; 
+########## DATE // CALENDAR ##########
 dott; printf %b "\e[G"; dots; 
 (printf %b " $(date +%a\ %b\ %d\ %Y\ \|\ %X| tr -d "\n") ")|bat -ppflc++ --theme zenburn; 
 echo;
