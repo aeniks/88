@@ -98,7 +98,7 @@ dott; printf %b "\e[G";
 printf %b "[cpu: ${cpu[*]} x ${cpus}] "|tr -s "\n" " "|bat -ppfljava --theme Dracula; echo; 
 dott; printf %b "\e[G"; 
 
-printf %b "[${memram}] "|bat -ppfljava --theme light; echo; 
+printf %b "[${memram}] "|bat -ppfljava --theme TwoDark; echo; 
 dott; printf %b "\e[G"; 
 
 printf %b "[${os1} | ${os2}] "|tr -s "\n" " "|bat -ppfljava --theme zenburn; echo; 

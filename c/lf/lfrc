@@ -512,10 +512,7 @@ set cursorparentfmt "\033[92m"
 set cursorpreviewfmt "\033[1m" 
 set cursoractivefmt "\033[4;7m"
 set nodrawbox
-set drawbox off
-set mouse on 
 set noicons  
-set icons off 
 set shell bash 
 set info size:time
 set sortby time
