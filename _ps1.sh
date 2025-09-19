@@ -31,17 +31,22 @@ printf -v "_host" %b "[\e[95m$HOSTNAME\e[0m] ";
 ################
 _dtime() { hh=1$(date +%H;); mm=1$(date +%M;); ss=1$(date +%S); 
 printf %b "\e[38;5;$((hh + 22))m${hh:1:2}$re:\e[38;5;$((mm + 22))m${mm:1:2}$re:\e[38;5;${ss/0/1}m${ss:1:2}\e[0m" 2>/dev/null; }; 
-_etime() { printf %b "\e[38;5;$((${EPOCHSECONDS:8:2}))m${EPOCHSECONDS:6:4}\e[0m";  }; 
+_etime() { printf %b "\e[38;5;${EPOCHSECONDS:8:2}m${EPOCHSECONDS:6:4}\e[0m";  }; 
 ################
-alias gitstats='[ -e $PWD/.git ] && printf -v "gitst" %b "\e[0m[\e[46;97mgit\e[0m]" && (printf %b "${gitst}\t$(git status --short|tr "\n" "\t"|bat -ppfld --theme Coldark-Dark)")'; 
+alias gits='[ -e $PWD/.git ] && ggii="$(git status --short 2>/dev/null|grep "" --quiet && printf %b "41"|| printf %b "44"; )" && printf %b "\e[0m\e[${ggii}m git \e[0m"'; 
+
+#alias gitstat='git status --short 2>/dev/null|tr "\n\t " " | "|bat -ppfld --theme Coldark-Dark'; 
+# (printf %b "${gitst}\t
 ################
 . "$HOME/88/i/colors.sh"; 
 ################
+# \e[0;2m'${wlan%.*}'.\e[0;1m'${w[${wlan/*./}]}'${wlan/*./}
 
 ################
-PS1=''$re'\e[0m[\e[0;1;38;5;$((2 + $?))m$?'$re'] \
+PS1=''$re'\e[0m[\e[0;1;38;5;$((2 + $?))m$?'$re']\
+$(gits||printf " ")\
 ['$re'$(_dtime 2>/dev/null)'$re'] \
 ['$re'$(_etime)'$re']'$re'$(_bat) \
-['$re'\e[0;2m'${wlan%.*}'.\e[0;1m'${w[${wlan/*./}]}'${wlan/*./}'$re'] \
-['$re'\e[0m'${w[${wlan/*./}]}'\e[7;47;1m${model:0:12}'$re'] \
-['$re$cyan'\u'$re']'$re' '${_host}'['$re$yellow'\w'${re}]' $(gitstats)\e[?25h\e[0m\n'; 
+['$re'${wlan%.*}.\e[38;5;${c[idn]:0:4}${wlan/*./}'$re'] \
+['$re'\e[0m'${w[${wlan/*./}]}'\e[3${c[idn]:13:1}m\e[48;5;${c[idn]:0:4}${model:0:12}'$re'] \
+['$re$cyan'\u'$re']'$re' '${_host}'['$re$yellow'\w'${re}]' \e[?25h\e[0m\n'; 

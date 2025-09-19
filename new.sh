@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # very good bash enviorment 
 shopt -s histappend; shopt -s histverify; 
 export IFS=$' \n\t'; 
@@ -12,20 +12,28 @@ export logs="$HOME/logs";
 export tmp="$HOME/tmp"; [ -z $TMPDIR ] && export TMPDIR="$HOME/tmp"; 
 unset HISTTIMEFORMAT; 
 ########
-[ PREFIX  ] && lessprefix='--redraw-on-quit --quit-if-one-screen'; 
+re='\e[0m'; cyan='\e[96m'; log="$HOME/logs"; c2="\e[96m -- \e[0m"; 
+########
+unset lessprefix; 
+([ -z "$PREFIX" ] && lsb_release -si|grep "Debian" &>/dev/null) || lessprefix='--redraw-on-quit --quit-if-one-screen'; 
 ########
 export LESS=''${lessprefix}' -R --file-size --use-color --incsearch --mouse --prompt=%F(%T) [/]search [n]ext [p]rev ?f%f .?n?m(%T %i of %m) ..?lt %lt-%lb?L/%L. :byte %bB?s/%s.  .?e(END)  ?x-  Next\:   %x.:?pB  %pB\%..%t '; 
 ########
 ########
 mkdir $HOME/logs $HOME/tmp $HOME/gh $HOME/dl -m 775 -p 2>/dev/null; 
-####
-re='\e[0m'; cyan='\e[96m'; log="$HOME/logs"; c2="\e[96m -- \e[0m"; 
-alias ll='lsd --group-directories-first --icon never --classify --date +%y.%m.%d_%M.%H.%S --sort time --blocks date,size,name --total-size iploc.sh'; 
-####
+########
+# [[ "$OS" != "Debian" ]] && \
+. $HOME/88/f/dfree.sh; 
+rm $logs/dfree.log &>/dev/null; dfree > $logs/dfree.log & disown; 
+########
+. $HOME/88/i/coala.log; 
+########
+alias re='reset -Q; exec bash;'; 
+########
 if echo $HOME|grep -w "termux"; then alias sudo='command'; else sudo=sudo; fi; 
 ########
-####
-####
+########
+########
 ########
 [ -x $HOME/.config/fzf_completions_bash.sh ] || (fzf --bash > $HOME/.config/fzf_completions_bash.sh; chmod 775 $HOME/.config/fzf_completions_bash.sh); 
 if fzf --bash &>/dev/null; then . $HOME/.config/fzf_completions_bash.sh; fi; 
@@ -50,7 +58,6 @@ new() {
 ##
 local IFS=$' \n\t'; 
 ##############
-. $HOME/88/f/dfree.sh; 
 . $HOME/88/f/12calendar.sh; 
 . $HOME/88/f/memram.sh; 
 . $HOME/88/i/colors.sh; 
@@ -74,12 +81,13 @@ do cat /sys/devices/virtual/dmi/id/${bb} 2>/dev/null|tr -s "\n" " "; done));
 osa1="$(printf %b "${osx1[*]}"|uniq|tr -s "\n" " "; printf %b "\b"|col -xb)"; 
 osa2="$(printf %b "${osx2[*]}"|uniq|tr -s "\n" " "; printf %b "\b"|col -xb)"; 
 os1="$(printf %b "${osa1}\b"|col -xb|tr -d "\n")"; os2="$(printf %b "${osa2}\b"|col -xb|tr -d "\n")";
-local IFS=$'\n\t '; 
+local IFS=$' \n\t'; 
 ## __ CPU __ GET _____
 cpu=($(lscpu |grep -E 'Model name'|tr -s "\t" " "|cut -f3- -d" ")); 
 cpus=($(lscpu|grep -e 'CPU(s):' -m1|cut -f2 -d":"|tr -d " ")); 
 ## ____ IP _ GET ____
 [ $PREFIX ] && wlan="$(getprop|grep -v "gateway"|grep -E "ipv4" -m1|tr -d "[]"|cut -f2 -d" ")"; 
+# [ -z $PREFIX ] && wlan=($(hostname -I));
 [ -z $wlan ] && wlan="$(ip -brief a 2>/dev/null|grep -v "127.0.0.1"|tr -s "/\t " "\n"|grep -E "UP" -A1 -m1|tail -n1)"; 
 [ -z $wlan ] && wlan="$($sudo ifconfig 2>/dev/null|grep -e "wlan" -A1|sed -e 1d|tr -s "a-z " "\n"|sed -e 1d -e 3,4d)"; 
 [ -z $PREFIX ] && mac=($(ip a show dynamic 2>/dev/null| grep --color=no -e 'ether' -B1|tr -s " " " "|cut -f2-3 -d" "|sed -e "s/\: <.*//g" -e "s/link\/ether\ //g"|tac));
@@ -98,7 +106,7 @@ dott; printf %b "\e[G";
 printf %b "[cpu: ${cpu[*]} x ${cpus}] "|tr -s "\n" " "|bat -ppfljava --theme Dracula; echo; 
 dott; printf %b "\e[G"; 
 
-printf %b "[${memram}] "|bat -ppfljava --theme light; echo; 
+printf %b "[${memram}] "|bat -ppfljava --theme TwoDark; echo; 
 dott; printf %b "\e[G"; 
 
 printf %b "[${os1} | ${os2}] "|tr -s "\n" " "|bat -ppfljava --theme zenburn; echo; 
@@ -111,15 +119,23 @@ echo;
 dott; 
 echo;
 # dots; dots; dots; dots; dots; 
-printf %b "${w[idn]}\e[7m $idn \e[27m $EPOCHSECONDS \e[0m \e[38;5;${idn}m idn: $idn  \e[0m"; echo; 
-dots; echo; 
+# printf %b "${w[idn]}\e[7m $idn \e[27m $EPOCHSECONDS \e[0m \e[38;5;${idn}m idn: $idn  \e[0m"; echo;
+# printf %b "\e[48;5;${c[$((${wlan: -2}))]} ";
+# printf %b "${c[$((${wlan: -2}))]}";
+# printf %b " ${c[idn]} ";
+# dots; echo;
 ######### IP##########################
-[ "$wlan" ] && printf %b "${wlan[*]} "|bat -ppflsyslog --theme DarkNeon && \
+[ "$wlan" ] && printf %b "${wlan} "|bat -ppflsyslog --theme DarkNeon && \
 [ "$mac" ] && printf %b "| ${mac[1]} | ${mac}" |tr -d "\n"| bat -ppflsyslog --theme zenburn; 
-[ "$SSH_CLIENT" ] && printf %b "| $SSH_CLIENT"|cut -f1,2,4  -d" " |tr "\n" "\t"| bat -ppflsyslog --theme zenburn; 
+[ "$SSH_CLIENT" ] && printf %b " | $SSH_CLIENT"|cut -f1,2,4  -d" " |tr "\n " "\t_"| bat -ppflsyslog --theme zenburn; 
 echo; 
-dots; echo;
-dfree; 
+dott; 
+echo; 
+printf %b "\e[3${c[idn]:13:1};48;5;${c[idn]:0:13}\e[0m \\${c[idn]:0:5}\e[3${c[idn]:13:1};48;5;${c[idn]:0:4}${c[idn]: -9: 9} \e[0m"; 
+echo; 
+dott; 
+echo;
+cat $logs/dfree.log 2>/dev/null || dfree; 
 dots; echo;
 printf '\e]12;red\e\\'; 
 ####
