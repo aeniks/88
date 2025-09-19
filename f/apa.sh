@@ -1,6 +1,5 @@
+#!/usr/bin/env bash
 apa() { 
-
-# [ -z $PREFIX ] && apa_ubuntu && return 0  2>/dev/null && break 2>/dev/null; 
 local IFS=$' \n\t'; 
 hash sudo 2>/dev/null && sudo=sudo; [ $PREFIX ] && unset sudo; [ $UID = 0 ] && unset sudo; 
 ####
@@ -8,26 +7,36 @@ FZF_DEFAULT_OPTS='-m -i --ansi --bind "0:change-preview-window(right,50%|top,20%
 #apinstalled=($(apt list --installed 2>/dev/null|tail -n +2|cut -f1 -d "/")); 
 ####
 ####
-printf %b "\e[?25l\n\n\n\n\n\n\e[5A\e[96m --\e[0;2m [\e[0;92mI\e[0;2m]\e[0mnstall or \e[2m[\e[0;96mR\e[0;2m]\e[0memove ?"; 
-read -srn1 "irir"; printf %b " ok \n"; 
+printf %b "\e[?25l\n\n\n\n\n\n\e[5A\e[96m --\e[0;2m [\e[0;92mI\e[0;2m]\e[0mnstall or \e[2m[\e[0;96mR\e[0;2m]\e[0memove ? "; 
+read -srn1 "irir"; printf %b "\e[0m\e[?25h \e[42G\e[42m  ok  \e[0m\n"; 
+########
 case "$irir" in 
 i|I) instremove="install"; 
-####
 apagetlist() { apt list 2>/dev/null|tail -n +2|cut -f1 -d"/" > "$HOME/logs/apts.log" & disown; };; 
 ####
 r|R) instremove="remove"; 
+apagetlist() { apt list --installed 2>/dev/null|tail -n +2|cut -f1 -d"/" > "$HOME/logs/apts.log" & disown; };; 
 ####
-apagetlist() { $sudo apt update &>/dev/null; apt list --installed 2>/dev/null|tail -n +2|cut -f1 -d"/" > "$HOME/logs/apts.log" & disown; };; 
+*) printf %b "\n be that way then \n\n"; return 0; 
+esac; 
 ####
-*) printf %b "\n be that way then \n\n"; return 0; esac; 
 ####
-####
-printf %b "\e[?25l\n\n\n\n\n\n\e[5A\e[96m -- \e[0mGetting list \e7"; 
-apagetlist; printf %b "\e8\e[K"; ae="$!"; (for i in {1..55}; 
+printf %b "\e[96m --\e[0m Updating \e7"; 
+apt update &>/dev/null & disown; 
+printf %b "\e8\e[K"; ae="$!"; (for i in {1..55}; 
 do printf %b "\e[38;5;$((RANDOM%222 + 22))m\u25$((RANDOM%99)) "; 
-read -t .5 -srn1 "yu"; [ $yu ] && printf %b "\e[?25l\e[0m gg" && break; 
+read -t .2 -srn1 "yu"; [ $yu ] && printf %b "\e[?25l\e[0m gg" && break; 
 ps|grep -e "$ae" --quiet 2>/dev/null||break; done) 2>/dev/null; 
-printf %b "\e[0m\e[?25l \e[42m done \e[0m\n\n"; 
+printf %b "\e[0m\e[?25h \e[42G\e[42m done \e[0m\n"; 
+####
+####\n\n\n\n\n\n\e[5A
+####
+printf %b "\e[?25l\e[96m --\e[0m Getting list \e7"; apagetlist; 
+printf %b "\e8\e[K"; ae="$!"; (for i in {1..55}; 
+do printf %b "\e[38;5;$((RANDOM%222 + 22))m\u25$((RANDOM%99)) "; 
+read -t .2 -srn1 "yu"; [ $yu ] && printf %b "\e[?25l\e[0m gg" && break; 
+ps|grep -e "$ae" --quiet 2>/dev/null||break; done) 2>/dev/null; 
+printf %b "\e[0m\e[?25h  \e[42G\e[42m done \e[0m\n"; 
 ####
 ####
 aapp=($(bat -ppfljava "$HOME/logs/apts.log"|fzf --query " $1" -i -m --color \
