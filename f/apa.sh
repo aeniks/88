@@ -38,9 +38,10 @@ read -t .2 -srn1 "yu"; [ $yu ] && printf %b "\e[?25l\e[0m gg" && break;
 ps|grep -e "$ae" --quiet 2>/dev/null||break; done) 2>/dev/null; 
 printf %b "\e[0m\e[?25h  \e[42G\e[42m done \e[0m\n"; 
 ####
+# apt show {} 2>/dev/null|tr -s "\n " "\n "|grep -vE "Package|Version|Maintainer|APT-Sources|Download-Size"|sed -e "s/Homepage: //" -e "s/Description: //"|bat -ppfld
 ####
 aapp=($(bat -ppfljava "$HOME/logs/apts.log"|fzf --query " $1" -i -m --color \
-preview-bg:0 --bind "q:abort" --preview 'apt show {} 2>/dev/null|tr -s "\n " "\n "|grep -vE "Package|Version|Maintainer|APT-Sources|Download-Size"|sed -e "s/Homepage: //" -e "s/Description: //"|bat -ppfld' --preview-window "wrap,66%,noborder,right" --cycle --ansi --inline-info))||\
+preview-bg:0 --bind "q:abort" --preview 'printf %b ""{}\ \ --\ \ ""|bat -ppfljs --theme DarkNeon; ap="$(apt show {} 2>/dev/null|tr -s "\n " "\n "|grep -vE "Bugs|Priority|Package|Version|Maintainer|APT-Sources|Download-Size")"; printf %b "${ap}"|grep -e "Installed-Size: "|cut -f2- -d"-"; printf %b "-----\n"; (printf %b "${ap}"|grep -e "Description: " -A22|sed "s/Description\:\ //"|fmt -g 60; printf %b "-----\n"; printf %b "${ap}"|grep -e "Homepage: " -m1 && printf %b "-----\n")|bat -ppfld --theme DarkNeon; printf %b "${ap}"|grep -vE "Description: |Installed-Size: "|bat -ppfljs --theme TwoDark' --preview-window "wrap,66%,noborder,right" --cycle --ansi --inline-info))||\
 (cd - &>/dev/null; printf %b "\n\n"&& cd $pwd &>/dev/null&& return 1;)||\
 return 1; cd - &>/dev/null && printf %b "\n\n\n\n\e[4A\n"; 
 printf %b " -- ${instremove}: "; 
