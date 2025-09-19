@@ -1,7 +1,7 @@
 #!/bin/bash 
 ################
 [ "$PREFIX" ] && . "${HOME}"/88/crons/bat.sh & disown; 
-touch $HOME/logs/bp.log; chmod 775 $HOME/logs/bc.log; 
+touch $HOME/logs/bp.log; chmod 775 $HOME/logs/bp.log; 
 yellow='\e[93m'; cyan='\e[96m'; re='\e[0m'; bc=0; 
 wlan="$(cat "$HOME/logs/wlan.sh" 2>/dev/null)"; 
 ################

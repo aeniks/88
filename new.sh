@@ -12,23 +12,23 @@ export tmp="$HOME/tmp"; [ -z $TMPDIR ] && export TMPDIR="$HOME/tmp";
 export logs="$HOME/logs"; [ -d $logs ] || mkdir -p -m 775 $logs 2>/dev/null; 
 [ PREFIX  ] && lessprefix='--redraw-on-quit --quit-if-one-screen'; 
 export LESS=''${lessprefix}' -R --file-size --use-color --incsearch --mouse --prompt=%F(%T) [/]search [n]ext [p]rev ?f%f .?n?m(%T %i of %m) ..?lt %lt-%lb?L/%L. :byte %bB?s/%s.  .?e(END)  ?x-  Next\:   %x.:?pB  %pB\%..%t '; 
+unset HISTTIMEFORMAT; 
 ####
 re='\e[0m'; cyan='\e[96m'; log="$HOME/logs"; c2="\e[96m -- \e[0m"; 
-####
-if fzf --bash &>/dev/null; then [ -x $HOME/logs/fzf_completions_bash.sh ] || (fzf --bash > $HOME/logs/fzf_completions_bash.sh;  chmod 775 $HOME/logs/fzf_completions_bash.sh); . $HOME/logs/fzf_completions_bash.sh; fi; 
-####
-# export HISTTIMEFORMAT="%b-%d-%H:%M:%S "; 
-unset HISTTIMEFORMAT; 
-########
 alias ll='lsd --group-directories-first --icon never --classify --date +%y.%m.%d_%M.%H.%S --sort time --blocks date,size,name --total-size iploc.sh'; 
+####
+if echo $HOME|grep -w "termux"; then alias sudo='command'; else sudo=sudo; fi; 
+########
+####
+####
+########
+if fzf --bash &>/dev/null; then [ -x $HOME/logs/fzf_completions_bash.sh ] || (fzf --bash > $HOME/logs/fzf_completions_bash.sh;  chmod 775 $HOME/logs/fzf_completions_bash.sh); . $HOME/logs/fzf_completions_bash.sh; fi; 
 ########
 [ $PREFIX ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --tmux "center,99%,95%" --height "~99%" --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder" --preview "bat -ppf {} 2>/dev/null||ls -pm {}" --wrap-sign "" --scroll-off 22 --color "list-bg:234,bg+:24,fg+:15,info:6"
 --border "top" --border-label "C-a:select-all | 0: change orientation | q:uit " --border-label-pos "top"';
 ########
 [ -z $PREFIX ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder" --scroll-off 22 --color "bg:0,preview-bg:16,bg+:24,fg+:15,info:6"'; 
-########
-if echo $HOME|grep -w "termux"; 
-then alias sudo='command'; else sudo=sudo; fi; 
+
 ########
 [ -x $HOME/.config/gemini_api_id.conf ] && . $HOME/.config/gemini_api_id.conf 2>/dev/null; 
 [ -x $HOME/.config/cloudflare_id.conf ] && . $HOME/.config/cloudflare_id.conf 2>/dev/null; 
@@ -44,22 +44,22 @@ new() {
 ##
 local IFS=$' \n\t'; 
 ##############
-. $HOME/88/f/dfree.sh; . $HOME/88/f/12calendar.sh; 
-. $HOME/88/f/memram.sh; . $HOME/88/i/colors.sh; 
-## ____ IP _ GET ____
-[ $PREFIX ] && wlan="$(getprop|grep -v "gateway"|grep -E "ipv4" -m1|tr -d "[]"|cut -f2 -d" ")"; 
-[ -z $wlan ] && wlan="$(ip -brief a 2>/dev/null|grep -v "127.0.0.1"|tr -s "/\t " "\n"|grep -E "UP" -A1 -m1|tail -n1)"; 
-[ -z $wlan ] && wlan="$($sudo ifconfig 2>/dev/null|grep -e "wlan" -A1|sed -e 1d|tr -s "a-z " "\n"|sed -e 1d -e 3,4d)"; 
-[ "$wlan" ] && printf %b "${wlan[*]}" > $HOME/logs/wlan.sh || wlan="$(cat $HOME/logs/wlan.log)"; 
+. $HOME/88/f/dfree.sh; 
+. $HOME/88/f/12calendar.sh; 
+. $HOME/88/f/memram.sh; 
+. $HOME/88/i/colors.sh; 
+# export HISTTIMEFORMAT="%b-%d-%H:%M:%S "; 
+memram="$(memram)"; 
 idn="${wlan/*./}"; 
-[ -z $PREFIX ] && mac=($(ip a show dynamic 2>/dev/null| grep --color=no -e 'ether' -B1|tr -s " " " "|cut -f2-3 -d" "|sed -e "s/\: <.*//g" -e "s/link\/ether\ //g"|tac));
-# mac="$(ip a 2>/dev/null|grep -e "state UP" -A2|grep -e "link/ether "|tr -s " " " "|cut -c 13-29)"; mac2="$(ip  a|grep -e "state UP" -A2|grep -e "link/ether "|tr -s " " " "|cut -f3 -d" ")"; 
-## ____ MODEL _ GET ____
+#############################
+#############################
+## ____ MODEL _ GET ____ ####
+[ $PREFIX ] && modo=($(getprop|grep -E "vendor.manufacturer|product.manufacturer" -m1 -A1 --group-separator=""|cut -f2- -d" "|tr -s "\n[]" " "; )); 
+#############################
 [ -z $PREFIX ] && [ -e /sys/devices/virtual/dmi/id/product_family ] && \
 modo=($(for bb in board_vendor board_name bios_vendor sys_vendor; 
 do cat /sys/devices/virtual/dmi/id/${bb} 2>/dev/null|tr -s "\n" " "; done)); 
 ########
-[ $PREFIX ] && modo=($((getprop|grep -E "vendor.manufacturer|product.manufacturer" -m1 -A1 --group-separator=""|cut -f2- -d" "|tr -s "\n" " "; printf %b "\b")|col -xb)); 
 ## ____ OS __ GET _____
 [ $PREFIX ] && osx1=($(uname --operating-system; getprop ro.build.version.release; getprop ro.build.version.codename; )); 
 [ $PREFIX ] && osx2=($((uname --kernel-name; uname --kernel-release|cut -f1 -d"-"|uniq -u; uname --machine)|tr -s "\n" " "; )); 
@@ -72,8 +72,13 @@ local IFS=$'\n\t ';
 ## __ CPU __ GET _____
 cpu=($(lscpu |grep -E 'Model name'|tr -s "\t" " "|cut -f3- -d" ")); 
 cpus=($(lscpu|grep -e 'CPU(s):' -m1|cut -f2 -d":"|tr -d " ")); 
+## ____ IP _ GET ____
+[ $PREFIX ] && wlan="$(getprop|grep -v "gateway"|grep -E "ipv4" -m1|tr -d "[]"|cut -f2 -d" ")"; 
+[ -z $wlan ] && wlan="$(ip -brief a 2>/dev/null|grep -v "127.0.0.1"|tr -s "/\t " "\n"|grep -E "UP" -A1 -m1|tail -n1)"; 
+[ -z $wlan ] && wlan="$($sudo ifconfig 2>/dev/null|grep -e "wlan" -A1|sed -e 1d|tr -s "a-z " "\n"|sed -e 1d -e 3,4d)"; 
+[ -z $PREFIX ] && mac=($(ip a show dynamic 2>/dev/null| grep --color=no -e 'ether' -B1|tr -s " " " "|cut -f2-3 -d" "|sed -e "s/\: <.*//g" -e "s/link\/ether\ //g"|tac));
+[ "$wlan" ] && printf %b "${wlan[*]}" > $HOME/logs/wlan.sh || wlan="$(cat $HOME/logs/wlan.log)"; 
 ########
-memram="$(memram)"; 
 ########
 dots() { printf %b "${re}·········${re}"; }; 
 dott() { printf %b "\e[0m"; for i in $(seq ${1-45}); do printf %b "·"; done; printf %b "\e[0m"; }; 
