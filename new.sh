@@ -28,6 +28,7 @@ rm $logs/dfree.log &>/dev/null; dfree > $logs/dfree.log & disown;
 ########
 . $HOME/88/i/coala.log; 
 ########
+alias k='col -xb|tr -s "\n" "\n"|bat -pfljava'; 
 alias re='reset -Q; exec bash;'; 
 ########
 if echo $HOME|grep -w "termux"; then alias sudo='command'; else sudo=sudo; fi; 
