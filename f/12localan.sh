@@ -25,13 +25,12 @@ printf %b "\e[K\e[A\e[K";
 read -t 0.05 -n1 -s -p "${iploc%.*}.$ip " "ny"; [ $ny ] && printf %b "\n\n\e[?25h" && return 0 && break; done; 
 # printf %b "${iploc%.*}.$i\n" >> "$ipt"& disown; \
 printf %b "\e[?25h";  
-printf %b "\e[K\n--------\n$c5 \$iplocal\t$ipt $c6\n\
---------\n\n"; 
+printf %b "\e[K\n----------------\n\n"; 
 # ipends=($(cat $ipt|cut -f4 -d"."; ));
 rm $HOME/logs/iplocal/$iploc 2>/dev/null; 
 iplocal=($(command ls $HOME/logs/iplocal; )); 
 # iplocall=-($iploc);
-command ls "$HOME/logs/iplocal"; echo; 
+# command ls "$HOME/logs/iplocal"; echo; 
 
 # for ip in ${iplocal[*]}; do (nmap --open $ipp -p 22,8022 --system-dns 2>/dev/null|grep -e "open"|cut -f1 -d"/"|tr -s "\n" " ") > $HOME/logs/iplocal/$ipp; done; 
 
