@@ -40,12 +40,13 @@ alias gits='[ -e $PWD/.git ] && ggii="$(git status --short 2>/dev/null|grep "" -
 ################
 . "$HOME/88/i/colors.sh"; 
 ################
+# \e[0;2m'${wlan%.*}'.\e[0;1m'${w[${wlan/*./}]}'${wlan/*./}
 
 ################
 PS1=''$re'\e[0m[\e[0;1;38;5;$((2 + $?))m$?'$re']\
 $(gits||printf " ")\
 ['$re'$(_dtime 2>/dev/null)'$re'] \
 ['$re'$(_etime)'$re']'$re'$(_bat) \
-['$re'\e[0;2m'${wlan%.*}'.\e[0;1m'${w[${wlan/*./}]}'${wlan/*./}'$re'] \
-['$re'\e[0m'${w[${wlan/*./}]}'\e[7;47;1m${model:0:12}'$re'] \
+['$re'${wlan%.*}.\e[38;5;${c[idn]:0:4}${wlan/*./}'$re'] \
+['$re'\e[0m'${w[${wlan/*./}]}'\e[3${c[idn]:13:1}m\e[48;5;${c[idn]:0:4}${model:0:12}'$re'] \
 ['$re$cyan'\u'$re']'$re' '${_host}'['$re$yellow'\w'${re}]' \e[?25h\e[0m\n'; 

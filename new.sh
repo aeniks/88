@@ -26,6 +26,8 @@ mkdir $HOME/logs $HOME/tmp $HOME/gh $HOME/dl -m 775 -p 2>/dev/null;
 . $HOME/88/f/dfree.sh; 
 rm $logs/dfree.log &>/dev/null; dfree > $logs/dfree.log & disown; 
 ########
+. $HOME/88/i/coala.log; 
+########
 alias re='reset -Q; exec bash;'; 
 ########
 if echo $HOME|grep -w "termux"; then alias sudo='command'; else sudo=sudo; fi; 
@@ -117,14 +119,22 @@ echo;
 dott; 
 echo;
 # dots; dots; dots; dots; dots; 
-printf %b "${w[idn]}\e[7m $idn \e[27m $EPOCHSECONDS \e[0m \e[38;5;${idn}m idn: $idn  \e[0m"; echo; 
-dots; echo; 
+# printf %b "${w[idn]}\e[7m $idn \e[27m $EPOCHSECONDS \e[0m \e[38;5;${idn}m idn: $idn  \e[0m"; echo;
+# printf %b "\e[48;5;${c[$((${wlan: -2}))]} ";
+# printf %b "${c[$((${wlan: -2}))]}";
+# printf %b " ${c[idn]} ";
+# dots; echo;
 ######### IP##########################
 [ "$wlan" ] && printf %b "${wlan} "|bat -ppflsyslog --theme DarkNeon && \
 [ "$mac" ] && printf %b "| ${mac[1]} | ${mac}" |tr -d "\n"| bat -ppflsyslog --theme zenburn; 
 [ "$SSH_CLIENT" ] && printf %b " | $SSH_CLIENT"|cut -f1,2,4  -d" " |tr "\n " "\t_"| bat -ppflsyslog --theme zenburn; 
 echo; 
-dots; echo;
+dott; 
+echo; 
+printf %b "\e[3${c[idn]:13:1};48;5;${c[idn]:0:13}\e[0m \\${c[idn]:0:5}\e[3${c[idn]:13:1};48;5;${c[idn]:0:4}${c[idn]: -9: 9} \e[0m"; 
+echo; 
+dott; 
+echo;
 cat $logs/dfree.log 2>/dev/null || dfree; 
 dots; echo;
 printf '\e]12;red\e\\'; 
