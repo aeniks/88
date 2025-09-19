@@ -14,15 +14,15 @@ unset HISTTIMEFORMAT;
 ########
 re='\e[0m'; cyan='\e[96m'; log="$HOME/logs"; c2="\e[96m -- \e[0m"; 
 ########
-[ -z "$PREFIX" ] && OS="$(lsb_release -si &>/dev/null)"; 
-[[ "$OS" != "Debian" ]] && \
-lessprefix='--redraw-on-quit --quit-if-one-screen'; 
+unset lessprefix; 
+([ -z "$PREFIX" ] && lsb_release -si|grep "Debian" &>/dev/null) || lessprefix='--redraw-on-quit --quit-if-one-screen'; 
 ########
 export LESS=''${lessprefix}' -R --file-size --use-color --incsearch --mouse --prompt=%F(%T) [/]search [n]ext [p]rev ?f%f .?n?m(%T %i of %m) ..?lt %lt-%lb?L/%L. :byte %bB?s/%s.  .?e(END)  ?x-  Next\:   %x.:?pB  %pB\%..%t '; 
 ########
 ########
 mkdir $HOME/logs $HOME/tmp $HOME/gh $HOME/dl -m 775 -p 2>/dev/null; 
 ########
+# [[ "$OS" != "Debian" ]] && \
 . $HOME/88/f/dfree.sh; 
 rm $logs/dfree.log &>/dev/null; dfree > $logs/dfree.log & disown; 
 ########
