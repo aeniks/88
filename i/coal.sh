@@ -10,3 +10,6 @@ printf %b "\e[3${i:12:1}m\e[48;5;${i:0:3}m${i}\e[0m\n";
 done; 
 ####
 ####
+for i in ${!co[*]}; do printf %b "\nc$i=\(${co[i]}\);\n"; done|col -xb > $logs/c.log; 
+chmod 775 $logs/c.log;
+. $logs/c.log;
