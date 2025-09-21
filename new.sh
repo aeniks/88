@@ -97,7 +97,6 @@ cpus=($(lscpu|grep -e 'CPU(s):' -m1|cut -f2 -d":"|tr -d " "));
 ########
 dots() { printf %b "${re}·········${re}"; }; 
 dott() { printf %b "\e[0m"; for i in $(seq ${1-45}); do printf %b "·"; done; printf %b "\e[0m"; }; 
-echo; 
 dott; echo; 
 dott; printf %b "\e[G"; 
 
@@ -107,18 +106,17 @@ dott; printf %b "\e[G";
 printf %b "[cpu: ${cpu[*]} x ${cpus}] "|tr -s "\n" " "|bat -ppfljava --theme Dracula; echo; 
 dott; printf %b "\e[G"; 
 
-printf %b "[${memram}] "|bat -ppfljava --theme TwoDark; echo; 
+printf %b "[${memram}] "|bat -ppflgo --theme TwoDark; echo; 
 dott; printf %b "\e[G"; 
 
 printf %b "[${os1} | ${os2}] "|tr -s "\n" " "|bat -ppfljava --theme zenburn; echo; 
-dott; echo; echo; 
-########## DATE // CALENDAR ##########
-dott; printf %b "\e[G"; dots; 
-(printf %b " $(date +%a\ %b\ %d\ %Y\ \|\ %X| tr -d "\n") ")|bat -ppflc++ --theme zenburn; 
-echo;
-12calendar && \
-dott; 
-echo;
+dott; echo; 
+########## DATE // CALENDAR ########
+# (printf %b " $(date +%a\ %b\ %d\ %Y\ \|\ %X| tr -d "\n") ")|bat -ppflc++ --theme zenburn; 
+calength="$(cat $HOME/logs/cal.log|wc -l)";
+for i in $(seq $calength); do dott && echo; done; 
+printf %b "\e[${calength}A"; 
+12calendar && dott && echo; 
 # dots; dots; dots; dots; dots; 
 # printf %b "${w[idn]}\e[7m $idn \e[27m $EPOCHSECONDS \e[0m \e[38;5;${idn}m idn: $idn  \e[0m"; echo;
 # printf %b "\e[48;5;${c[$((${wlan: -2}))]} ";
