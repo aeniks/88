@@ -1,21 +1,27 @@
 #!/bin/bash
 ## calll
 12calendarget() { 
-(curl -sL "https://script.google.com/macros/s/AKfycbwSft4XmNq-lCW38uuBjihWM8pKMGrm-1uDmwusW7uksz0uN3WIEobzOt-0NQUgDOASqQ/exec" && printf %b "\n\nEPOCH_$EPOCHSECONDS") > $HOME/logs/calendar.json; 
+(hour="$(date +%H)"; 
+curl -sL "https://script.google.com/macros/s/AKfycbwSft4XmNq-lCW38uuBjihWM8pKMGrm-1uDmwusW7uksz0uN3WIEobzOt-0NQUgDOASqQ/exec" && printf %b "\nh_${hour}\nEPOCH_${EPOCHSECONDS}") > $HOME/logs/calendar.json; 
 }; 
 ####
 ####
 12calendar() { 
 [ -e $HOME/logs/calendar.json ] || 12calendarget; 
 cat  $HOME/logs/calendar.json|grep -e "EPOCH" --quiet||12calendarget; 
+cat  $HOME/logs/calendar.json|grep -e "h_" --quiet||12calendarget; 
 ####
 _epoch_h="$((EPOCHSECONDS / 3600))"; 
 _epoch_h_cal="$(($(tail -c10 $HOME/logs/calendar.json) / 3600))"; 
 ####
-[ $((_epoch_h - _epoch_h_cal)) -gt 2 ] && 12calendarget;
+[ $((_epoch_h - _epoch_h_cal)) -gt 2 ] && printf %b "getting cal... "; 12calendarget; printf %b "\e[G"; 
 ####
-head -n-1 $HOME/logs/calendar.json|jq|sed -e "s/\ \ //g"|grep -vE 'description|end_date|call'|cut -f1 -d+|tr -d '"{}[],\t'|sed -e "s/summary\:\ /\n\ %/g"|tr -d "\n"|tr -s "%" "\n"|sed -e "s/start_date_time............./\ \%\ /g" -e "s/start_date\:/\ \%/g" -e s/start_date_time\:/\%\ /g|tr -s " " " "|column --separator "%" --table --output-width "$COLUMNS" --output-separator '|' --table|bat -ppflr --theme Visual\ Studio\ Dark+; 
+head -n-1 $HOME/logs/calendar.json|sed -e "s/\ \ //g"|grep -vE 'description|end_date|call'|cut -f1 -d+|tr -d '"{}[],\t'|sed -e "s/summary\:\ /\n\ %/g"|tr -d "\n"|tr -s "%" "\n"|sed -e "s/start_date_time............./\ \%\ /g" -e "s/start_date\:/\ \%/g" -e s/start_date_time\:/\%\ /g|tr -s " " " "|column --separator "%" --table --output-width "$COLUMNS" --output-separator '|' --table|bat -ppflr --theme Visual\ Studio\ Dark+; 
 }; 
+
+calle() { cat $HOME/logs/calendar.json |tr -s "," "\n"|grep -vE 'description|end_date'|sed '/start_date_time/{s/.[0-9]*[-T]//g}'|cut -f1 -d "+"|cut -f 2- -d":"|sed 's/"/\n/'|tr -s  "\n\"}" "%%\n"|cut -f2-4 -d"%"|column --separator "%" --table --table-name 1 --output-separator " | " --table-right 1 --table-noextreme 2,3 --table-columns "______ _event,day,time"|grep -vE "_event|EPOCH_"; }; 
+
+callee() { ((printf %b "\e[0m----------------- "; printf %b "$(date +%a\ %b\ %d\ %Y\ \|\ %T) -----------------\n") |bat -ppfljava --theme DarkNeon ; cat $HOME/logs/calendar.json | tr -s "," "\n" | grep -vE 'EPOCH_|h_|description|end_date' | sed '/start_date_time/{s/.[0-9]*[-T]//g}' | cut -f1 -d "+" | cut -f 2- -d":" | sed 's/"/\n/' | tr -s "\n\"}" "%%\n" | cut -f2-4 -d"%"|col -xb|column --separator "%" --table --output-separator " | " --table-columns "123456789012345" --table-right 1|tail -n+2 |bat -ppflr --theme Visual\ Studio\ Dark+ )|tee $HOME/logs/cal.log; }; 
 ####
 ## && printf %b "\nEPOCH_$EPOCHSECONDS " >> $HOME/logs/calc.sh; 
 ####
