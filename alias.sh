@@ -119,8 +119,9 @@ alias 12edit-anews_start='$EDITOR ~/start/anew.sh'
 alias coolors='echo; for i in $(seq --equal-width 255); do printf "\e[48;5;${i}m ${i} \e[7m\e[30m ${i} \e[0m"; done; '; 
 ####
 alias push='git add --all; git commit --all -m $(id -nu; date +%F_%H_%M); git push -v|batcat -ppflzig'
-alias pp='push'
-alias pull='git pull'
+# alias pp='push'
+alias pp='git add ./; git commit -a -m "${USER}_${modo//\ /}_$(date)" -v; git pull --verbose; git push --verbose; ls --color=always -trAp --group-directories-first'; 
+alias pull='git pull --verbose'
 alias pppp='git pull|batcat -ppflzig'; 
 alias uuuu='$sudo apt update 2>/dev/null| \
 bat -ppflzig --theme=Nord; $sudo apt upgrade -y 2>/dev/null| \
