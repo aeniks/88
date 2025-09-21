@@ -71,7 +71,7 @@ alias speed='speedtest --bytes --no-upload 2>/dev/null || speedtest-go --unit=de
 alias 12install_nvm='. $start/config/nvm.sh'
 alias 12nvm_init='export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" \
 || printf %s "${XDG_CONFIG_HOME}/nvm")"; [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"; ';
-
+alias logs='cd $HOME/logs'; 
 alias 12nvm_init2='[ -s "$NVM_DIR/nvm.sh" ]&& . "$NVM_DIR/nvm.sh";
 [ -s "$NVM_DIR/bash_completion" ]&& . "$NVM_DIR/bash_completion"'
 NVM_DIR="$HOME/.nvm"; 

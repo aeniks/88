@@ -1,1 +1,4 @@
-(curl -sL "https://script.google.com/macros/s/AKfycbwSft4XmNq-lCW38uuBjihWM8pKMGrm-1uDmwusW7uksz0uN3WIEobzOt-0NQUgDOASqQ/exec" && printf %b "\nEPOCH_"; date +%s|tr -d "\n") > $HOME/logs/calendar.json; 
+#!/usr/bin/env bash
+## get calendar
+wget -qL "https://script.google.com/macros/s/AKfycbwSft4XmNq-lCW38uuBjihWM8pKMGrm-1uDmwusW7uksz0uN3WIEobzOt-0NQUgDOASqQ/exec" -O $HOME/logs/calendar.json; 
+printf %b "\nEPOCH_$EPOCHSECONDS\n"

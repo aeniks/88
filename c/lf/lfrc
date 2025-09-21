@@ -50,7 +50,10 @@ map ss :search
 map sp :set preview! 
 map s0 :set ratios 1
 map s1 :set ratios 1:1
-map 1
+cmap 1 ""
+map 1 ""
+map Z :cd ~/zz
+map L :cd ~/logs
 map 1 :set ratios 1:1
 map s2 :set ratios 1:2
 map s4 :set ratios 1:4
