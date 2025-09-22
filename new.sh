@@ -138,7 +138,7 @@ dott; echo;
 ######### IP##########################
 [ "$wlan" ] && printf %b "${wlan} "|bat -ppflsyslog --theme DarkNeon && \
 [ "$mac" ] && printf %b "| ${mac[1]} | ${mac}" |tr -d "\n"| bat -ppflsyslog --theme zenburn; 
-[ "$ssh" ] && printf %b " | ${ssh} | ${ssh[2]} "|tr "\n " "\t "| bat -ppflsyslog --theme zenburn; 
+[ "$ssh" ] && printf %b " << ${ssh} : ${ssh[-1]} "|tr "\n " "\t "| bat -ppflsyslog --theme zenburn; 
 echo; 
 dott; 
 echo; 
@@ -147,8 +147,8 @@ printf %b "\e[48;5;${idc}m\e[3${idc[2]}m ${idc[3]} \e[4${idc[2]}m \e[38;5;${idc}
 echo; 
 dott; 
 echo;
-cat $logs/dfree.log 2>/dev/null || dfree; 
-dots; echo;
+[ $(wc -c ${logs}/dfree.log|tr -d "a-z" 2>/dev/null) -gt 4 ] && cat ${logs}/dfree || dfree; 
+dott; echo;
 printf '\e]12;red\e\\'; 
 ####
 moda="$(printf %b "${modo}"|tr -d "[]"|head -c14)"; model="${moda/%\ /}"; 
