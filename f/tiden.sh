@@ -14,6 +14,6 @@ sleep 8;
 done; 
 
 }; 
-tiden
+
 
 # gum style --border normal --padding "0 2" --margin "1 $((RANDOM%8))" "$(fortune|wc -c|fmt -g 44|bat -ppfljs --theme TwoDark)"; read -sn1 -t12 "kk";  [ "$kk" = q ] && return 0; done; 
