@@ -24,7 +24,7 @@ mkdir $HOME/logs $HOME/tmp $HOME/gh $HOME/dl -m 775 -p 2>/dev/null;
 ########
 # [[ "$OS" != "Debian" ]] && \
 . $HOME/88/f/dfree.sh; 
-rm $logs/dfree.log &>/dev/null; dfree > $logs/dfree.log & disown; 
+dfree > $logs/dfree.log & disown; 
 ########
 . $HOME/88/i/coala.log; 
 ########
@@ -40,7 +40,7 @@ if echo $HOME|grep -w "termux"; then alias sudo='command'; else sudo=sudo; fi;
 if fzf --bash &>/dev/null; then . $HOME/.config/fzf_completions_bash.sh; fi; 
 ########
 # [ $PREFIX ] && 
-export FZF_DEFAULT_OPTS="-i -m --cycle --ansi --tmux 'center,99%,95%' --height '~99%' --bind '0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort' --info inline --inline-info --preview-window 'wrap,noborder' --preview 'bat -ppf {} 2>/dev/null||ls -pm {}' --scroll-off 22 --color 'list-bg:234,bg+:24,fg+:15,info:6' --border 'top' --border-label 'C-a:select-all | 0: change orientation | q:uit ' --border-label-pos 'top' "$([ $HOME ] && printf %b "--wrap-sign '""'")""; 
+export FZF_DEFAULT_OPTS="-i -m --cycle --ansi --tmux 'center,99%,95%' --height '~99%' --bind '0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort' --info inline --inline-info --preview-window 'wrap,noborder' --preview 'bat -ppf {} 2>/dev/null||ls -pm {}' --scroll-off 22 --color 'list-bg:234,bg+:24,fg+:15,info:6' --border 'top' --border-label 'C-a:select-all | 0: change orientation | q:uit ' --border-label-pos 'top' --wrap-sign "" "$([ $PREFIX ] && printf %b "--tmux")""; 
 ########
 # [ -z $PREFIX ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder" --scroll-off 22 --color "bg:0,preview-bg:16,bg+:24,fg+:15,info:6"'; 
 
@@ -132,11 +132,11 @@ dott; echo;
 ######### IP##########################
 [ "$wlan" ] && printf %b "${wlan} "|bat -ppflsyslog --theme DarkNeon && \
 [ "$mac" ] && printf %b "| ${mac[1]} | ${mac}" |tr -d "\n"| bat -ppflsyslog --theme zenburn; 
-[ "$SSH_CLIENT" ] && printf %b " | $SSH_CLIENT"|cut -f1  -d" " |tr "\n " "\t "| bat -ppflsyslog --theme zenburn; 
+[ "$SSH_CLIENT" ] && printf %b " | "${SSH_CLIENT""|cut -f1  -d" " |tr "\n " "\t "| bat -ppflsyslog --theme zenburn; 
 echo; 
 dott; 
 echo; 
-printf %b "\e[48;5;${idc}m\e[3${idc[2]}m ${idc[3]} \e[4${idc[2]}m \e[38;5;${idc}m${idc[1]} \e[40;1m ${idc} \e[0m\n"; 
+printf %b "\e[48;5;${idc}m\e[3${idc[2]}m ${idc[3]} \e[4${idc[2]}m \e[38;5;${idc}m${idc[1]} \e[40;1m ${idc} \e[0m${}"; 
 # printf %b "\e[3${c[idn]:13:1};48;5;${c[idn]:0:13}\e[0m \\${c[idn]:0:5}\e[3${c[idn]:13:1};48;5;${c[idn]:0:4}${c[idn]: -9: 9} \e[0m"; 
 echo; 
 dott; 
