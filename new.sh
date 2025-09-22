@@ -121,6 +121,7 @@ printf %b "[${memram}] "|bat -ppfljava --theme DarkNeon; echo;
 dott; printf %b "\e[G"; 
 
 printf %b "[${os1} | ${os2}] "|tr -s "\n" " "|bat -ppfljava --theme zenburn; echo; 
+dott; echo; 
 ########## DATE // CALENDAR ########
 ############
 # calength="$(cat $HOME/logs/cal.log|wc -l)";
