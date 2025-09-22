@@ -132,7 +132,7 @@ dott; echo;
 ######### IP##########################
 [ "$wlan" ] && printf %b "${wlan} "|bat -ppflsyslog --theme DarkNeon && \
 [ "$mac" ] && printf %b "| ${mac[1]} | ${mac}" |tr -d "\n"| bat -ppflsyslog --theme zenburn; 
-[ "$SSH_CLIENT" ] && printf %b " | $SSH_CLIENT"|cut -f1,2,4  -d" " |tr "\n " "\t_"| bat -ppflsyslog --theme zenburn; 
+[ "$SSH_CLIENT" ] && printf %b " | $SSH_CLIENT"|cut -f1  -d" " |tr "\n " "\t "| bat -ppflsyslog --theme zenburn; 
 echo; 
 dott; 
 echo; 
