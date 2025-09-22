@@ -48,10 +48,10 @@ if fzf --bash &>/dev/null; then . $HOME/.config/fzf_completions_bash.sh; fi;
 unset tmuxprefix; 
 if [ "$PREFIX" ]; then tmuxprefix=" --tmux 'center,99%,95%' "; 
 fi; 
-[ -z "$PREFIX" ] && alias fzf='fzf-tmux -h 95% -w 95%'; 
+[ -z "$PREFIX" ] && alias fzf='fzf-tmux -h 98% -w 98%'; 
 
 # alias
-export FZF_DEFAULT_OPTS="${tmuxprefix} -i -m --cycle --ansi --height '~99%' --bind '0:change-preview-window(hidden,right,50%|top,20%|top,55%|right,20%),q:abort' --info inline --inline-info --preview-window 'wrap,noborder' --preview 'bat -ppf {} 2>/dev/null||ls -pm {}' --scroll-off 22 --color 'bg:232,bg+:24,fg+:15,info:6,preview-bg:-1' --border 'top' --border-label 'C-a:select-all | 0: change orientation | q:uit ' --border-label-pos 'top' "$([ $PREFIX ] && printf %b "--wrap-sign '""'")""; 
+export FZF_DEFAULT_OPTS="${tmuxprefix} -i -m --cycle --ansi --height '~99%' --bind '0:change-preview-window(hidden,right,50%|top,20%|top,55%|right,20%),q:abort' --info inline --inline-info --preview-window 'wrap,noborder' --preview 'bat -ppf {} 2>/dev/null||ls -pm {}' --scroll-off 22 --color 'bg:234,bg+:24,fg+:15,info:6,preview-bg:-1' --border 'top' --border-label 'C-a:select-all | 0: change orientation | q:uit ' --border-label-pos 'top' "$([ $PREFIX ] && printf %b "--wrap-sign '""'")""; 
 ########
 # [ -z $PREFIX ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder" --scroll-off 22 --color "bg:0,preview-bg:16,bg+:24,fg+:15,info:6"'; 
 
@@ -165,7 +165,7 @@ for i in $HOME/88/f/*.sh; do . $i; done;
 source "$HOME/88/c/tmuxcompletions.sh"; 
 ####
 sshd 2>/dev/null; command ps -A|cut -c25-|grep -e 'crond' &>/dev/null || crond 2>/dev/null; 
-[ -z "$PREFIX" ] && alias fzf='fzf-tmux -h 95% -w 95%'; 
+[ -z "$PREFIX" ] && alias fzf='fzf-tmux -h 95% -w 98%'; 
 }; 
 [ $PREFIX ] && termux-api-start &>/dev/null & disown; 
 [ $PREFIX ] && (sleep 4; termux-wake-lock &>/dev/null) & disown; 
