@@ -95,6 +95,9 @@ cpus=($(lscpu|grep -e 'CPU(s):' -m1|cut -f2 -d":"|tr -d " "));
 ########
 memram="$(memram)"; 
 idn="${wlan/*./}"; 
+. $HOME/88/i/colors/coala.sh; 
+idc=(${co[idn]}); 
+tmux set-option -g status-style bg=colour$(printf %b "$idc";); 
 ########
 ########
 dots() { printf %b "${re}·········${re}"; }; 
@@ -114,10 +117,11 @@ dott; printf %b "\e[G";
 printf %b "[${os1} | ${os2}] "|tr -s "\n" " "|bat -ppfljava --theme zenburn; echo; 
 dott; echo; 
 ########## DATE // CALENDAR ########
-# (printf %b " $(date +%a\ %b\ %d\ %Y\ \|\ %X| tr -d "\n") ")|bat -ppflc++ --theme zenburn; 
-calength="$(cat $HOME/logs/cal.log|wc -l)";
-for i in $(seq $calength); do dott && echo; done; 
-printf %b "\e[${calength}A"; 
+############
+# calength="$(cat $HOME/logs/cal.log|wc -l)";
+# for i in $(seq $calength); do dott && echo; done; 
+# printf %b "\e[${calength}A"; 
+############
 12calendar && dott && echo; 
 # dots; dots; dots; dots; dots; 
 # printf %b "${w[idn]}\e[7m $idn \e[27m $EPOCHSECONDS \e[0m \e[38;5;${idn}m idn: $idn  \e[0m"; echo;
@@ -132,7 +136,8 @@ printf %b "\e[${calength}A";
 echo; 
 dott; 
 echo; 
-printf %b "\e[3${c[idn]:13:1};48;5;${c[idn]:0:13}\e[0m \\${c[idn]:0:5}\e[3${c[idn]:13:1};48;5;${c[idn]:0:4}${c[idn]: -9: 9} \e[0m"; 
+printf %b "\e[48;5;${idc}m\e[3${idc[2]}m ${idc[3]} \e[4${idc[2]}m \e[38;5;${idc}m${idc[1]} \e[40;1m ${idc} \e[0m\n"; 
+# printf %b "\e[3${c[idn]:13:1};48;5;${c[idn]:0:13}\e[0m \\${c[idn]:0:5}\e[3${c[idn]:13:1};48;5;${c[idn]:0:4}${c[idn]: -9: 9} \e[0m"; 
 echo; 
 dott; 
 echo;
