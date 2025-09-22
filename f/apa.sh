@@ -61,9 +61,8 @@ printf %b "\e[96m ----------\e[0m\n\n\e[2A"
 read -rs -n1 "ny"; if [ -z "$ny" ]; then printf %b " \t\t [\e[92mOK\e[0m] \n"; 
 # IFS=$'"' \n\t'"'; 
 
-tmux split-window -e "apap=${aapp[*]}" -e "instremove=$instremove" -e "sudo=$sudo" -l "82%" \
--v '
-ap=(${apap}); for i in ${!ap[*]}; do printf %b "\n\e[0m${instremove}ing: \e[48;5;$((RANDOM%222 + 22))m ${ap[i]} \e[0m\n-\e[222m\n\e[38;5;$((RANDOM%222 + 22))m"; $sudo apt ${instremove} -y ${ap[i]}; done; printf %b "\n-\e[222b\ndone\n"; read -t2 -n1;'
+tmux display-popup -E -e "apap=${aapp[*]}" -e "instremove=$instremove" -e "sudo=$sudo" -w "82%" -h "82%" \
+'ap=(${apap}); for i in ${!ap[*]}; do printf %b "\n\e[0m${instremove}ing: \e[48;5;$((RANDOM%222 + 22))m ${ap[i]} \e[0m\n-\e[222m\n\e[38;5;$((RANDOM%222 + 22))m"; $sudo apt ${instremove} -y ${ap[i]}; done; printf %b "\n-\e[222b\ndone\n"; read -t2 -n1;'
 
 # for i in {1..55}; do printf %b "\e[48;5;1$(shuf -i 1-9 -z -n1; shuf -i 1-9 -z -n1)m  "; sleep .4; done & disown; printf %b "\e[A\e[K"; 
 # for aa in ${ap[*]}; do printf %b "\n $aa \n"; sleep .5; 
