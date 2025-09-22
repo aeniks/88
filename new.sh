@@ -13,6 +13,8 @@ export tmp="$HOME/tmp"; [ -z $TMPDIR ] && export TMPDIR="$HOME/tmp";
 unset HISTTIMEFORMAT; 
 ########
 re='\e[0m'; cyan='\e[96m'; logs="$HOME/logs"; c2="\e[96m -- \e[0m"; 
+ssh=(${SSH_CONNECTION}); 
+[ -z $ssh ] && ssh=($SH_CLIENT); 
 ########
 unset lessprefix; [ $PREFIX ] && lessprefix='--redraw-on-quit'; 
 unset tmuxprefix; [ $PREFIX ] && tmuxprefix=' --tmux 'center,99%,95%' '; 
@@ -101,6 +103,7 @@ idn="${wlan/*./}";
 . $HOME/88/i/colors/coala.sh; 
 idc=(${co[idn]}); 
 tmux set-option -g status-style bg=colour$(printf %b "$idc";); 
+[ -z "$ssh" ] && ssh=(${SSH_CONNECTION}); 
 ########
 ########
 dots() { printf %b "${re}·········${re}"; }; 
@@ -135,7 +138,7 @@ dott; echo;
 ######### IP##########################
 [ "$wlan" ] && printf %b "${wlan} "|bat -ppflsyslog --theme DarkNeon && \
 [ "$mac" ] && printf %b "| ${mac[1]} | ${mac}" |tr -d "\n"| bat -ppflsyslog --theme zenburn; 
-[ "$SSH_CLIENT" ] && printf %b " | "${SSH_CLIENT}""|cut -f1  -d" " |tr "\n " "\t "| bat -ppflsyslog --theme zenburn; 
+[ "$ssh" ] && printf %b " | ${ssh} | ${ssh[2]} "|tr "\n " "\t "| bat -ppflsyslog --theme zenburn; 
 echo; 
 dott; 
 echo; 
