@@ -147,7 +147,7 @@ printf %b "\e[48;5;${idc}m\e[3${idc[2]}m ${idc[3]} \e[4${idc[2]}m \e[38;5;${idc}
 echo; 
 dott; 
 echo;
-[ $(wc -c ${logs}/dfree.log|tr -d "a-z" 2>/dev/null) -gt 4 ] && cat ${logs}/dfree || dfree; 
+[ "$(cat ${logs}/dfree.log|wc -c" -gt 4 ] && cat "${logs}/dfree" || dfree; 
 dott; echo;
 printf '\e]12;red\e\\'; 
 ####
