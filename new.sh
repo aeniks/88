@@ -45,7 +45,8 @@ if echo $HOME|grep -w "termux"; then alias sudo='command'; else sudo=sudo; fi;
 if fzf --bash &>/dev/null; then . $HOME/.config/fzf_completions_bash.sh; fi; 
 ########
 # [ $PREFIX ] && 
-export FZF_DEFAULT_OPTS="${tmuxprefix} -i -m --cycle --ansi --height '~99%' --bind '0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort' --info inline --inline-info --preview-window 'wrap,noborder' --preview 'bat -ppf {} 2>/dev/null||ls -pm {}' --scroll-off 22 --color 'bg:8,bg+:24,fg+:15,info:6' --border 'top' --border-label 'C-a:select-all | 0: change orientation | q:uit ' --border-label-pos 'top' "$([ $PREFIX ] && printf %b "--wrap-sign '""'")""; 
+# alias
+export FZF_DEFAULT_OPTS="${tmuxprefix} -i -m --cycle --ansi --height '~99%' --bind '0:change-preview-window(hidden,right,50%|top,20%|top,55%|right,20%),q:abort' --info inline --inline-info --preview-window 'wrap,noborder' --preview 'bat -ppf {} 2>/dev/null||ls -pm {}' --scroll-off 22 --color 'bg:234,bg+:24,fg+:15,info:6,preview-bg:-1' --border 'top' --border-label 'C-a:select-all | 0: change orientation | q:uit ' --border-label-pos 'top' "$([ $PREFIX ] && printf %b "--wrap-sign '""'")""; 
 ########
 # [ -z $PREFIX ] && export FZF_DEFAULT_OPTS='-i -m --cycle --ansi --bind "0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort" --info inline --inline-info --preview-window "wrap,noborder" --scroll-off 22 --color "bg:0,preview-bg:16,bg+:24,fg+:15,info:6"'; 
 
