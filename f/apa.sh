@@ -11,11 +11,11 @@ FZF_DEFAULT_OPTS='-m -i --ansi --bind "0:change-preview-window(right,50%|top,20%
 aline='\e[96m ----------\e[0m\n'; 
 
 
-printf %b "\e[?25l\n\n\n\n\n\n\e[5A\e[96m --\e[0;2m [\e[0;92mI\e[0;2m]\e[0mnstall or \e[2m[\e[0;96mR\e[0;2m]\e[0memove ? "; 
+printf %b "\e[?25l\n\n\n\n\n\n\e[5A\e[96m --\e[0;2m [\e[0;92mI\e[0;2m]\e[0mnstall or \e[2m[\e[0;96mr\e[0;2m]\e[0memove ? "; 
 read -srn1 "irir"; printf %b "\e[0m\e[?25h \e[42G\e[42m  ok  \e[0m\n"; 
 ########
 case "$irir" in 
-i|I) instremove="install"; 
+i|I|"") instremove="install"; 
 apagetlist() { apt list 2>/dev/null|tail -n +2|cut -f1 -d"/" > "$HOME/logs/apts.log" & disown; };; 
 ####
 r|R) instremove="remove"; 
@@ -63,7 +63,7 @@ read -rs -n1 "ny"; if [ -z "$ny" ]; then printf %b " \t\t [\e[92mOK\e[0m] \n";
 
 tmux split-window -e "apap=${aapp[*]}" -e "instremove=$instremove" -e "sudo=$sudo" -l "82%" \
 -v '
-ap=(${apap}); for i in ${!ap[*]}; do printf %b "${ap[i]} \n"; done; read -n1;'
+ap=(${apap}); for i in ${!ap[*]}; do printf %b "\n\e[0m${instremove}ing: \e[48;5;$((RANDOM%222 + 22))m ${ap[i]} \e[0m\n-\e[222m\n\e[38;5;$((RANDOM%222 + 22))m"; $sudo apt ${instremove} -y ${ap[i]}; done; printf %b "\n-\e[222b\ndone\n"; read -t2 -n1;'
 
 # for i in {1..55}; do printf %b "\e[48;5;1$(shuf -i 1-9 -z -n1; shuf -i 1-9 -z -n1)m  "; sleep .4; done & disown; printf %b "\e[A\e[K"; 
 # for aa in ${ap[*]}; do printf %b "\n $aa \n"; sleep .5; 
