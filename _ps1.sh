@@ -41,9 +41,9 @@ ee() { [ $? = 130 ] && echo gg; };
 # . "$HOME/88/i/colors.sh"; 
 ################
 # \e[0;2m'${wlan%.*}'.\e[0;1m'${w[${wlan/*./}]}'${wlan/*./}
-st() { st=$?; [ $st = 130 ] && printf %b "\e[2A\r"; return $st; }; 
+# st() { st=$?; [ $st = 130 ] && printf %b "\e[2A\r"; return $st; }; 
 ################
-trap 'printf %b "\e[K\e[2A\e[K"' 2; 
+# trap 'printf %b "\e[K\e[2A\e[K"' 2; 
 ##
 PS1='\e[0m[\e[0;1;38;5;$((2 + $?))m$?'$re']\
 $(gits||printf " ")\
