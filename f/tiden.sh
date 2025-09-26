@@ -1,19 +1,17 @@
 tiden() { 
 printf %b "\ec"; 
-while true; do printf %b "\e[4H\ec"; 
+while true; do printf %b "\ec\e[48;5;$((RANDOM%222))m"; 
+for i in $(seq $LINES); do printf %b " \e[222b"; done; sleep .5; printf %b "\ec\e[12H"; 
 
-fortune |tee $HOME/.$EPOCHSECONDS|wc -c
 
-figlet -f Roman -w $COLUMNS -c "$(date +%H:%M:%S)" | bat -ppfljs; 
-printf %b "\e[$((LINES - 5))H\e[5A"; 
+figlet -f Roman -w $COLUMNS -c "$(date +%H:%M)" | bat -ppfljs; 
+
+printf %b "\e[$((LINES - $((RANDOM%12))));$((RANDOM%12))H\e[6A"; 
 
 gum style --border normal --border-foreground "$((RANDOM%222))" --margin "1 4" \
-"$(gum style --border normal --padding "1 4" --margin "0 4 0 0" --border-foreground "$((RANDOM%222))" "$(while true; do [ "$(fortune|tee ~/.ff|wc -c)" -lt 120 ] && break; done; 
-bat -ppfljava ~/.ff|tr -s "\t "  " "; )")";
-sleep 8; 
-done; 
-
+"$(gum style --border normal --padding "1 4" --margin "0 $((RANDOM%4)) 0 $((RANDOM%4))" \
+--border-foreground $((RANDOM%222)) \
+"$(while true; do [ "$(fortune|tee ~/.ff|wc -c)" -lt 120 ] && break; done; 
+bat -ppfljava ~/.ff|fmt -w $((COLUMNS - 25)) -g $((COLUMNS-28))|tr -s "\t " " "; )")"; 
+read -st 45 -n1 "kk"; [ "$kk" ] && break; done; 
 }; 
-
-
-# gum style --border normal --padding "0 2" --margin "1 $((RANDOM%8))" "$(fortune|wc -c|fmt -g 44|bat -ppfljs --theme TwoDark)"; read -sn1 -t12 "kk";  [ "$kk" = q ] && return 0; done; 
