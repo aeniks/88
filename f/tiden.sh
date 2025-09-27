@@ -6,7 +6,7 @@ for i in $(seq $LINES); do printf %b " \e[222b"; done; sleep .5; printf %b "\ec\
 
 figlet -f Roman -w $COLUMNS -c "$(date +%H:%M)" | bat -ppfljs; 
 
-printf %b "\e[$((LINES - $((RANDOM%12))));$((RANDOM%12))H\e[6A"; 
+printf %b "\e[$((LINES - $((RANDOM%12))));$((RANDOM%12))H\e[16A"; 
 
 gum style --border normal --border-foreground "$((RANDOM%222))" --margin "1 4" \
 "$(gum style --border normal --padding "1 4" --margin "0 $((RANDOM%4)) 0 $((RANDOM%4))" \
