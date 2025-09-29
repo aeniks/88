@@ -128,6 +128,7 @@ map bq $return 0
 # map f :push F<backspace><right><backspace><right><backspace>**<left>
 ####
 cmd bboo ${{ 
+tmux display-popup 'aa dd ff ee rr gg'; 
 IFS=$'\n\t '; popo=(chafa bat micro xgd-open); 
 po=($(printf %b "${popo[*]}"|fzf-tmux -h --no-preview -i --cycle --bind 'q:abort' --border 'top'||exit))||exit 0; 
 case $po in chafa) pp="$po -f symbols"; pv="printf %b '\e[4A'$f'\n'; mediainfo $f|tr -d ' '|grep -E -m4 'Width|Height|File'|bat -ppfljava; ";; bat) pp="$po -p";; *) pp="$po";; esac;
