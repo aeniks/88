@@ -222,7 +222,7 @@ printf "\e[35;5m\e[$((lf_width/2-2))G >_<\n\e[25m\e[0m";
 
 
 cmd lenk ${{ 
-read -rep "ln from: $(printf "\e[96m")" -i "$fx" "kk"; read -rep "$(printf "\e[0m")to: $(printf "\e[92m")" -i "$PWD" "kt"; printf "\e[0m"; ln -s "${kk}" "${kt}"; ls $kt; sleep 1; 
+read -rep "ln from: $(printf "\e[96m")" -i "$fx" "kk"; read -rep "$(printf "\e[0m")to: $(printf "\e[92m")" -i "$PWD" "kt"; printf "\e[0m"; ln "${kk}" -t "${kt}" -s; ls $kt; sleep 1; 
 }} 
 
 
