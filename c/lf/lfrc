@@ -84,8 +84,8 @@ map 1 !true
 map x $$f
 map X !$f
 cmap o 
-map o
-map O $mimeopen --ask $f
+map o :bboo
+map O :kola
 map oj !jp2a --color-depth=8 --fill $f
 map oc !chafa $f
 map ok !cacaview $f
@@ -99,6 +99,7 @@ map H :maps
 map m :push %mkdir<space>
 map oD :depl
 map j :tajm
+# $mimeopen --ask $f
 # map b !printf "\n\n\n\n\n\n\n\n\n\n"; exiftool $f|batcat -pl c++
 # map o :push !<space>$f<left><left><left>
 # map <enter>c !chafa $f 
@@ -128,13 +129,14 @@ map bq $return 0
 # map f :push F<backspace><right><backspace><right><backspace>**<left>
 ####
 cmd bboo ${{ 
-tmux display-popup 'aa dd ff ee rr gg'; 
 IFS=$'\n\t '; popo=(chafa bat micro xgd-open); 
 po=($(printf %b "${popo[*]}"|fzf-tmux -h --no-preview -i --cycle --bind 'q:abort' --border 'top'||exit))||exit 0; 
 case $po in chafa) pp="$po -f symbols"; pv="printf %b '\e[4A'$f'\n'; mediainfo $f|tr -d ' '|grep -E -m4 'Width|Height|File'|bat -ppfljava; ";; bat) pp="$po -p";; *) pp="$po";; esac;
 tmux display-popup -E -w "99%" -h "95%" "${pp} $f; ${pv} read -e -n 1 kk"; 
 }} 
 
+
+cmd kola ${{ kk="$(realpath $f)"; [ $f ]||read -ei "$PWD/" "kk"; tmux display-popup -b none -EE -w100% -h100% -e "kk=kk" "printf %b "\e[?25l\e[A"; chafa --format=symbols --scale=max --align right $kk; printf %b '"'\e[11A'"'; mediainfo $kk|tr -s '"'\n'"' '"'\n'"'|head -n9; bash -c '"'read -n1 kk'"'"; }} 
 # mediainfo oi_heyday.jpg|tr -d " "|grep -E -m4 "Width|Height|size|name"
 
 # ${kk[*]:0:((${#kk[*]}-1))} $f; 
