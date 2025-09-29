@@ -28,7 +28,10 @@ tmux display-popup -E -w 99% -h 98% "btop"; fi '
 alias qb='ssh aa@ants.ftp.sh "qbittorrent-nox -d" && xdg-open https://qb.aeniks.com'; 
 alias l='lf -last-dir-path $HOME/logs/ll.log; cd $(cat $HOME/logs/ll.log); '
 alias jacketts='/home/aa/gh/jackett/jackett &'
-alias uu="tmux split-window -l 44% -e sudo='$sudo' '$sudo nala update; $sudo nala upgrade -y; '"; 
+alias uu="tmux split-window -l 44% -e sudo='$sudo' 'hash nala||$sudo apt install nala -y &>/dev/null; $sudo nala update; $sudo nala upgrade -y; '"; 
+alias u2='tmux split-window -l "44%" -e "sudo=$sudo" -v '$sudo apt update 2>/dev/null|bat -ppflzig --theme=DarkNeon; printf %b "\n\n\n\n\e[96m"; $sudo apt upgrade -y; $sudo apt autoremove -y; printf %b "\n\e[0;46m\n\n\n\n -- done\n\n\n\n\e[0m\n"; read -n1 "kk"; ';'; 
+
+
 alias ffff='[ -z $PREFIX ] && neofetch || [ $PREFIX ] && fastfetch --percent-type 2 --logo-position right --logo-padding 2 --bar-border-right "" --bar-border-left "" --disable-linewrap';
 alias mm='micro'
 #!/bin/bash
@@ -124,12 +127,12 @@ alias pp='git add ./; git commit -a -m "${USER}_${modo//\ /}_$(date)" -v; git pu
 alias pull='git pull --verbose'
 alias pppp='git pull|batcat -ppflzig'; 
 alias uuuu='$sudo apt update 2>/dev/null| \
-bat -ppflzig --theme=Nord; $sudo apt upgrade -y 2>/dev/null| \
-bat -ppfld --theme=1337; sudo apt autoremove -y 2>/dev/null | \
+bat -ppflzig --theme=Nord; $sudo apt upgrade -y; \
+$sudo apt autoremove -y 2>/dev/null | \
 bat -ppflc --theme=1337; 
 sudo apt update &>/dev/null|tail -n1 > $HOME/logs/aptup.log && \
 printf %b "\n -- done\n\n"'; 
-alias uu='uuuu'; 
+# alias uu='uuuu'; 
 alias rb='$sudo reboot'; 
 open() { [ $PREFIX ] && termux-open $@ || xdg-open $@; }; 
 alias open-url='termux-open-url'; 
