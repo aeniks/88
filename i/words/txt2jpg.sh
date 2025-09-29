@@ -15,8 +15,8 @@ words=($(cat $wordfolder/$word.log));
 ####
 local IFS=$'\n\t '; 
 gum style --margin "1 2 0 2" --align center --border none "$(printf %b "${words[0]}"|bat -ppfljava)"|ansifilter -M -F "serif" -s 40 > $wordfolder/$word.htm; 
-gum style --margin "0 2 0 2" --align center --border none "$(printf %b "${words[1]}"|bat -ppfljava)"|ansifilter -M -F "code" -s 28 >> $wordfolder/$word.htm; 
-gum style --margin "0 2 0 2" --align center --border none --foreground "#bbbbbb" "$(printf %b "${words[2]}")"|ansifilter -M -F "sans-serif" -s 25 >> $wordfolder/$word.htm; 
+gum style --margin "0 2 0 2" --align center --border none "$(printf %b "${words[1]}"|bat -ppfljava)"|ansifilter -M -F "monospace" -s 28 >> $wordfolder/$word.htm; 
+gum style --margin "0 2 0 2" --align center --border none --foreground "#bbbbbb" "$(printf %b "${words[2]}")"|ansifilter -M -F "monospace" -s 25 >> $wordfolder/$word.htm; 
 gum style --margin "0 2 1 2" --padding "0 2 0 2" --align center --border normal --border-foreground "#bbbbbb" "$(printf %b "${words[3]}"|fmt -w 40 -g 28|bat -ppfljava)"|ansifilter -M -F "monospace" -s 28 >> $wordfolder/$word.htm; 
 
 
