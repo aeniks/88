@@ -15,7 +15,7 @@ local IFS=$'\n';
 words=($(cat "$mkt" | grep -e 'Est. 1828' -A20|tail -n+7|grep -vE 'play|Prev Next|━|What It Means'|sed 2,4"s/\ /\n\n/"|fmt -w999|grep -v '// '|tr -s "\n" "\n")); 
 
 ##
-printf %b "${words[0]}\n[ ${words[2]} ]\n\n${words[1]}\n${words[-1]}" > $td/$words.log; 
+printf %b "${words[0]}\n[ ${words[2]} ]\n${words[1]}\n${words[-1]}" > $td/$words.log; 
 }; 
 ##
 wordget_miriam; 
