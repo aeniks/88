@@ -169,6 +169,11 @@ sshd 2>/dev/null; command ps -A|cut -c25-|grep -e 'crond' &>/dev/null || crond 2
 alias fzf='fzf-tmux -h 95% -w 98%'; 
 }; 
 
+[ $PREFIX ] && modo=($(getprop|grep -E "vendor.manufacturer|product.manufacturer" -m1 -A1 --group-separator=""|cut -f2- -d" "|tr -s "\n[]" " "; )); 
+#############################
+[ -z $PREFIX ] && [ -e /sys/devices/virtual/dmi/id/product_family ] && \
+modo=($(for bb in board_vendor board_name bios_vendor sys_vendor; 
+do cat /sys/devices/virtual/dmi/id/${bb} 2>/dev/null|tr -s "\n" " "; done)); 
 
 moda="$(printf %b "${modo}"|tr -d "[]"|head -c14)"; model="${moda/%\ /}"; 
 . ${HOME}/88/alias.sh; 
