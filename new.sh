@@ -82,6 +82,9 @@ local IFS=$' \n\t';
 [ -z $PREFIX ] && [ -e /sys/devices/virtual/dmi/id/product_family ] && \
 modo=($(for bb in board_vendor board_name bios_vendor sys_vendor; 
 do cat /sys/devices/virtual/dmi/id/${bb} 2>/dev/null|tr -s "\n" " "; done)); 
+#################################
+## ____ VIDEOCARD _ GET ____ ####
+[ -z $PREFIX ] && videocard="$(lspci|grep -e 'VGA'|cut -f2 -d'['|cut -f1 -d']';)"; 
 ########
 ## ____ OS __ GET _____
 [ $PREFIX ] && osx1=($(uname --operating-system; getprop ro.build.version.release; getprop ro.build.version.codename; )); 
@@ -119,10 +122,13 @@ dott; printf %b "\e[G";
 
 printf %b "[${modo[*]:0:7}] "|uniq -u|tr -s "\n" " "|bat -ppfljava --theme DarkNeon; echo; 
 dott; printf %b "\e[G"; 
-
-printf %b "[cpu: ${cpu[*]} x ${cpus}] "|tr -s "\n" " "|bat -ppfljava --theme Dracula; echo; 
-dott; printf %b "\e[G"; 
-
+####
+printf %b "[${cpu[*]} x ${cpus}] "|tr -s "\n" " "|bat -ppfljava --theme Dracula; echo; 
+[ "$videocard" ] && \
+dott && printf %b "\e[G" && \
+printf %b "[${videocard}] "|tr -s "\n" " "|bat -ppfljava --theme DarkNeon && echo && 
+dott && printf %b "\e[G"; 
+####
 printf %b "[${memram}] "|bat -ppfljava --theme DarkNeon; echo; 
 dott; printf %b "\e[G"; 
 
