@@ -5,6 +5,7 @@ c2='\e[96m --\e[0m'; re='\e[0m'; gt="";
 alias kk='fmt -g 66|col -xb|bat -pfljava --theme DarkNeon'; 
 alias kkkk='col -xb|fmt --split-only --width=$((COLUMNS - 2)) --goal=66 --uniform-spacing --tagged-paragraph|bat -pfljava --theme TwoDark'; 
 alias cccc='crontab -e'; 
+alias xxxx='ssh -p 8022 aa@192.168.0.19 "mpv $HOME/88/m/money.mp3"'
 alias 12alias='$EDITOR ~/88/alias.sh'; 
 alias antsup='ssh aa@ants.ftp.sh "sudo apt update; sudo apt upgrade; sudo reboot"'; 
 alias s='ssss -l'; 
