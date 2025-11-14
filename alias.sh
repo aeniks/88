@@ -6,6 +6,7 @@ alias kk='fmt -g 66|col -xb|bat -pfljava --theme DarkNeon';
 alias kkkk='col -xb|fmt --split-only --width=$((COLUMNS - 2)) --goal=66 --uniform-spacing --tagged-paragraph|bat -pfljava --theme TwoDark'; 
 alias cccc='crontab -e'; 
 alias 12alias='$EDITOR ~/88/alias.sh'; 
+alias antsup='ssh aa@ants.ftp.sh "sudo apt update; sudo apt upgrade; sudo reboot"'; 
 alias s='ssss -l'; 
 alias ss='history -s "$(printf %b "sudo "; tail -n1 "$HISTFILE")"; history -w; read -ei "$(tail -n1 "$HISTFILE")" "ssss" && ${ssss} || echo ok; '; 
 alias 88='cd ~/88; echo; realpath ~/88|bat -ppfljava; echo; ls --color=always -GghtrAp --group-directories-first; echo; git status'; 
@@ -42,7 +43,8 @@ alias mm='micro'
 # alias yno='nyo'; 
 alias zz='cd $HOME/zz'; 
 # alias zz='col -b|tr -s "\n\t " "\n\t "|bat -pfljava --pager "more"'; 
-alias f='fff; cd $(cat $HOME/.cache/fff/.fff_d)'; 
+alias f='[ -e $PREFIX/bin/fastfetch ] && fastfetch || neofetch || return 0'
+# alias f='fff; cd $(cat $HOME/.cache/fff/.fff_d)'; 
 alias sshaa='mosh aa@ants.ftp.sh||ssh aa@ants.ftp.sh'; 
 alias 12moshants='sshaa'; 
 alias 12path='$EDITOR $HOME/.config/path.sh; '; 
