@@ -6,6 +6,7 @@ alias kk='fmt -g 66|col -xb|bat -pfljava --theme DarkNeon';
 alias kkkk='col -xb|fmt --split-only --width=$((COLUMNS - 2)) --goal=66 --uniform-spacing --tagged-paragraph|bat -pfljava --theme TwoDark'; 
 alias cccc='crontab -e'; 
 alias 12alias='$EDITOR ~/88/alias.sh'; 
+alias s='ssss -l'; 
 alias ss='history -s "$(printf %b "sudo "; tail -n1 "$HISTFILE")"; history -w; read -ei "$(tail -n1 "$HISTFILE")" "ssss" && ${ssss} || echo ok; '; 
 alias 88='cd ~/88; echo; realpath ~/88|bat -ppfljava; echo; ls --color=always -GghtrAp --group-directories-first; echo; git status'; 
 alias 88pullpush='git add ./; git commit -a -m "${USER}_${mod//\ /}_$(date)" -v; git pull; git push; ls --color=always -trAmp --group-directories-first'; 
@@ -29,6 +30,7 @@ alias qb='ssh aa@ants.ftp.sh "qbittorrent-nox -d" && xdg-open https://qb.aeniks.
 alias l='lf -last-dir-path $HOME/logs/ll.log; cd $(cat $HOME/logs/ll.log); '
 alias jacketts='/home/aa/gh/jackett/jackett &'
 alias uu="tmux split-window -l 44% -e sudo='$sudo' 'hash nala||$sudo apt install nala -y &>/dev/null; $sudo nala update; $sudo nala upgrade -y; '"; 
+alias upup='$sudo apt update; $sudo apt upgrade -y'; 
 
 # alias u2='tmux split-window -l "44%" -e "sudo=$sudo" -v '$sudo apt update 2>/dev/null|bat -ppflzig --theme=DarkNeon; printf %b "\n\n\n\n\e[96m"; $sudo apt upgrade -y; $sudo apt autoremove -y; printf %b "\n\e[0;46m\n\n\n\n -- done\n\n\n\n\e[0m\n"; read -n1 "kk"; ';'; 
 
