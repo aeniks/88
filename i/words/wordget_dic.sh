@@ -1,6 +1,8 @@
 #!/bin/bash
 wordget_dictionary_com() { 
-local IFS=$'\n'; fold="$HOME/logs/words/wordlog"; mkdir $fold -p -m 775 2>/dev/null; 
+local IFS=$'\n'; 
+fold="$HOME/logs/words/wordlog"; 
+mkdir $fold -p -m 775 2>/dev/null; 
 date=$(date +%F-%H_%M_%S); 
 wlog="$HOME/logs/words/tmp/dictionary_com_$date"; 
 ####
