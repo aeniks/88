@@ -36,7 +36,7 @@ convert -border 2 -bordercolor black -gravity center pango:"$(cat $wordlog/${wor
 ####
 hexx="$(pastel random -n1|pastel format hex|col -xb)"; 
 ####
-convert -border 12%x12% -bordercolor "$hexx" "$wordimg/${word}2.jpg" "$wordimg/${word}.jpg"; 
+convert -border 6%x29% -bordercolor "$hexx" "$wordimg/${word}2.jpg" "$wordimg/${word}.jpg"; 
 ####
 cp "$wordimg/${word}.jpg" -t "$HOME/fofo/wordimg"; 
 ####
