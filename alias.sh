@@ -38,13 +38,14 @@ alias upup='$sudo apt update; $sudo apt upgrade -y';
 
 
 alias ffff='[ -z $PREFIX ] && neofetch || [ $PREFIX ] && fastfetch --percent-type 2 --logo-position right --logo-padding 2 --bar-border-right "" --bar-border-left "" --disable-linewrap';
-alias mm='micro'
+alias mm='micro'; 
 #!/bin/bash
 ## aaaaaa
+alias upwords='rsync aa@ants.ftp.sh:/home/aa/logs/words/up -avP --mkpath ~/'; 
 # alias yno='nyo'; 
 alias zz='cd $HOME/zz'; 
 # alias zz='col -b|tr -s "\n\t " "\n\t "|bat -pfljava --pager "more"'; 
-alias f='[ -e $PREFIX/bin/fastfetch ] && fastfetch || neofetch || return 0'
+alias f='[ -e $PREFIX/bin/fastfetch ] && fastfetch || neofetch || return 0'; 
 # alias f='fff; cd $(cat $HOME/.cache/fff/.fff_d)'; 
 alias sshaa='mosh aa@ants.ftp.sh||ssh aa@ants.ftp.sh'; 
 alias 12moshants='sshaa'; 
