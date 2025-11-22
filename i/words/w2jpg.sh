@@ -1,6 +1,8 @@
 #!/bin/bash
 words2jpg() { 
-local IFS=$'\n\t'; wordlog="$HOME/logs/words/wordlog"; wordimg="$HOME/logs/words/wordimg"; mkdir -m 775 -p "$wordlog" "$wordimg"; 
+local IFS=$'\n\t'; 
+wordlog="$HOME/logs/words/wordlog"; wordimg="$HOME/logs/words/wordimg"; 
+mkdir -m 775 -p "$wordlog" "$wordimg/story" "$wordimg/post"; 
 latest="$(command ls -t1 $wordlog|grep -e '.log$'|head -n1)"; 
 ww="$wordlog/$latest"; 
 [ "$1" ] && latest="${1/*\//}"; 
@@ -31,13 +33,16 @@ hexx="$(pastel random -n1|pastel format hex|col -xb)";
 im=($(mediainfo "$wordimg/${word}2.jpg"|grep -E 'Width|Height'|tr -d "A-z:\t ")); 
 imh="$((im[1] - im))";
 imw="$((im - im[1]))"; [ "$imw" -gt 1 ] && imh=122; 
-convert -border ${imh}x$((imw / 2 "+ 122")) -bordercolor "$hexx" "$wordimg/${word}2.jpg" "$wordimg/${word}.jpg"; 
+##
+convert -border ${imh}x$((imw / 2 "+ 222")) -bordercolor "$hexx" "$wordimg/${word}2.jpg" "$wordimg/post/${word}.jpg"; 
+##
+convert -border 422x1288 -bordercolor "$hexx" "$wordimg/${word}2.jpg" "$wordimg/story/${word}.jpg"; 
 
 # 6%x29% 
 ####
-cp "$wordimg/${word}.jpg" -t "$HOME/fofo/wordimg"; 
+cp "$wordimg/post/${word}.jpg" -t "$HOME/fofo/wordimg"; 
 mv "$wordlog/${word}.htm" "$wordimg/${word}2.jpg" -t ~/tmp; 
-mv "$wordlog/${word}.log" -t $HOME/logs/words/up
+# mv "$wordlog/${word}.log" -t $HOME/logs/words/up
 ####
 }; 
 words2jpg; 
