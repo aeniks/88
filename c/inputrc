@@ -23,7 +23,7 @@ C-t: '\e4klock\n'
 C-o: '\ek\ncd $(lf -print-last-dir); \n'
 C-p: 'printf %b "";\C-b\C-b' 
 "\e[v": '\ek\nsed -n l;\n' 
-C-x: '\ek\nreset -Q;\nexec bash;\n'
+C-x: '\ek\nreset -Q; exec bash;\n'
 # C-f: '\ek\nserch\n'
 C-z: undo
 ^Z: undo

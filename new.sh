@@ -151,14 +151,15 @@ echo;
 dott; echo;
 printf '\e]12;red\e\\'; 
 ####
-moda="$(printf %b "${modo}"|tr -d "[]"|head -c14)"; model="${moda/%\ /}"; 
+moda="$(printf %b "${modo}"|tr -d "[]"|head -c14)"; 
+model="${moda/%\ /}"; 
 . ${HOME}/88/alias.sh; 
 . $HOME/88/_ps1.sh; 
 ####
-for i in $HOME/88/f/*.sh; do . $i; done; 
-source "$HOME/88/c/tmuxcompletions.sh"; 
+# for i in $HOME/88/f/*.sh; do . $i; done; 
+# source "$HOME/88/c/tmuxcompletions.sh"; 
 ####
-sshd 2>/dev/null; command ps -A|cut -c25-|grep -e 'crond' &>/dev/null || crond 2>/dev/null; 
+# sshd 2>/dev/null; command ps -A|cut -c25-|grep -e 'crond' &>/dev/null || crond 2>/dev/null; 
 [ -z "$PREFIX" ] && alias fzf='fzf-tmux -h 95% -w 98%'; 
 }; 
 

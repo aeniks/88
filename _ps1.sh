@@ -27,7 +27,7 @@ printf -v "bat" %b "\e[${bc}m$bc";
 }; 
 ################
 [[ "$HOSTNAME" == "localhost" ]] && unset HOSTNAME || \
-printf -v "_host" %b "[\e[95m$HOSTNAME\e[0m] "; 
+printf -v "_host" %b "[\e[95m${HOSTNAME-$HOSTTYPE}\e[0m] "; 
 ################
 _dtime() { hh=1$(date +%H;); mm=1$(date +%M;); ss=1$(date +%S); 
 printf %b "\e[38;5;$((hh + 22))m${hh:1:2}$re:\e[38;5;$((mm + 22))m${mm:1:2}$re:\e[38;5;${ss/0/1}m${ss:1:2}\e[0m" 2>/dev/null; }; 
@@ -45,10 +45,11 @@ ee() { [ $? = 130 ] && echo gg; };
 ################
 # trap 'printf %b "\e[K\e[2A\e[K"' 2; 
 ##
+# ['$re'$(_etime)'$re']\
 PS1='\e[0m[\e[0;1;38;5;$((2 + $?))m$?'$re']\
 $(gits||printf " ")\
-['$re'$(_dtime 2>/dev/null)'$re'] \
-['$re'$(_etime)'$re']'$re'$(_bat) \
+['$re'$(_dtime 2>/dev/null)'$re']\
+'$re'$(_bat) \
 ['$re'${wlan%.*}.\e[38;5;${c[idn]:0:4}${wlan/*./}'$re'] \
 ['$re'\e[0m'${w[${wlan/*./}]}'\e[3${c[idn]:13:1}m\e[48;5;${c[idn]:0:4}${model:0:12}'$re'] \
 ['$re$cyan'\u'$re']'$re' '${_host}'['$re$yellow'\w'${re}]' \e[?25h\e[0m \n'; 
