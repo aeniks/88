@@ -50,10 +50,7 @@ map ss :search
 map sp :set preview! 
 map s0 :set ratios 1
 map s1 :set ratios 1:1
-cmap 1 ""
-map 1 ""
-map Z :cd ~/zz
-map L :cd ~/logs
+map 1
 map 1 :set ratios 1:1
 map s2 :set ratios 1:2
 map s4 :set ratios 1:4
@@ -84,8 +81,8 @@ map 1 !true
 map x $$f
 map X !$f
 cmap o 
-map o :bboo
-map O :kola
+map o 
+map O $mimeopen --ask $f
 map oj !jp2a --color-depth=8 --fill $f
 map oc !chafa $f
 map ok !cacaview $f
@@ -99,7 +96,6 @@ map H :maps
 map m :push %mkdir<space>
 map oD :depl
 map j :tajm
-# $mimeopen --ask $f
 # map b !printf "\n\n\n\n\n\n\n\n\n\n"; exiftool $f|batcat -pl c++
 # map o :push !<space>$f<left><left><left>
 # map <enter>c !chafa $f 
@@ -135,8 +131,6 @@ case $po in chafa) pp="$po -f symbols"; pv="printf %b '\e[4A'$f'\n'; mediainfo $
 tmux display-popup -E -w "99%" -h "95%" "${pp} $f; ${pv} read -e -n 1 kk"; 
 }} 
 
-
-cmd kola ${{ kk="$(realpath $f)"; [ $f ]||read -ei "$PWD/" "kk"; tmux display-popup -b none -EE -w100% -h100% -e "kk=kk" "printf %b "\e[?25l\e[A"; chafa --format=symbols --scale=max --align right $kk; printf %b '"'\e[11A'"'; mediainfo $kk|tr -s '"'\n'"' '"'\n'"'|head -n9; bash -c '"'read -n1 kk'"'"; }} 
 # mediainfo oi_heyday.jpg|tr -d " "|grep -E -m4 "Width|Height|size|name"
 
 # ${kk[*]:0:((${#kk[*]}-1))} $f; 
@@ -149,7 +143,7 @@ elif [[ ${f/*./} = sh ]]; then bat -pf ${f};
 elif [[ ${f/*./} = jpg ]]; then IFS=$'\n\t '; 
 popo=(chafa bat micro xgd-open ffmpeg-convert); 
 po=($(printf %b "${popo[*]}"|fzf-tmux -h --no-preview -i --cycle --bind 'q:abort' --border 'top'||exit))||exit 0; 
-case $po in chafa) pp="$po -f symbols $f"; pv="printf %b '\e[4A'$f'\n'; mediainfo $f|tr -d ' '|grep -E -m4 'Width|Height|File'|bat -ppfljava; ";; bat) pp="$po -p";; ffmpeg-convert) printf %b "\n\n\e[A -- to fileformat:"; read -ep ' ' -i "webp" "end"; ffmpeg -i $f ${f/.*/}.$end; read -es -n1 kk;; *) pp="$po";; esac; 
+case $po in chafa) pp="$po -f symbols $f"; pv="printf %b '\e[4A'$f'\n'; mediainfo $f|tr -d ' '|grep -E -m4 'Width|Height|File'|bat -ppfljava; ";; bat) pp="$po -p";; ffmpeg-convert) printf %b "\n\n\e[A -- to fileformat:"; read -ep ' ' -i "webp" "end"; ffmpeg -i $f ${f/*\//}.$end; read -es -n1 kk;; *) pp="$po";; esac; 
 tmux display-popup -E -w "99%" -h "95%" "${pp}; ${pv} read -e -n 1 kk"; 
 else bat -pfljava ${f}; 
 fi; }}
@@ -224,7 +218,7 @@ printf "\e[35;5m\e[$((lf_width/2-2))G >_<\n\e[25m\e[0m";
 
 
 cmd lenk ${{ 
-read -rep "ln from: $(printf "\e[96m")" -i "$fx" "kk"; read -rep "$(printf "\e[0m")to: $(printf "\e[92m")" -i "$PWD" "kt"; printf "\e[0m"; ln "${kk}" -t "${kt}" -s; ls $kt; sleep 1; 
+read -rep "ln from: $(printf "\e[96m")" -i "$fx" "kk"; read -rep "$(printf "\e[0m")to: $(printf "\e[92m")" -i "$PWD" "kt"; printf "\e[0m"; ln -s "${kk}" "${kt}"; ls $kt; sleep 1; 
 }} 
 
 
@@ -518,7 +512,10 @@ set cursorparentfmt "\033[92m"
 set cursorpreviewfmt "\033[1m" 
 set cursoractivefmt "\033[4;7m"
 set nodrawbox
+set drawbox off
+set mouse on 
 set noicons  
+set icons off 
 set shell bash 
 set info size:time
 set sortby time
