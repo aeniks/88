@@ -32,7 +32,7 @@ dfree > $logs/dfree.log & disown;
 alias k='col -xb|tr -s "\n" "\n"|bat -pfljava'; 
 alias re='reset -Q; exec bash;'; 
 ########
-if echo $HOME|grep -w "termux"; then alias sudo='command'; else sudo=sudo; fi; 
+if echo $HOME|grep -w "termux" -q; then alias sudo='command'; else sudo=sudo; fi; 
 ########
 ########
 ########
