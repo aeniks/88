@@ -174,6 +174,7 @@ moda="$(printf %b "${modo}"|tr -d "[]"|head -c14)"; model="${moda/%\ /}";
 . $HOME/88/_ps1.sh; 
 ####
 for i in $HOME/88/f/*.sh; do . $i; done; 
+[ "$TMUX_PANE" = "%0" ] && dfree; 
 source "$HOME/88/c/tmuxcompletions.sh"; 
 ####
 sshd 2>/dev/null; command ps -A|cut -c25-|grep -e 'crond' &>/dev/null || crond 2>/dev/null; 
