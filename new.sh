@@ -156,7 +156,6 @@ moda="$(printf %b "${modo}"|tr -d "[]"|head -c14)";
 model="${moda/%\ /}"; 
 . ${HOME}/88/alias.sh; 
 . $HOME/88/_ps1.sh; 
-cd; 
 ####
 # for i in $HOME/88/f/*.sh; do . $i; done; 
 # source "$HOME/88/c/tmuxcompletions.sh"; 
