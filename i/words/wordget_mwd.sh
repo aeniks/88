@@ -16,9 +16,8 @@ sed -e 4d -e '5y/\ /\n/' | \
 tr -s "\n " "\n " | \
 sed -e 's/^[ \t]*//' -e '/^$/d' > $wlog.log;
 ########
-
 wowo="$(head -n1 $wlog.log)"; 
-cat $wlog.log | sed -e '3s/^/[/' -e '3s/$/]/' > $fold/$wowo.log;
+cat $wlog.log | sed -e '3s/^/[/' -e '3s/$/]/' > $fold/$wowo.log; 
 }; 
 ########
 wordget_mw_com; 

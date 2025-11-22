@@ -9,13 +9,18 @@ wlog="$HOME/logs/words/tmp/thefreedictionary_com_$date";
 lynx -dump 'https://www.thefreedictionary.com/_/WoD/rss.aspx' -width 800 -nonumbers -nomargins -force_empty_hrefless_a | tr '<>/' '\n' | grep -e 'Definition' | cut -f2 -d" " --complement > $wlog.log; 
 ###
 
-for i in {1..3}; do sed -n ${i}p $wlog.log | \
-tr -s "\n " "\n " | \
-sed -e "s/[(]/\n/" -e "s/[)]\ /\n\n/" | sed -e 's/ $//' > $wlog.$i.log; 
+# for i in {1..3}; do sed -n ${i}p $wlog.log | \
+
+
+word="$(head -n1 $wlog.log|cut -f1 -d" ")"; 
+
+head -n1 $wlog.log|tr -s "\n " "\n " | \
+sed -e "s/[(]/\n/" -e "s/[)]\ /\n\n/" | sed -e 's/ $//' > $fold/$word.log; 
+
+# > $wlog.$i.log; 
 ####
-wowo="$(head -n1 $wlog.$i.log)"; 
-cat $wlog.$i.log > $fold/$wowo.log; 
-done; 
+# cat $wlog.$i.log 
+# done; 
 
 }; 
 wordget_tfdictionary_com; 
