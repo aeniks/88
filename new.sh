@@ -136,6 +136,7 @@ dott; echo;
 # printf %b " ${c[idn]} ";
 # dots; echo;
 ######### IP##########################
+gum style --padding "0 1" --border-foreground 250 --border normal "$(ip -c -brief -4 a|tail -n+2|cut -f1 -d"/"|column --table --output-separator "$(printf %b "\e[0;2m") | ")"; 
 [ "$wlan" ] && printf %b "${wlan} "|bat -ppflsyslog --theme DarkNeon && \
 [ "$mac" ] && printf %b "| ${mac[1]} | ${mac}" |tr -d "\n"| bat -ppflsyslog --theme zenburn; 
 [ "$ssh" ] && printf %b " << ${ssh} : ${ssh[-1]} "|tr "\n " "\t "| bat -ppflsyslog --theme zenburn; 

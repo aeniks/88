@@ -13,8 +13,8 @@ printf %b "getting cal... " && (curl -sL 'https://script.googleusercontent.com/m
 cat  $HOME/logs/calendar.json|grep -e "EPOCH" --quiet||12calendarget; 
 ###
 ####
-printf -v "epoch" %b "$((EPOCHSECONDS / 2000))"; 
-printf -v "epcal" %b "$(($(tail -c10 $HOME/logs/calendar.json) / 2000))"; 
+printf -v "epoch" %b "$((EPOCHSECONDS / 20000))"; 
+printf -v "epcal" %b "$(($(tail -c10 $HOME/logs/calendar.json) / 20000))"; 
 [[ "$epoch" -gt "$epcal" ]] && 12calendarget; 
 # [ $((_epoch_h - _epoch_h_cal)) -gt 222 ] 
 # _epoch_h="$((EPOCHSECONDS / 3600))"; _epoch_h_cal="$(($(tail -c10 $HOME/logs/calendar.json) / 3600))"; 
