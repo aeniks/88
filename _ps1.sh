@@ -26,7 +26,7 @@ printf -v "bat" %b "\e[${bc}m$bc";
 [ "$bc" ] && printf %b " ${bs}[$re\e[38;5;${bc:0:1}m${bat}${bs}]$re"; 
 }; 
 ################
-[[ "$HOSTNAME" == "localhost" ]] && unset HOSTNAME || \
+# [[ "$HOSTNAME" == "localhost" ]] && unset HOSTNAME || \
 printf -v "_host" %b "[\e[95m${HOSTNAME-$HOSTTYPE}\e[0m] "; 
 ################
 _dtime() { hh=1$(date +%H;); mm=1$(date +%M;); ss=1$(date +%S); 
