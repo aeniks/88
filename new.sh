@@ -136,11 +136,12 @@ dott; echo;
 # printf %b " ${c[idn]} ";
 # dots; echo;
 ######### IP##########################
-gum style --padding "0 1" --border-foreground 250 --border normal "$(ip -c -brief -4 a|tail -n+2|cut -f1 -d"/"|column --table --output-separator "$(printf %b "\e[0;2m") | ")"; 
-[ "$wlan" ] && printf %b "${wlan} "|bat -ppflsyslog --theme DarkNeon && \
+ii="$(ip -c -brief -4 a 2>/dev/null|tail -n+2|cut -f1 -d"/"|column --table --output-separator "$(printf %b "\e[0;2m") | ")"; 
+[ -z "$ii" ] && ii=($(ifconfig 2>/dev/null|grep -vE "unspec|lo: |127.0.0.1" |cut -f1,10 -d" "|tr -d "\n"|bat -ppf --theme DarkNeon --language Idris)); 
+gum style --padding "0 1 0 1" --border-foreground 250 --border normal \
+"$(printf %b "${ii[*]}"; [ "$wlan" ] && printf %b " - ${wlan}"|bat -ppflsyslog --theme TwoDark)"; 
 [ "$mac" ] && printf %b "| ${mac[1]} | ${mac}" |tr -d "\n"| bat -ppflsyslog --theme zenburn; 
 [ "$ssh" ] && printf %b " << ${ssh} : ${ssh[-1]} "|tr "\n " "\t "| bat -ppflsyslog --theme zenburn; 
-echo; 
 dott; 
 echo; 
 printf %b "\e[48;5;${idc}m\e[3${idc[2]}m ${idc[3]} \e[4${idc[2]}m \e[38;5;${idc}m${idc[1]} \e[40;1m ${idc} \e[0m"; 
