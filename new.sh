@@ -70,11 +70,11 @@ local IFS=$' \n\t';
 [ $PREFIX ] && modo=($(getprop|grep -E "vendor.manufacturer|product.manufacturer" -m1 -A1 --group-separator=""|cut -f2- -d" "|tr -s "\n[]" " "; )); 
 #############################
 [ -z $PREFIX ] && [ -e /sys/devices/virtual/dmi/id/product_family ] && \
-modo=($(for bb in board_vendor board_name bios_vendor sys_vendor; 
+modo=($(for bb in product_family board_vendor board_name bios_vendor sys_vendor; 
 do cat /sys/devices/virtual/dmi/id/${bb} 2>/dev/null|tr -s "\n" " "; done)); 
 #################################
 ## ____ VIDEOCARD _ GET ____ ####
-[ -z $PREFIX ] && videocard="$(lspci|grep -e 'VGA'|cut -f2 -d'['|cut -f1 -d']';)"; 
+[ -z $PREFIX ] && videocard="$(lspci|grep -e 'VGA'|cut -f5- -d" ";)"; 
 #################################
 ## ____ OS __ GET _____ #########
 [ $PREFIX ] && osx1=($(uname --operating-system; getprop ro.build.version.release; getprop ro.build.version.codename; )); 
