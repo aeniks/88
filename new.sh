@@ -140,7 +140,7 @@ ii="$(ip -c -brief -4 a 2>/dev/null|tail -n+2|cut -f1 -d"/"|column --table --out
 [ -z "$ii" ] && ii=($(ifconfig 2>/dev/null|grep -vE "unspec|lo: |127.0.0.1" |cut -f1,10 -d" "|tr -d "\n"|bat -ppf --theme DarkNeon --language Idris)); 
 gum style --padding "0 1 0 1" --border-foreground 250 --border normal \
 "$(printf %b "${ii[*]}"; [ "$wlan" ] && printf %b " - ${wlan}"|bat -ppflsyslog --theme TwoDark)"; 
-[ "$mac" ] && printf %b "| ${mac[1]} | ${mac}" |tr -d "\n"| bat -ppflsyslog --theme zenburn; 
+# [ "$mac" ] && printf %b "| ${mac[1]} | ${mac}" |tr -d "\n"| bat -ppflsyslog --theme zenburn; 
 [ "$ssh" ] && printf %b " << ${ssh} : ${ssh[-1]} "|tr "\n " "\t "| bat -ppflsyslog --theme zenburn; 
 dott; 
 echo; 
