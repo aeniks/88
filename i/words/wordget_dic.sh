@@ -1,6 +1,6 @@
 #!/bin/bash
 wordget_dictionary_com() { 
-local IFS=$'\n'; 
+local IFS=$'\n'; echo; echo; 
 fold="$HOME/logs/words/wordlog"; 
 mkdir $fold -p -m 775 2>/dev/null; 
 date=$(date +%F-%H_%M_%S); 
@@ -16,11 +16,12 @@ tr -s '\n' '\n' | \
 sed '/Show IPA/d' > $wlog.log; 
 ####
 wowo="$(head -n1 $wlog.log)"; 
-sed -n 1p $wlog.log > $fold/$wowo.log; 
-sed -n 3p $wlog.log >> $fold/$wowo.log; 
+sed -n 1p $wlog.log | tee $fold/$wowo.log; 
+sed -n 3p $wlog.log | tee -a $fold/$wowo.log; 
 (printf %b '['; sed -n 2p $wlog.log | tr "\n" "]"; 
-printf %b '\n') >> $fold/$wowo.log; 
-tail -n+4 $wlog.log >> $fold/$wowo.log; 
+printf %b '\n') | tee -a $fold/$wowo.log; 
+tail -n+4 $wlog.log | tee -a $fold/$wowo.log; 
+echo; echo; 
 }; 
 ####
 wordget_dictionary_com; 
