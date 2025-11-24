@@ -1,6 +1,6 @@
 #!/bin/bash
 wordget_tfdictionary_com() { 
-local IFS=$'\n'; 
+local IFS=$'\n'; echo; echo; 
 fold="$HOME/logs/words/wordlog"; 
 mkdir $fold -p -m 775 2>/dev/null; 
 date=$(date +%F-%H_%M_%S); 
@@ -15,8 +15,8 @@ lynx -dump 'https://www.thefreedictionary.com/_/WoD/rss.aspx' -width 800 -nonumb
 word="$(head -n1 $wlog.log|cut -f1 -d" ")"; 
 
 head -n1 $wlog.log|tr -s "\n " "\n " | \
-sed -e "s/[(]/\n/" -e "s/[)]\ /\n\n/" | sed -e 's/ $//' > $fold/$word.log; 
-
+sed -e "s/[(]/\n/" -e "s/[)]\ /\n\n/" | sed -e 's/ $//' | tee $fold/$word.log; 
+echo; echo; 
 # > $wlog.$i.log; 
 ####
 # cat $wlog.$i.log 
