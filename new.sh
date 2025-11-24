@@ -74,7 +74,8 @@ modo=($(for bb in product_family board_vendor board_name bios_vendor sys_vendor;
 do cat /sys/devices/virtual/dmi/id/${bb} 2>/dev/null|grep -v "O.E.M."|tr -s "\n" " "; done)); 
 #################################
 ## ____ VIDEOCARD _ GET ____ ####
-[ -z $PREFIX ] && videocard="$(lspci|grep -e 'VGA'|cut -f5- -d" ";)"; 
+[ -z $PREFIX ] && \
+videocard="$(lspci|grep -e 'VGA'|cut -f5- -d" "|sed -e "s/\ (rev.*//g")"; 
 #################################
 ## ____ OS __ GET _____ #########
 [ $PREFIX ] && osx1=($(uname --operating-system; getprop ro.build.version.release; getprop ro.build.version.codename; )); 
