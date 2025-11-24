@@ -27,21 +27,27 @@ sed -n 4,6p $ww|fmt -w 48 -g 29|gum style --padding "1 5 5 5" --margin "0 1 0 0"
 ############
 hexx="$(pastel random -n1|pastel format hex|col -xb)"; 
 ####
-convert -border 4 -bordercolor black -gravity center pango:"$(cat $wordlog/${word}.htm)" "$wordfolder/wordimg/${word}2.jpg"; 
+convert -border 4 -bordercolor black -gravity center pango:"$(cat $wordlog/$word.htm|col -xb)" $wordlog/$word.jpg; 
 
-im=($(mediainfo "$wordfolder/wordimg/${word}2.jpg"|grep -E 'Width|Height'|tr -d "A-z:\t "));
-imh="$((im[1] - im))"; imw="$((im - im[1]))"; [ "$imw" -gt 1 ] && imh=122; 
+# im=($(mediainfo "$wordfolder/wordimg/$word.2.jpg"|grep -E 'Width|Height'|tr -d "A-z:\t "));
+
+# imh="$((im[1] - im))"; imw="$((im - im[1]))"; [ "$imw" -gt 1 ] && imh=122; 
+# $((imh + 222))x$((imw / 2 "+ 222")) 
 ##
-convert -border $((imh + 222))x$((imw / 2 "+ 222")) -bordercolor "$hexx" "$wordfolder/wordimg/${word}2.jpg" "$wordfolder/wordimg/post/${word}.jpg"; 
+convert -border 444x444 -bordercolor "$hexx" \
+"$wordlog/$word.jpg" "$wordfolder/wordimg/post/$word.jpg"; 
 ##
-convert -border 422x1288 -bordercolor "$hexx" "$wordfolder/wordimg/${word}2.jpg" "$wordfolder/wordimg/story/${word}.jpg"; 
+convert -border 422x1288 -bordercolor "$hexx" \
+"$wordlog/$word.jpg" "$wordfolder/wordimg/story/$word.jpg"; 
+
+# "$wordfolder/wordimg/$word.2.jpg" "$wordfolder/wordimg/story/$word.jpg"; 
 ##
 printf %b "
 $wordfolder/wordimg/story/${word}.jpg \n
 $wordfolder/wordimg/post/${word}.jpg  \n "; 
 ####
 cp "$wordfolder/wordimg/post/${word}.jpg" -t "$wordfolder/up"; 
-mv "$wordfolder/wordlog/${word}.htm" "$wordfolder/wordimg/${word}2.jpg" -t ~/tmp; cd -; 
+# mv "$wordfolder/wordlog/${word}.htm" "$wordfolder/wordimg/$word.2.jpg" -t ~/tmp; cd -; 
 # mv "$wordlog/${word}.log" -t $HOME/logs/words/up
 ####
 }; 
