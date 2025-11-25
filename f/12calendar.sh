@@ -11,8 +11,6 @@ dott() { printf %b "\e[0m"; for i in $(seq ${1-45}); do printf %b "·"; done; pr
 ##
 12calendarget() { 
 dott; printf %b " getting cal ·· " && (curl -sL 'https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLh82D-w6Vdzi3vdjLA0rakIzmnxVaN3TaSRrJjW71ONNO7Zvaq4bE1eONHgmJRX3fWLsQZ9nM4FjNjxtW26dFReTCX30DKPCP_vpZsACkJwAOQUSiRwoB2Lyr-g84HzkExyQ-EcfPci-euFNXYeidSnLTuCfMzcC10j5ZUafNjYlijpNwyWIrHB7FMisJz-7naOIzcrkfUEANLLr3wGW503lM0m6w0CB1X90FVjifOxiSmWyYFgEQrOVblbjO1bxC1Ew5U_BbR4B-UEMR3MTBjBwzkmCA&lib=M72QkDm7CT60m1UNRIr2naUe2CZqY5xWx' && printf %b "\nEPOCH_${EPOCHSECONDS}") > $HOME/logs/calendar.json && printf %b "\e[G"; 
-
-
 ####
 (cat $HOME/logs/calendar.json | tr -s "," "\n" | grep -vE 'EPOCH_|h_|description|end_date' | sed '/start_date_time/{s/.[0-9]*[-T]//g}' | cut -f1 -d "+" | cut -f 2- -d":" | sed 's/"/\n/' | tr -s "\n\"}" "%%\n" | cut -f2-4 -d"%"|col -xb|column --separator "%" --table --output-separator " | " --table-columns "1234567890123456" --table-right 1|tail -n+2 |bat -ppflr --theme Visual\ Studio\ Dark+ ) > $HOME/logs/cal.log; 
 }; 
