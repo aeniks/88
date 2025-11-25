@@ -129,7 +129,7 @@ dott; echo;
 # for i in $(seq $calength); do dott && echo; done; 
 # printf %b "\e[${calength}A"; 
 ############
-12calendar && dott && echo; 
+12calendar; 
 # dots; dots; dots; dots; dots; 
 # printf %b "${w[idn]}\e[7m $idn \e[27m $EPOCHSECONDS \e[0m \e[38;5;${idn}m idn: $idn  \e[0m"; echo;
 # printf %b "\e[48;5;${c[$((${wlan: -2}))]} ";
