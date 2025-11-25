@@ -122,6 +122,7 @@ map b bopen
 map bb $batcat -pf $f
 map bg $glow -p $f
 map bq $return 0
+map L :cd $logs
 # map f :push F<backspace><right><backspace><right><backspace>**<left>
 ####
 cmd bboo ${{ 

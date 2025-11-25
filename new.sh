@@ -137,7 +137,7 @@ dott; echo;
 # printf %b " ${c[idn]} ";
 # dots; echo;
 ######### IP##########################
-ii="$(ip -c -brief -4 a 2>/dev/null|grep -vE "lo\ |DOWN"|cut -f1 -d"/"|column --table --output-separator "$(printf %b "\e[0;2m") | ")"; 
+ii="$(ip -c -brief -4 a 2>/dev/null|grep -vE "lo |DOWN"|cut -f1 -d"/"|column --table --output-separator "$(printf %b "\e[0;2m") | ")"; 
 ####
 [ -z "$ii" ] && ii=($(ifconfig 2>/dev/null|grep -vE "unspec|lo: |127.0.0.1" |cut -f1,10 -d" "|tr -d "\n"|bat -ppf --language Idris)); 
 ####
