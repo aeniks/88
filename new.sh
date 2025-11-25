@@ -70,11 +70,12 @@ local IFS=$' \n\t';
 [ $PREFIX ] && modo=($(getprop|grep -E "vendor.manufacturer|product.manufacturer" -m1 -A1 --group-separator=""|cut -f2- -d" "|tr -s "\n[]" " "; )); 
 #############################
 [ -z $PREFIX ] && [ -e /sys/devices/virtual/dmi/id/product_family ] && \
-modo=($(for bb in board_vendor board_name bios_vendor sys_vendor; 
-do cat /sys/devices/virtual/dmi/id/${bb} 2>/dev/null|tr -s "\n" " "; done)); 
+modo=($(for bb in product_family board_vendor board_name bios_vendor sys_vendor; 
+do cat /sys/devices/virtual/dmi/id/${bb} 2>/dev/null|grep -v "O.E.M."|tr -s "\n" " "; done)); 
 #################################
 ## ____ VIDEOCARD _ GET ____ ####
-[ -z $PREFIX ] && videocard="$(lspci|grep -e 'VGA'|cut -f2 -d'['|cut -f1 -d']';)"; 
+[ -z $PREFIX ] && \
+videocard="$(lspci|grep -e 'VGA'|cut -f5- -d" "|sed -e "s/\ (rev.*//g")"; 
 #################################
 ## ____ OS __ GET _____ #########
 [ $PREFIX ] && osx1=($(uname --operating-system; getprop ro.build.version.release; getprop ro.build.version.codename; )); 
@@ -136,12 +137,14 @@ dott; echo;
 # printf %b " ${c[idn]} ";
 # dots; echo;
 ######### IP##########################
-ii="$(ip -c -brief -4 a 2>/dev/null|tail -n+2|cut -f1 -d"/"|column --table --output-separator "$(printf %b "\e[0;2m") | ")"; 
-[ -z "$ii" ] && ii=($(ifconfig 2>/dev/null|grep -vE "unspec|lo: |127.0.0.1" |cut -f1,10 -d" "|tr -d "\n"|bat -ppf --theme DarkNeon --language Idris)); 
+ii="$(ip -c -brief -4 a 2>/dev/null|grep -vE "lo\ |DOWN"|cut -f1 -d"/"|column --table --output-separator "$(printf %b "\e[0;2m") | ")"; 
+####
+[ -z "$ii" ] && ii=($(ifconfig 2>/dev/null|grep -vE "unspec|lo: |127.0.0.1" |cut -f1,10 -d" "|tr -d "\n"|bat -ppf --language Idris)); 
+####
 gum style --padding "0 1 0 1" --border-foreground 250 --border normal \
-"$(printf %b "${ii[*]}"; [ "$wlan" ] && printf %b " - ${wlan}"|bat -ppflsyslog --theme TwoDark)"; 
+"$(printf %b "${ii[*]}"; 
+[ "$wlan" ] && printf %b " - ${wlan}"|bat -ppflsyslog --theme TwoDark; [ "$ssh" ] && printf %b " << ${ssh}:${ssh[-1]}"|tr "\n " "\t "| bat -ppflsyslog --theme zenburn; )"; 
 # [ "$mac" ] && printf %b "| ${mac[1]} | ${mac}" |tr -d "\n"| bat -ppflsyslog --theme zenburn; 
-[ "$ssh" ] && printf %b " << ${ssh} : ${ssh[-1]} "|tr "\n " "\t "| bat -ppflsyslog --theme zenburn; 
 dott; 
 echo; 
 printf %b "\e[48;5;${idc}m\e[3${idc[2]}m ${idc[3]} \e[4${idc[2]}m \e[38;5;${idc}m${idc[1]} \e[40;1m ${idc} \e[0m"; 
@@ -168,7 +171,7 @@ model="${moda/%\ /}";
 [ $PREFIX ] && modo=($(getprop|grep -E "vendor.manufacturer|product.manufacturer" -m1 -A1 --group-separator=""|cut -f2- -d" "|tr -s "\n[]" " "; )); 
 #############################
 [ -z $PREFIX ] && [ -e /sys/devices/virtual/dmi/id/product_family ] && \
-modo=($(for bb in board_vendor board_name bios_vendor sys_vendor; 
+modo=($(for bb in product_sku board_vendor board_name bios_vendor sys_vendor; 
 do cat /sys/devices/virtual/dmi/id/${bb} 2>/dev/null|tr -s "\n" " "; done)); 
 moda="$(printf %b "${modo}"|tr -d "[]"|head -c14)"; model="${moda/%\ /}"; 
 . ${HOME}/88/alias.sh; 
