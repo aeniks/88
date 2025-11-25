@@ -51,6 +51,7 @@ alias sshaa='mosh aa@ants.ftp.sh||ssh aa@ants.ftp.sh';
 alias 12moshants='sshaa'; 
 alias 12path='$EDITOR $HOME/.config/path.sh; '; 
 alias path_change='$EDITOR $HOME/.config/path.sh; '; 
+alias patchshow='echo $PATH |tr ":" "\n"|batcat -ppf --language perl --theme OneHalfDark'; 
 # export LESS='-R --file-size --use-color  --incsearch --prompt="(%T) [/]search [n]ext-match [p]rev-match ?f%f .?n?m(%T %i of %m) ..?lt %lt-%lb?L/%L. :byte %bB?s/%s.  .?e(END)  ?x-  Next\:   %x.:?pB  %pB\%..%t "'; 
 alias mmmmmm='ssh -p 8022 192.168.0.19 "mpv start/media/money.mp3"'; 
 alias sd='cd /sdcard';
@@ -125,6 +126,7 @@ alias 12edit-lf='$EDITOR ~/.config/lf/lfrc'
 alias 12edit-bashrc='$EDITOR ~/.bashrc'
 alias 12edit-tmuxlocal='$EDITOR ~/.tmux.conf.local'
 alias 12edit-anews_start='$EDITOR ~/start/anew.sh'
+alias 12mems='gum style --border normal --border-foreground 24 --padding "0 1" "$(free -h|sed -e "1s/\ \ \ \ \ /RAM: /" -e "2,3s/i/b/g"|column --table --table-right 2-9 --output-separator "   "|batcat -ppflc++ --theme Visual\ Studio\ Dark+ )"'; 
 ####
 alias coolors='echo; for i in $(seq --equal-width 255); do printf "\e[48;5;${i}m ${i} \e[7m\e[30m ${i} \e[0m"; done; '; 
 ####
