@@ -1,33 +1,21 @@
-
-##
+#!/bin/bash
+####
+sh $HOME/88/i/words/wpre.sh; 
+####
 wol="$HOME/logs/words/wordlog"
-wob="$HOME/logs/words/wordlog/wobrit_$(date +%y%m%d)"; 
-##
+wob="wobrit_$(date +%y%m%d)"; 
+####
 lynx -nomargins -nonumbers -nolist -width 800 -dump "https://www.britannica.com/dictionary/eb/word-of-the-day" \
-| grep -e "\(BUTTON\)" -A20 > $wob.log; ##
-##
-wobb="$(sed -n 7p $wob.log)"; 
-echo; 
-echo "--------"; 
+| grep -e "\(BUTTON\)" -A20 > $wol/$wob.log; 
+####
+word="$(sed -n 7p $wol/$wob.log)"; echo; 
 ##########
 ##########
-sed -n 7p $wob.log|tr -s " " " " > $wob.sh; 
-sed -n 9p $wob.log|tr -s " " " " >> $wob.sh; 
-(printf %b "["; sed -n 8p $wob.log|tr -d "\n"; printf %b "]\n" ) >> $wob.sh; 
-sed -n 18p $wob.log|cut -f2- -d" " >> $wob.sh; 
+sed -n 7p $wol/$wob.log|tr -s " " " " > $wol/$word.log; 
+sed -n 9p $wol/$wob.log|tr -s " " " " >> $wol/$word.log; 
+(printf %b "["; sed -n 8p $wol/$wob.log|tr -d "\n"; printf %b "]\n" ) >> $wol/$word.log; 
+sed -n 18p $wol/$wob.log|cut -f2- -d" " >> $wol/$word.log; 
 #########
 #########
-# (printf %b "[$(sed -n 8p $wob.log|tr -s " " " " \
-# | col -xb|iconv --to-code=UTF-8)]\n") >> $wob.sh; 
-####
-# grep -e "count" -A2 $wob.log \
-# | tr -s "\n " " " \
-# | sed -e "s/\[count\]\ \:\ //g" \
-# >> $wob.sh; 
-####
-mv $wob.sh $wol/$wobb.log; 
-mv $wob.log -t $HOME/logs/words/tmp; 
-echo; echo "--------"; 
-echo; 
-##
-##
+mv $wol/$wob.log -t $HOME/logs/words/tmp; 
+printf %b "\n----\n$word\n----\n"; 

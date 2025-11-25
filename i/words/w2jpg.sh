@@ -4,7 +4,7 @@ local IFS=$'\n\t ';
 echo; echo; 
 wordfolder="$HOME/logs/words"; 
 wordlog="$wordfolder/wordlog"; cd "$wordlog"; 
-latest="$(command ls -t1 $wordlog|grep -e '.log$'|head -n1)"; /
+latest="$(command ls -t1 $wordlog|grep -e '.log$'|head -n1)"; 
 ww="$wordlog/$latest"; 
 word="${latest/.*/}"; 
 # [ "$1" ] && latest="${1/*\//}"; [ "$1" ] && ww="$1"; 
