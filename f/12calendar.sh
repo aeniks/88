@@ -1,17 +1,24 @@
 #!/bin/bash
 ## calll
 12calendar() { 
-##
+####
+
+# calurl='https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLg_YBNhX7Oit_Rki29oJKGCkyzDaARNMLIq-w3cUYjT0hiWE5UyhIDG6Io3cm0eFcISNs-xi7Q_2k8Mc3LW3h8lEn1E_i9kDyiJ-YXXPvwzoWIV7IOF7VXs3WJbGPPpYVIxd7vOrjXQ9g9PY0eF5Iw2Xf7YRDAVoypcGha5MQs6p7rc_Y0R6CEDqSQKsM5MU4izAwNmn6M1JoAwYBIAKKtIVOtIOfTAvFRHRcdMSNHnOo0ZwEWInLVrYZIXNg&lib=M72QkDm7CT60m1UNRIr2naUe2CZqY5xWx'; 
+#### 
 dott() { printf %b "\e[0m"; for i in $(seq ${1-45}); do printf %b "·"; done; printf %b "\e[0m"; }; 
 ####
 calcomp() { 
-printf -v "epoch" %b "$((EPOCHSECONDS / 60))"; printf -v "epcal" %b "$(($(tail -c10 $HOME/logs/calendar.json) / 60))"; printf -v "epmin" %b "$((epoch - epcal))"; }; 
+printf -v "epoch" %b "$((EPOCHSECONDS / 60))"; printf -v "epcal" %b "$(($(tail -c10 $HOME/logs/calendar.json) / 60))"; printf -v "epmin" %b "$((epoch - epcal))"; 
+}; 
 ##
-for i in {1..18}; do printf %b "·"; done; printf %b " $(date +%a\ %b\ %d\ %Y\ \|\ %T)\n"|bat -ppfljava --theme DarkNeon; 
+for i in {1..18}; do printf %b "·"; done; 
+printf %b " $(date +%a\ %b\ %d\ %Y\ \|\ %T)\n"|bat -ppfljava --theme DarkNeon; 
 ##
 ##
 12calendarget() { 
-dott; printf %b " getting cal ·· " && (curl -sL 'https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLh82D-w6Vdzi3vdjLA0rakIzmnxVaN3TaSRrJjW71ONNO7Zvaq4bE1eONHgmJRX3fWLsQZ9nM4FjNjxtW26dFReTCX30DKPCP_vpZsACkJwAOQUSiRwoB2Lyr-g84HzkExyQ-EcfPci-euFNXYeidSnLTuCfMzcC10j5ZUafNjYlijpNwyWIrHB7FMisJz-7naOIzcrkfUEANLLr3wGW503lM0m6w0CB1X90FVjifOxiSmWyYFgEQrOVblbjO1bxC1Ew5U_BbR4B-UEMR3MTBjBwzkmCA&lib=M72QkDm7CT60m1UNRIr2naUe2CZqY5xWx' && printf %b "\nEPOCH_${EPOCHSECONDS}") > $HOME/logs/calendar.json && printf %b "\e[G"; 
+
+dott; printf %b "  getting cal ·· "; 
+curl -L 'https://script.google.com/macros/s/AKfycbzldVvhvOBiwlgyAIkosGX8-mjDYzEJyjLG30zbMlpQXxChUCJGmI__0dhe5vRjkuQLMA/exec' # "https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLg_YBNhX7Oit_Rki29oJKGCkyzDaARNMLIq-w3cUYjT0hiWE5UyhIDG6Io3cm0eFcISNs-xi7Q_2k8Mc3LW3h8lEn1E_i9kDyiJ-YXXPvwzoWIV7IOF7VXs3WJbGPPpYVIxd7vOrjXQ9g9PY0eF5Iw2Xf7YRDAVoypcGha5MQs6p7rc_Y0R6CEDqSQKsM5MU4izAwNmn6M1JoAwYBIAKKtIVOtIOfTAvFRHRcdMSNHnOo0ZwEWInLVrYZIXNg&lib=M72QkDm7CT60m1UNRIr2naUe2CZqY5xWx" && printf %b "\nEPOCH_${EPOCHSECONDS}") > $HOME/logs/calendar.json && printf %b "\e[G"; 
 ####
 (cat $HOME/logs/calendar.json | tr -s "," "\n" | grep -vE 'EPOCH_|h_|description|end_date' | sed '/start_date_time/{s/.[0-9]*[-T]//g}' | cut -f1 -d "+" | cut -f 2- -d":" | sed 's/"/\n/' | tr -s "\n\"}" "%%\n" | cut -f2-4 -d"%"|col -xb|column --separator "%" --table --output-separator " | " --table-columns "1234567890123456" --table-right 1|tail -n+2 |bat -ppflr --theme Visual\ Studio\ Dark+ ) > $HOME/logs/cal.log; 
 }; 
@@ -50,6 +57,7 @@ printf %b " ${epmin} mins ago\n"|bat -ppfld --theme Coldark-Cold
 ##cat $HOME/logs/calendar.json|col -xb|jq --indent 0|grep -vE 'description|end_date|call'|cut -f1 -d+|tr -d '"{}[],\t'|sed -e "s/summary:\ /\n%/g"|tr -d "\n"|tr "%" "\n"|sed -e "s/start_date_time............./\%\ /g" -e "s/start_date\:/\ \%/g" -e s/start_date_time\:/\ \%/g|column --separator "%" --output-width "$COLUMNS" --output-separator '|' --table|bat -ppflr --theme Visual\ Studio\ Dark+ ; }; 
 ########
 ########
-
+# calurl='https://script.google.com/macros/s/AKfycbyrq3IhGeXMbWMRfdgpoQpMPX3i0y3Fu17_3O5W1Uys/dev'; 
 
 # https://script.google.com/macros/s/AKfycbwSft4XmNq-lCW38uuBjihWM8pKMGrm-1uDmwusW7uksz0uN3WIEobzOt-0NQUgDOASqQ/exec
+## 
