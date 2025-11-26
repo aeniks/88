@@ -13,12 +13,11 @@ word="$(sed -n 7p $wol/$wob.log)"; echo;
 ##########
 sed -n 7p $wol/$wob.log|tr -s " " " " > $wol/$word.log; 
 sed -n 9p $wol/$wob.log|tr -s " " " " >> $wol/$word.log; 
-(printf %b "["; sed -n 8p $wol/$wob.log|tr -d "\n"; printf %b "]\n" ) >> $wol/$word.log; 
+(printf %b "["; 
+sed -n 8p $wol/$wob.log|tr -d "\n"; 
+printf %b "]\n" ) >> $wol/$word.log; 
 ####
-sed -n 12,26p $wol/$wob.log|grep -v 'object\]'|grep -e 'Definition of ' -A6|sed -e 1,2d -e 4,9d -e "s/:\ //" >> $wol/$word.log; 
-####
-# |grep -v 'object\]'|grep -e 'Definition of ' -A6|sed -e 1,2d -e 4,9d -e "s/:\ //"
-# sed -n 18p $wol/$wob.log|cut -f2- -d" " >> $wol/$word.log; 
+sed -n "/Definition of/,/More Words/p" $wol/$wob.log|sed -n "/\:\ /p"|sed -e "s/\:\ //g" >> $wol/$word.log; 
 #########
 #########
 echo; cat $wol/$word.log; 

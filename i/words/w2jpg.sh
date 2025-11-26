@@ -11,25 +11,25 @@ wordfolder="$HOME/logs/words"; wordlog="$wordfolder/wordlog"; latest="$(command 
 ####
 convert -border 4 -bordercolor black -gravity center pango:"$(cat $wordlog/$word.htm)" $wordlog/$word.jpg; 
 ####
-hexx="$(pastel random -n1|pastel format hex|col -xb)"; 
 wordw="$(mediainfo --INFORM="Image;%Width%" "$wordlog/$word.jpg")"; 
 wordh="$(mediainfo --INFORM="Image;%Height%" "$wordlog/$word.jpg")"; 
 wordzp="$(((2999 - wordw) / 2))x$(((2999 - wordh) / 2))"; 
-wordzs="$(((2800 - wordw) / 2))x$(((4600 - wordh) / 2))"; 
-
+wordzs="$(((2999 - wordw) / 2))x$(((4600 - wordh) / 2))"; 
+########
+########
+hexx="$(pastel random -n1|pastel format hex|col -xb)"; 
 convert -border ${wordzp} -bordercolor "$hexx" "$wordlog/$word.jpg" "$wordfolder/wordimg/${word}_post.jpg"; 
 ####
 hexx="$(pastel random -n1|pastel format hex|col -xb)"; 
 convert -border ${wordzs} -bordercolor "$hexx" "$wordlog/$word.jpg" "$wordfolder/wordimg/${word}_story.jpg"; 
-####
-printf %b "\n----\nhttps://aa.aeniks.com/wordimg/${word}_post.jpg \n"; 
-printf %b "\n----\nhttps://aa.aeniks.com/wordimg/${word}_story.jpg \n"; 
-####
+########
+printf %b "\n----\nhttps://aa.aeniks.com/wordimg/${word}_post.jpg \nhttps://aa.aeniks.com/wordimg/${word}_story.jpg \n----\n"; 
+########
 mv "$wordlog/$word.htm" "$wordlog/$word.jpg" -t $wordfolder/tmp; 
 }; 
-####
+########
 words2jpg; 
-####
+########
 
 
 
