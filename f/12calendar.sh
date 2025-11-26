@@ -18,9 +18,11 @@ printf %b " $(date +%a\ %b\ %d\ %Y\ \|\ %T)\n"|bat -ppfljava --theme DarkNeon;
 12calendarget() { 
 
 dott; printf %b "  getting cal ·· "; 
-curl -L 'https://script.google.com/macros/s/AKfycbzldVvhvOBiwlgyAIkosGX8-mjDYzEJyjLG30zbMlpQXxChUCJGmI__0dhe5vRjkuQLMA/exec' # "https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLg_YBNhX7Oit_Rki29oJKGCkyzDaARNMLIq-w3cUYjT0hiWE5UyhIDG6Io3cm0eFcISNs-xi7Q_2k8Mc3LW3h8lEn1E_i9kDyiJ-YXXPvwzoWIV7IOF7VXs3WJbGPPpYVIxd7vOrjXQ9g9PY0eF5Iw2Xf7YRDAVoypcGha5MQs6p7rc_Y0R6CEDqSQKsM5MU4izAwNmn6M1JoAwYBIAKKtIVOtIOfTAvFRHRcdMSNHnOo0ZwEWInLVrYZIXNg&lib=M72QkDm7CT60m1UNRIr2naUe2CZqY5xWx" && printf %b "\nEPOCH_${EPOCHSECONDS}") > $HOME/logs/calendar.json && printf %b "\e[G"; 
+(curl -sL "https://script.google.com/macros/s/AKfycbye8O0u3we9g5Xt3HilbKzLdjlC94OwSj7QPprmzc0pWI5dZ_ORE5YSaFmlyCJ-JqBQ/exec" && printf %b "\nEPOCH_${EPOCHSECONDS}") > $HOME/logs/calendar.json && printf %b "\e[G"; 
 ####
-(cat $HOME/logs/calendar.json | tr -s "," "\n" | grep -vE 'EPOCH_|h_|description|end_date' | sed '/start_date_time/{s/.[0-9]*[-T]//g}' | cut -f1 -d "+" | cut -f 2- -d":" | sed 's/"/\n/' | tr -s "\n\"}" "%%\n" | cut -f2-4 -d"%"|col -xb|column --separator "%" --table --output-separator " | " --table-columns "1234567890123456" --table-right 1|tail -n+2 |bat -ppflr --theme Visual\ Studio\ Dark+ ) > $HOME/logs/cal.log; 
+( cat $HOME/logs/calendar.json | tr -s "," "\n" | grep -vE 'EPOCH_|h_|description|end_date' | sed '/start_date_time/{s/.[0-9]*[-T]//g}' | cut -f1 -d "+" | sed -e "s/{\"summary/€\n/g"| cut -f 2- -d":" | tr -s "\n€[]" " \n"|sed -e 's/\ \"//g' -e 's/\"\ /\"/g' | col -xb | column --separator "\"" --table --output-separator " | " --table-columns "1234567890123456" --table-right 1 | tail -n+2 | bat -ppflr --theme Visual\ Studio\ Dark+ ) > $HOME/logs/cal.log; 
+####
+# (cat $HOME/logs/calendar.json | tr -s "," "\n" | grep -vE 'EPOCH_|h_|description|end_date' | sed '/start_date_time/{s/.[0-9]*[-T]//g}' | cut -f1 -d "+" | cut -f 2- -d":" | sed 's/"/\n/' | tr -s "\n\"}" "%%\n" | cut -f2-4 -d"%"|col -xb|column --separator "%" --table --output-separator " | " --table-columns "1234567890123456" --table-right 1|tail -n+2 |bat -ppflr --theme Visual\ Studio\ Dark+ ) > $HOME/logs/cal.log; 
 }; 
 ## \get
 ####
