@@ -15,7 +15,7 @@ mkdir -m 775 -p "$wordfolder/wordlog" "$wordfolder/tmp" "$wordfolder/wordimg" "$
 #### create file and spacing on top
 ####
 # wordfolder="$HOME/logs/words"; wordlog="$wordfolder/wordlog"; 
-latest="$(command ls -t1 $wordlog|grep -e '.log$'|head -n1)"; ww="$wordlog/$latest"; word="${latest/.*/}"; printf %b "  "|ansifilter -M -F "serif" -s 155 > $wordlog/$word.htm; printf %b "  $(sed -n 1p $ww)  "|ansifilter -M -F "serif" -s 260 >> $wordlog/$word.htm; sed -n 3p $ww|tr -s "/" " "|bat -ppflgo --theme Coldark-Dark|ansifilter -c -M -F "code" -s 60 >> $wordlog/$word.htm; sed -n 2p $ww|bat -ppfljs --theme Coldark-Cold|ansifilter -M -F "code" -s 60 >> $wordlog/$word.htm; sed -n 4,6p $ww|fmt -w 42 -g 26|gum style --margin "0 4 1 4" --padding "2"|ansifilter -c -M -s 60 -F "monospace" >> $wordlog/$word.htm; 
+latest="$(command ls -t1 $wordlog|grep -e '.log$'|head -n1)"; ww="$wordlog/$latest"; word="${latest/.*/}"; printf %b "  "|ansifilter -M -F "serif" -s 155 > $wordlog/$word.htm; printf %b "  $(sed -n 1p $ww)  "|ansifilter -M -F "serif" -s 260 >> $wordlog/$word.htm; sed -n 3p $ww|tr -s "/" " "|bat -ppflgo --theme Coldark-Dark|ansifilter -c -M -F "code" -s 60 >> $wordlog/$word.htm; sed -n 2p $ww|bat -ppfljs --theme Coldark-Cold|ansifilter -M -F "code" -s 60 >> $wordlog/$word.htm; sed -n 4,6p $ww|fmt -w 42 -g 26|gum style --margin "1 4 1 4" --padding "0 2 2 2"|ansifilter -c -M -s 60 -F "monospace" >> $wordlog/$word.htm; 
 ####
 convert -border 4 -bordercolor black -gravity center pango:"$(cat $wordlog/$word.htm)" $wordlog/$word.jpg 2>/dev/null; echo; 
 ####
