@@ -9,15 +9,12 @@ export HISTCONTROL="ignoreboth";
 export PROMPT_COMMAND="history -a; history -n; "; 
 export EDITOR="micro"; 
 export BAT_THEME="Coldark-Dark"; 
-# export wolenonel='0c:9d:92:76:52:0d';
-# export wolaeniks='9c:5c:8e:bb:ce:5e'; 
 export logs="$HOME/logs"; 
 export tmp="$HOME/tmp"; [ -z $TMPDIR ] && export TMPDIR="$HOME/tmp"; 
 unset HISTTIMEFORMAT; 
 ########
 re='\e[0m'; cyan='\e[96m'; logs="$HOME/logs"; c2="\e[96m -- \e[0m"; 
-ssh=(${SSH_CONNECTION}); 
-[ -z $ssh ] && ssh=($SH_CLIENT); 
+ssh=(${SSH_CONNECTION}); [ -z $ssh ] && ssh=($SSH_CLIENT); 
 ########
 unset lessprefix; [ $PREFIX ] && lessprefix='--redraw-on-quit'; 
 ########
@@ -44,8 +41,7 @@ if echo $HOME|grep -w "termux" -q; then alias sudo='command'; else sudo=sudo; fi
 if fzf --bash &>/dev/null; then . $HOME/.config/fzf_completions_bash.sh; fi; 
 ########
 unset tmuxprefix; 
-if [ "$PREFIX" ]; then tmuxprefix=" --tmux 'center,99%,95%' "; 
-alias fzf='fzf-tmux -h 98% -w 98%'; fi; 
+if [ "$PREFIX" ]; then tmuxprefix=" --tmux 'center,99%,95%' "; alias fzf='fzf-tmux -h 98% -w 98%'; fi; 
 #########
 export FZF_DEFAULT_OPTS="${tmuxprefix} -i -m --cycle --ansi --height '~99%' --bind '0:change-preview-window(right,50%|top,20%|top,55%|right,20%|hidden),q:abort' --info inline --inline-info --preview-window 'hidden,wrap,noborder' --preview 'bat -ppf {} 2>/dev/null||ls -pm {}' --scroll-off 22 --color 'bg:234,bg+:24,fg+:15,info:6,preview-bg:-1,gutter:233,bg:233,scrollbar:magenta,hl:red' --scrollbar '▉' --pointer '▉' --marker '▉' --border 'top' --border-label 'C-a:select-all | 0: change orientation | q:uit ' --border-label-pos 'top' "$([ $PREFIX ] && printf %b "--wrap-sign '""'")""; 
 ########
@@ -172,7 +168,9 @@ model="${moda/%\ /}";
 [ -z "$PREFIX" ] && alias fzf='fzf-tmux -h 95% -w 98%'; 
 ##
 ##
-printf %b "\x1b[1 q \x1b]12;#ff44bb\x1b]11;#04000f"; 
+printf %b "\x1b[1 q"; ## > cursor = block
+printf %b "\x1b]12;#ff44bb"; ## cursor = pink
+printf %b "\x1b]11;#04000f"; ## background = $arkblue 
 }; 
 ##
 ##
