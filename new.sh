@@ -174,6 +174,8 @@ model="${moda/%\ /}";
 modo=($(for bb in product_sku board_vendor board_name bios_vendor sys_vendor; 
 do cat /sys/devices/virtual/dmi/id/${bb} 2>/dev/null|tr -s "\n" " "; done)); 
 moda="$(printf %b "${modo}"|tr -d "[]"|head -c14)"; model="${moda/%\ /}"; 
+##
+. $HOME/88/c/lfcolors.sh; 
 . ${HOME}/88/alias.sh; 
 . $HOME/88/_ps1.sh; 
 ####

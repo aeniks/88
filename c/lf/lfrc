@@ -516,7 +516,6 @@ set nodrawbox
 set drawbox off
 set mouse on 
 set noicons  
-set icons off 
 set shell bash 
 set info size:time
 set sortby time
