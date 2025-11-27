@@ -178,6 +178,8 @@ moda="$(printf %b "${modo}"|tr -d "[]"|head -c14)"; model="${moda/%\ /}";
 . $HOME/88/c/lfcolors.sh; 
 . ${HOME}/88/alias.sh; 
 . $HOME/88/_ps1.sh; 
+printf '\e]11;#004a66\e\\';
+printf '\e]12;#ff4a88\e\\';
 ####
 for i in $HOME/88/f/*.sh; do . $i; done; 
 # [ "$TMUX_PANE" = "%0" ] && dfree; 
