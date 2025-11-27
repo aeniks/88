@@ -37,8 +37,8 @@ format_style() {
 }
 
 # Defaults
-default_fg='colour24'
-default_bg='colour04'
+default_fg='colour15'
+default_bg='colour166'
 default_copy_attr='fg=default,bg=yellow'
 default_sync_attr='fg=default,bg=yellow'
 default_empty_attr='fg=default,bg=default'

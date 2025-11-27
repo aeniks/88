@@ -172,6 +172,7 @@ model="${moda/%\ /}";
 [ -z "$PREFIX" ] && alias fzf='fzf-tmux -h 95% -w 98%'; 
 ##
 ##
+printf %b "\x1b[1 q \x1b]12;#ff44bb\x1b]11;#04000f"; 
 }; 
 ##
 ##
