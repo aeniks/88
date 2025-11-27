@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # very good bash enviorment 
+[ -z "$TMUX" ] && tmux; 
 shopt -s histappend; shopt -s histverify; 
 . $HOME/88/c/lfcolors.sh; 
 export IFS=$' \n\t'; 
