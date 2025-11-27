@@ -1,6 +1,10 @@
 #!/bin/bash
 ## get any word in short definition 
-wordget() { word="$@"; [ -z "$1" ] && printf %b "\n\n\e[A-- word:" && read -ep " " "word"; wf="$HOME/logs/words/wf"; mkdir -p -m 775 "$wf" 2>/dev/null; printf %b "\n----\n"; (printf %b "$word\n"; lynx -trim_input_fields -nonumbers -nomargins -trim_blank_lines -width 800 -dump "https://www.dictionary.com/browse/$word"|grep -e 'View synonyms for ' -m1 -A18|grep -ve '(BUTTON)'|sed -e 's/_//g' -e '/( ) /d' -e 1,2d|grep -vE '2. |3. |4. |5. |6. |7. '|grep -E '\[|noun|verb|adjectiv|adverb|1. '|sed -e 's/\ 1.\ //g')|tee $wf/$word.log; printf %b "----\n\n\n\n\e[2A-- make jpg? [Y/n] "; read -sen1 "ny"; [ -z "$ny" ] && wordget2jpg;  }; 
+wordget() { word="$@"; [ -z "$1" ] && printf %b "\n\n\e[A-- word:" && read -ep " " "word"; wf="$HOME/logs/words/wf"; mkdir -p -m 775 "$wf" 2>/dev/null; printf %b "\n----\n"; (printf %b "$word\n"; lynx -trim_input_fields -nonumbers -nomargins -trim_blank_lines -width 800 -dump "https://www.dictionary.com/browse/$word"|grep -e 'View synonyms for ' -m1 -A18|grep -ve '(BUTTON)'|sed -e 's/_//g' -e '/( ) /d' -e 1,2d|grep -vE '2. |3. |4. |5. |6. |7. '|grep -E '\[|noun|verb|adjectiv|adverb|1. '|sed -e 's/\ 1.\ //g') > $wf/$word.log1; 
+##
+(printf %b "$word\n"; sed -n 3p $wf/$word.log1; sed -n 2p $wf/$word.log1; sed -n 4,5p $wf/$word.log1; ) | tee $wf/$word.log; rm $wf/$word.log1; 
+##
+printf %b "----\n\n\n\n\e[2A-- make jpg? [Y/n] "; read -sen1 "ny"; [ -z "$ny" ] && wordget2jpg; }; 
 #!/bin/bash
 wordget2jpg() { 
 ####
@@ -11,7 +15,7 @@ mkdir -m 775 -p "$wordfolder/wordlog" "$wordfolder/tmp" "$wordfolder/wordimg" "$
 #### create file and spacing on top
 ####
 # wordfolder="$HOME/logs/words"; wordlog="$wordfolder/wordlog"; 
-latest="$(command ls -t1 $wordlog|grep -e '.log$'|head -n1)"; ww="$wordlog/$latest"; word="${latest/.*/}"; printf %b "  "|ansifilter -M -F "serif" -s 150 > $wordlog/$word.htm; printf %b "    $(sed -n 1p $ww)    "|ansifilter -M -F "serif" -s 260 >> $wordlog/$word.htm; sed -n 3p $ww|tr -s "/" " "|bat -ppflgo --theme Coldark-Dark|ansifilter -c -M -F "code" -s 60 >> $wordlog/$word.htm; sed -n 2p $ww|bat -ppfljs --theme Coldark-Cold|ansifilter -M -F "code" -s 60 >> $wordlog/$word.htm; sed -n 4,6p $ww|fmt -w 42 -g 26|gum style --margin "0 6 2 6" --padding "2"|ansifilter -c -M -s 60 -F "monospace" >> $wordlog/$word.htm; 
+latest="$(command ls -t1 $wordlog|grep -e '.log$'|head -n1)"; ww="$wordlog/$latest"; word="${latest/.*/}"; printf %b "  "|ansifilter -M -F "serif" -s 155 > $wordlog/$word.htm; printf %b "  $(sed -n 1p $ww)  "|ansifilter -M -F "serif" -s 260 >> $wordlog/$word.htm; sed -n 3p $ww|tr -s "/" " "|bat -ppflgo --theme Coldark-Dark|ansifilter -c -M -F "code" -s 60 >> $wordlog/$word.htm; sed -n 2p $ww|bat -ppfljs --theme Coldark-Cold|ansifilter -M -F "code" -s 60 >> $wordlog/$word.htm; sed -n 4,6p $ww|fmt -w 42 -g 26|gum style --margin "0 4 1 4" --padding "2"|ansifilter -c -M -s 60 -F "monospace" >> $wordlog/$word.htm; 
 ####
 convert -border 4 -bordercolor black -gravity center pango:"$(cat $wordlog/$word.htm)" $wordlog/$word.jpg 2>/dev/null; echo; 
 ####
