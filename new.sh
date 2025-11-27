@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # very good bash enviorment 
 shopt -s histappend; shopt -s histverify; 
+. $HOME/88/c/lfcolors.sh; 
 export IFS=$' \n\t'; 
 export HISTCONTROL="ignoreboth"; 
 export PROMPT_COMMAND="history -a; history -n; "; 
@@ -158,16 +159,19 @@ printf '\e]12;red\e\\';
 ####
 moda="$(printf %b "${modo}"|tr -d "[]"|head -c14)"; 
 model="${moda/%\ /}"; 
-. ${HOME}/88/alias.sh; 
-. $HOME/88/_ps1.sh; 
+# . ${HOME}/88/alias.sh; 
+# . $HOME/88/_ps1.sh; 
 ####
 # for i in $HOME/88/f/*.sh; do . $i; done; 
 # source "$HOME/88/c/tmuxcompletions.sh"; 
 ####
 # sshd 2>/dev/null; command ps -A|cut -c25-|grep -e 'crond' &>/dev/null || crond 2>/dev/null; 
 [ -z "$PREFIX" ] && alias fzf='fzf-tmux -h 95% -w 98%'; 
+##
+##
 }; 
-
+##
+##
 [ $PREFIX ] && modo=($(getprop|grep -E "vendor.manufacturer|product.manufacturer" -m1 -A1 --group-separator=""|cut -f2- -d" "|tr -s "\n[]" " "; )); 
 #############################
 [ -z $PREFIX ] && [ -e /sys/devices/virtual/dmi/id/product_family ] && \
@@ -175,10 +179,10 @@ modo=($(for bb in product_sku board_vendor board_name bios_vendor sys_vendor;
 do cat /sys/devices/virtual/dmi/id/${bb} 2>/dev/null|tr -s "\n" " "; done)); 
 moda="$(printf %b "${modo}"|tr -d "[]"|head -c14)"; model="${moda/%\ /}"; 
 ##
-. $HOME/88/c/lfcolors.sh; 
+# . $HOME/88/c/lfcolors.sh; 
 . ${HOME}/88/alias.sh; 
 . $HOME/88/_ps1.sh; 
-printf '\e]11;#004a66\e\\';
+printf '\e]11;#001420\e\\';
 printf '\e]12;#ff4a88\e\\';
 ####
 for i in $HOME/88/f/*.sh; do . $i; done; 
