@@ -3,6 +3,7 @@
 [ -z "$TMUX" ] && tmux; 
 shopt -s histappend; shopt -s histverify; 
 . $HOME/88/c/lfcolors.sh; 
+####
 export IFS=$' \n\t'; 
 export HISTCONTROL="ignoreboth"; 
 export PROMPT_COMMAND="history -a; history -n; "; 
@@ -157,6 +158,7 @@ echo;
 [ "$(cat ${logs}/dfree.log|wc -c)" -gt 4 ] && cat "${logs}/dfree.log" || dfree; 
 dott; echo;
 printf '\e]12;red\e\\'; 
+printf '\e]12;cyan\e\\'; 
 ####
 moda="$(printf %b "${modo}"|tr -d "[]"|head -c14)"; 
 model="${moda/%\ /}"; 
@@ -180,9 +182,10 @@ modo=($(for bb in product_sku board_vendor board_name bios_vendor sys_vendor;
 do cat /sys/devices/virtual/dmi/id/${bb} 2>/dev/null|tr -s "\n" " "; done)); 
 moda="$(printf %b "${modo}"|tr -d "[]"|head -c14)"; model="${moda/%\ /}"; 
 ##
-# . $HOME/88/c/lfcolors.sh; 
-. ${HOME}/88/alias.sh; 
 . $HOME/88/_ps1.sh; 
+. ${HOME}/88/alias.sh; 
+. $HOME/.config/tmux/tmuxcompletions.sh; 
+####
 printf '\e]11;#001420\e\\';
 printf '\e]12;#ff4a88\e\\';
 ####
