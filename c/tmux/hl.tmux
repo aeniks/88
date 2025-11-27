@@ -37,12 +37,13 @@ format_style() {
 }
 
 # Defaults
-default_fg='colour231'
+default_fg='colour24'
 default_bg='colour04'
 default_copy_attr='fg=default,bg=yellow'
 default_sync_attr='fg=default,bg=yellow'
 default_empty_attr='fg=default,bg=default'
-default_prefix_prompt=$(tmux_option prefix | tr "[:lower:]" "[:upper:]" | sed 's/C-/\^/')
+default_prefix_prompt='@'
+# $(tmux_option prefix | tr "[:lower:]" "[:upper:]" | sed 's/C-/\^/')
 default_copy_prompt='Copy'
 default_sync_prompt='Sync'
 default_empty_prompt=''

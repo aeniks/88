@@ -6,8 +6,7 @@
     "Ctrl-r": "command:reload",
     "CtrlSpace": "CommandMode",
     "CtrlUnderscore": "lua:comment.comment",
-    // "Ctrl-y": "command:cheat",
-    // "F1": "command:cheat",
+    "F1": "command:cheat",
     "F12": "command:makeup",
     "F5": "command:runit",
     "F9": "command:makeupbg"
