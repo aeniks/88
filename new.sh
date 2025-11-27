@@ -186,6 +186,7 @@ moda="$(printf %b "${modo}"|tr -d "[]"|head -c14)"; model="${moda/%\ /}";
 printf '\e]11;#001420\e\\';
 printf '\e]12;#ff4a88\e\\';
 ####
+[ "$TMUX" ] && new; 
 for i in $HOME/88/f/*.sh; do . $i; done; 
 # [ "$TMUX_PANE" = "%0" ] && dfree; 
 # source "$HOME/88/c/tmuxcompletions.sh"; 
