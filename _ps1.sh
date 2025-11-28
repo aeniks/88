@@ -1,9 +1,9 @@
 #!/bin/bash 
 ################
 [ "$PREFIX" ] && . "${HOME}"/88/crons/bat.sh & disown; 
-touch $HOME/logs/bp.log; chmod 775 $HOME/logs/bp.log; 
+touch $HOME/logs/b/bp.log; chmod 775 $HOME/logs/b/bp.log; 
 yellow='\e[93m'; cyan='\e[96m'; re='\e[0m'; bc=0; 
-wlan="$(cat "$HOME/logs/wlan.sh" 2>/dev/null)"; 
+wlan="$(cat "$HOME/logs/iploc.log" 2>/dev/null)"; 
 ################
 _bat() { 
 if [ -e "/sys/class/power_supply/BAT0/status" ]; \
@@ -15,15 +15,21 @@ printf -v "batcap" "/sys/class/power_supply/battery/capacity";
 elif [ -e "/sys/class/power_supply/BAT1/status" ]; \
 then printf -v "batstat" "/sys/class/power_supply/BAT1/status"; \
 printf -v "batcap" "/sys/class/power_supply/BAT1/capacity"; 
-else printf -v "batstat" %b "$HOME/logs/battery.log"; 
-printf -v "batcap" %b "$HOME/logs/bp.log"; fi; 
-printf -v "bs" "\e[0;2m"; 
-cat "$batstat" 2>/dev/null|grep -wi "Charging" --quiet && \
-printf -v "bs" "\e[0;92m"; 
-[ "$bc" ] && printf -v "bc" %b "$(cat "$batcap")"; 
-[ "$bc" ] && printf %b "$bc" > "${HOME}"/logs/bpc.log; 
-printf -v "bat" %b "\e[${bc}m$bc"; 
-[ "$bc" ] && printf %b " ${bs}[$re\e[38;5;${bc:0:1}m${bat}${bs}]$re"; 
+else 
+printf -v "batstat" %b "$HOME/logs/b/battery.log"; 
+batp="$(cat "$HOME/logs/b/bp.log")"; 
+fi; 
+####
+# printf -v "bcharge" "\e[0;2m["; cat "$batstat" 2>/dev/null|
+grep -wqi "Charging" "$batstat" && bcharge="\e[0m\e[38;5;42;1m" || bcharge="\e[0m\e[2m"; 
+# [ "$bc" ] && printf -v "bcolor" %b "$(cat "$batcap")";
+# [ "$bc" ] && 
+bcolor="$((batp / 10 * 4 + 124 - 4))"; 
+printf %b "$bcolor" > ~/logs/b/bcolor.log; 
+# printf -v "bat" %b "\e[${bc}m$bc"; 
+
+# [ "$bc" ] && 
+printf %b " ${bcharge}[${re}\e[38;5;${bcolor}m${batp}${bcharge}]$re"; 
 }; 
 ################
 # [[ "$HOSTNAME" == "localhost" ]] && unset HOSTNAME || \
@@ -31,7 +37,7 @@ printf -v "_host" %b "[\e[95m${HOSTNAME-$HOSTTYPE}\e[0m] ";
 ################
 _dtime() { hh=1$(date +%H;); mm=1$(date +%M;); ss=1$(date +%S); 
 printf %b "\e[38;5;$((hh + 22))m${hh:1:2}$re:\e[38;5;$((mm + 22))m${mm:1:2}$re:\e[38;5;${ss/0/1}m${ss:1:2}\e[0m" 2>/dev/null; }; 
-_etime() { printf %b "\e[38;5;${EPOCHSECONDS:8:2}m${EPOCHSECONDS:6:4}\e[0m";  }; 
+# _etime() { printf %b "\e[38;5;${EPOCHSECONDS:8:2}m${EPOCHSECONDS:6:4}\e[0m";  }; 
 ################
 alias gits='[ -e $PWD/.git ] && ggii="$(git status --short 2>/dev/null|grep "" --quiet && printf %b "41"|| printf %b "44"; )" && printf %b "\e[0m\e[${ggii}m git \e[0m"'; 
 ee() { [ $? = 130 ] && echo gg; }; 
