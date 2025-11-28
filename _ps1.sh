@@ -1,7 +1,7 @@
 #!/bin/bash 
 ################
 [ "$PREFIX" ] && . "${HOME}"/88/crons/bat.sh & disown; 
-touch $HOME/logs/b/bp.log; chmod 775 $HOME/logs/b/bp.log; 
+chmod 775 $HOME/logs/b/bp.log; touch $HOME/logs/b/bp.log; 
 yellow='\e[93m'; cyan='\e[96m'; re='\e[0m'; bc=0; 
 wlan="$(cat "$HOME/logs/iploc.log" 2>/dev/null)"; 
 ################
@@ -24,8 +24,8 @@ fi;
 grep -wqi "Charging" "$batstat" && bcharge="\e[0m\e[38;5;42;1m" || bcharge="\e[0m\e[2m"; 
 # [ "$bc" ] && printf -v "bcolor" %b "$(cat "$batcap")";
 # [ "$bc" ] && 
-bcolor="$((batp / 10 * 4 + 124 - 4))"; 
-printf %b "$bcolor" > ~/logs/b/bcolor.log; 
+bcolor="$(printf %b "$((batp / 10 * 4 + 124 - 4))"|tee ~/logs/b/bcolor.log)"; 
+# printf %b "$bcolor" > ~/logs/b/bcolor.log; 
 # printf -v "bat" %b "\e[${bc}m$bc"; 
 
 # [ "$bc" ] && 

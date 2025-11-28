@@ -1,6 +1,6 @@
 #!/bin/bash
-sleep 1; termux-battery-status > ~/logs/b/battery.log; 
-cat ~/logs/b/battery.log|grep -e "percentage"|tr -d 'A-z ,\":' > ~/logs/b/bp.log; 
+sleep 1; termux-battery-status > $HOME/logs/b/battery.log; 
+cat ~/logs/b/battery.log|grep -e "percentage"|tr -d 'A-z ,\":' > $HOME/logs/b/bp.log; 
 ####
 # bat="$(
 ####
