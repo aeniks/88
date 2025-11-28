@@ -21,7 +21,7 @@ unset lessprefix; [ $PREFIX ] && lessprefix='--redraw-on-quit';
 export LESS=''${lessprefix}' -R --file-size --use-color --incsearch --mouse --prompt=%F(%T) [/]search [n]ext [p]rev ?f%f .?n?m(%T %i of %m) ..?lt %lt-%lb?L/%L. :byte %bB?s/%s.  .?e(END)  ?x-  Next\:   %x.:?pB  %pB\%..%t '; 
 ########
 ######## make som basic folders ######## 
-mkdir $HOME/logs $HOME/tmp $HOME/gh $HOME/dl $HOME/bin -m 775 -p 2>/dev/null; 
+mkdir $HOME/logs/b $HOME/tmp $HOME/gh $HOME/dl $HOME/bin -m 775 -p 2>/dev/null; 
 ########
 # [[ "$OS" != "Debian" ]] && \
 . $HOME/88/f/dfree.sh; 

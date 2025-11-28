@@ -1,8 +1,11 @@
 #!/bin/bash 
 ################
 [ "$PREFIX" ] && . "${HOME}"/88/crons/bat.sh & disown; 
-chmod 775 $HOME/logs/b/bp.log; touch $HOME/logs/b/bp.log; 
-yellow='\e[93m'; cyan='\e[96m'; re='\e[0m'; bc=0; 
+mkdir $HOME/logs/b -p -m 775 2>/dev/null; 
+touch $HOME/logs/b/bp.log; 
+chmod 775 $HOME/logs/b/bp.log; 
+yellow='\e[93m'; cyan='\e[96m'; re='\e[0m'; bc=0; dim='\e[2m'; 
+##
 wlan="$(cat "$HOME/logs/iploc.log" 2>/dev/null)"; 
 ################
 _bat() { 
