@@ -62,6 +62,7 @@ local IFS=$' \n\t';
 . $HOME/88/f/12calendar.sh; 
 . $HOME/88/f/memram.sh; 
 . $HOME/88/i/colors.sh; 
+clear; . $HOME/88/crons/hour.sh; printf %b "\e[9B"; 
 ## export HISTTIMEFORMAT="%b-%d-%H:%M:%S "; 
 #############################
 #############################
