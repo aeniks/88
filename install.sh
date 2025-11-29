@@ -52,7 +52,7 @@ if [ $pp1 ]; then $sudo apt update && $sudo apt upgrade -y; printf %b "\n$c2 apt
 if [ $pp2 ]; then for i in $(ls -1 $HOME/88/install/ap); do rr="$((RANDOM%222))";  printf %b "\ec\e[0m -- \e[48;5;${rr}m ${i} \e[0m --\n\e[38;5;${rr}m "; command -v $i &>/dev/null || $sudo apt install -y $i; done; printf %b "\e[2J\e[2H\n\n\e[0m -- \e[48;5;196m DONE \e[0m --\n\n"; echo; fi; 
 ##############################
 ##############################
-if [ $pp3 ]; then _backup "$start"; _newcolor; hash -v git &>/dev/null || $sudo apt install -y git 2>/dev/null; git clone https://github.com/aeniks/88.git $start; cd "$start"; git config remote.origin.url git@github.com:aeniks/88.git; cd $OLDPWD; printf %b "\n$c2 config files installed! \n"; echo; fi; 
+if [ $pp3 ]; then _backup "$start"; _newcolor; hash -v git &>/dev/null || $sudo apt install -y git 2>/dev/null; git clone https://github.com/aeniks/88.git $start; cd "$start"; git config remote.origin.url git@github.com:aeniks/88.git; cd $OLDPWD; printf %b "\n$c2 config files downloaded! \n"; echo; fi; 
 ##############################
 ##############################
 if [ $pp4 ]; then _backup $HOME/.inputrc; _newcolor; _link $start/c/inputrc $HOME/.inputrc; _newcolor; confolders=($(ls -1p $HOME/88/c|grep "/")); for q in ${confolders[*]}; do mkdir -p $HOME/.config/$q 2>/dev/null; _backup $HOME/.config/$q/*; _newcolor; ln -s $start/c/$q/* -t $HOME/.config/$q/ 2>/dev/null; sleep .2; printf %b "\n\e[0m"; p1 "updated"; _newcolor; printf %b " $q"; done; _newcolor; printf %b "${PATH}:${HOME}/.local/bin" > $HOME/.config/path.sh; chmod 775 $HOME/.config/path.sh; _newcolor; printf %b "\n\e[0m"; p1 'added PATH to ~/.config/path.sh '; printf %b "\n$c2 config files installed! \n"; echo; fi; 
