@@ -26,14 +26,14 @@ C-p: 'printf %b "";\C-b\C-b'
 C-x: '\ek\nreset -Q; exec bash;\n'
 # C-f: '\ek\nserch\n'
 C-z: undo
-^Z: undo
+# ^Z: undo
 "\e[z": undo
 "\ez": undo
 "\eq": insert-comment
 "\e[q": insert-comment
 "\e3": insert-comment
 \C-q: insert-comment
-"£": insert-insert
+# "£": insert-insert
 "\eU": upcase-word
 "\eu": upcase-word
 # "\e1": dump-functions
