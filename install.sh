@@ -7,11 +7,12 @@ mkdir $HOME/{tmp,logs,gh,backup,.config} 2>/dev/null;
 export tmp=$HOME/tmp time=$(date +%y%m%d%H%m%S) bu=$HOME/backup; 
 #####
 local IFS=$' \n\t' start=$HOME/88 green='\e[32m' dim='\e[2m' re='\e[0m' red='\e[31m' cyan='\e[36m' yellow='\e[33m' blue='\e[36m' bold='\e[1m' height="$(stty size|cut -f1 -d" ")" width="$(stty size|cut -f2 -d" ")" yno='\e[0m[\e[2mY\e[0m/\e[2mn\e[0m]' c2='\e[0m\e[36m--\e[0m' uu="60" enter='\e[\e[0m [\e[2mENTER\e[0m] to accept or [\e[2mq\e[0m]\e[2mto Quit \e[0m' x="2>/dev/null"; 
+unset _yno_prompt ny 2>/dev/null; 
 #####
 # unalias p1 p2 2>/dev/null; 
 # p1() { p2=" ${@}"; for i in $(seq ${#p2}); do sleep .04; printf %b "${p2:${i}:1}"; done; }; p2() { printf %b "$@"; }; 
 ####
-_quit() { [[ "$ny" = "q" ]] && printf %b "\n\n\e[2A" && return 2; }; 
+_quit() { [[ "$ny" = "q" ]] && printf %b "" && return 2; }; 
 ####
 p1() { p2=" ${@}"; for i in $(seq ${#p2}); do sleep .04; printf %b "${p2:${i}:1}"; done; }; ## rolling text 
 p2() { printf %b "$@"; }; 
@@ -23,39 +24,38 @@ _newcolor() { printf %b "\e[38;5;$((uu++))m"; sleep .02; };
 _backup() { mv -fb --suffix="$time" $@ -t $bu &>/dev/null; }; 
 _yno() { _ok() { printf %b "\e[40G     \e[8D  "; p2 "\e[0;1m [\e[0;92m"; p1 "OK"; p2 "\e[0;1m]  \e[0m\n"; }; yno='\e[0m[\e[2mY\e[0m/\e[2mn\e[0m]'; [ "$1" ]&& ny=${1}; printf %b "\e[?25h\e[40G\b\b\b\b\b\b\b\b$yno "; 
 printf -v _yno_${1} "false"; read -rsn1 ny; 
-[[ -z $ny || $ny = y ]] && printf -v _yno_${1} "true"; 
-[[ $ny = q ]] && printf %b "\e[?25h\nqok\n" && _quit && exit 0; _ok; 
-[[ $ny = q ]] && printf %b "\e[?25h\nok\n" && _quit && return 2; }; 
+[[ -z $ny || $ny = y ]] && printf -v _yno_${1} "true"; _ok;  
+[[ $ny = q ]] && printf %b "\e[?25h" && printf %b "\n\n" && return 1; 
+# [[ $ny = q ]] && printf %b "\e[?25h" && _quit && return 2; 
+}; 
 ########
-for i in $(seq $((height / 2))); do printf %b "\e[38;5;$((RANDOM%16 + 111))m$i\n"; sleep .01; done; for i in $(seq $((height / 2 - 5))); do printf %b "\e[K\e[A\e[2K"; sleep .02; done; printf %b "\e[?25l"; 
+for i in $(seq $((height))); do printf %b "\n"; done; printf %b "\e[H\n\n"; 
+# for i in $(seq $((height / 2))); do printf %b "\e[38;5;$((RANDOM%16 + 111))m$i\n"; sleep .01; done; for i in $(seq $((height / 2 - 5))); do printf %b "\e[K\e[A\e[2K"; sleep .02; done; printf %b "\e[?25l"; 
 
-
-
-
-
-
-_prompt() { [[ "$ny" = "q" ]] && return 1; p2 " $c2 "; p1 "$@"; _yno prompt; if [[ $_yno_prompt == true ]]; then _newcolor; else return 1; fi; }; 
+_prompt() { [[ "$ny" = "q" ]] && return 1; p2 "    $c2 "; p1 "$@"; _yno prompt; 
+if [[ $_yno_prompt == true ]]; then _newcolor; else return 1; fi; }; 
 
 ####
-_prompt "update system? " && ($sudo apt update && $sudo apt upgrade -y); 
+_prompt "update system? " && ($sudo apt update && $sudo apt upgrade -y); _quit; 
 ####
 
-_prompt "install basic apps? " && (echo ok; for i in $(ls -1 $HOME/88/install/ap); do rr="$((RANDOM%222))";  printf %b "\ec\e[0m -- \e[48;5;${rr}m ${i} \e[0m --\n\e[38;5;${rr}m "; $sudo apt install -y $i; done; printf %b "\n\n\e[0m -- \e[48;5;196m DONE \e[0m --\n\n"; ) || echo no; 
+_prompt "install basic apps? " && (echo ok; for i in $(ls -1 $HOME/88/install/ap); do rr="$((RANDOM%222))";  printf %b "\ec\e[0m -- \e[48;5;${rr}m ${i} \e[0m --\n\e[38;5;${rr}m "; $sudo apt install -y $i; done; printf %b "\n\n\e[0m -- \e[48;5;196m DONE \e[0m --\n\n"; );
 
 _prompt "download config-files? " && (p2 " $c2 "; p1 "where to? "; 
 read -ei "$HOME/" "hstart"; start="${hstart}/88"; sleep .2; 
 export start="${start/\/\///}"; 
 _backup "$start"; _newcolor; 
 git clone https://github.com/aeniks/88.git $start &>/dev/null; 
-cd "$start"; git config remote.origin.url git@github.com:aeniks/88.git) || echo no; 
+cd "$start"; git config remote.origin.url git@github.com:aeniks/88.git); 
 ####
 _prompt "install config-files? " && (
 ####
 _backup $HOME/.inputrc; _newcolor; 
 _link $start/c/inputrc $HOME/.inputrc; _newcolor; 
 ####
-conf=(micro newsboat bat lf tmux htop glow aichat ranger); 
-for q in ${conf[*]}; do 
+confolders=($(ls -1p $HOME/88/c|grep "/")); 
+# conf=(micro newsboat bat lf tmux htop glow aichat ranger); 
+for q in ${confolders[*]}; do 
 mkdir -p $HOME/.config/$q 2>/dev/null; 
 _backup $HOME/.config/$q/*; _newcolor; 
 ln -s $start/c/$q/* -t $HOME/.config/$q/ 2>/dev/null; sleep .2; 
@@ -87,7 +87,7 @@ printf %b "\e[96m\u990 \e[0m"; ssh -T git@github.com; printf %b "\n";
 cd $start; git config remote.origin.url git@github.com:aeniks/88.git 2>/dev/null; cd -; 
 ####
 ); 
-
+echo; echo; 
 
 
 }; 
