@@ -6,15 +6,17 @@ local IFS=$' \n\t' start=$HOME/88 green='\e[32m' dim='\e[2m' re='\e[0m' red='\e[
 #####
 #####
 p1() { p2=" ${@}"; for i in $(seq ${#p2}); do sleep .04; printf %b "${p2:${i}:1}"; done; }; p2() { printf %b "$@"; }; 
-for i in $(seq $((height))); do printf %b "\n"; done; printf %b "\e[H\n\n       "; p1 "hello. "; sleep 2; printf %b "\n\n"; 
 #####
+#####
+for i in $(seq $((height))); do printf %b "\n"; done; 
+printf %b "\e[H\n\n       "; p1 "hello. "; sleep 2; printf %b "\n\n"; 
 #####
 #####
 p1() { p2=" ${@}"; for i in $(seq ${#p2}); do sleep .04; printf %b "${p2:${i}:1}"; done; }; p2() { printf %b "$@"; }; 
 #####
 _ok() { printf %b "\e[40G     \e[8D  "; p2 "\e[0;1m [\e[0;92m"; p1 "OK"; p2 "\e[0;1m]  \e[0m\n"; }; 
 ##
-_yno() { yno='\e[0m[\e[2mY\e[0m/\e[2mn\e[0m]'; [ "$1" ] && ny=${1}; printf %b "\e[?25h\e[40G\b\b\b\b\b\b\b\b$yno "; printf -v _yno_${1} "false"; read -rsn1 ny; [[ -z $ny || $ny = y ]] && printf -v "pp$((yy++))" %b "ok" && printf -v _yno_${1} "true"; _ok; [[ $ny = q ]] && printf %b "\e[?25l\n\n" && return 1; }; 
+_yno() { yno='\e[0m[\e[2mY\e[0m/\e[2mn\e[0m]'; [ "$1" ] && ny=${1}; printf %b "\e[?25h\e[40G\b\b\b\b\b\b\b\b$yno "; printf -v _yno_${1} "false"; read -rsn1 ny; [[ -z $ny || $ny = y ]] && printf -v "pp$((yy++))" %b "ok" && printf -v _yno_${1} "true" || unset -v pp$((yy++)); _ok; [[ $ny = q ]] && printf %b "\e[?25l\n\n" && return 1; }; 
 ##
 _link() { ln -s $@ 2>/dev/null; }; 
 _backup() { mv -fb --suffix="$time" $@ -t $bu &>/dev/null; }; 
