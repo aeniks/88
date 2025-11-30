@@ -26,6 +26,7 @@ t) sudo systemctl set-default multi-user.target;;
 *) return 1;; esac; 
 '
 
+alias la='lsd -l --icon never --group-directories-first --classify --total-size -a --blocks user,size,date,name --date +%H:%M:%S'
 alias bb='if [ "$PREFIX" ]; then \
 tmux display-popup -E -w 99% -h 98% "htop"; else \
 tmux display-popup -E -w 99% -h 98% "btop"; fi '
