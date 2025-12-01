@@ -11,10 +11,7 @@ set icons false
 set globfilter true
 set globsearch true
 set mouse true
-cmap 8
-map 8
-cmap 8 :cd ~/88
-map 8 :cd ~/88
+map "(" :cd ~/88
 map f
 map . set hidden! 
 map <esc> quit
@@ -84,7 +81,7 @@ map 1 !true
 map x $$f
 map X !$f
 cmap o 
-map o
+map o 
 map O $mimeopen --ask $f
 map oj !jp2a --color-depth=8 --fill $f
 map oc !chafa $f
@@ -107,7 +104,7 @@ map l :lenk
 # map <enter> pger
 map - maps
 map \\ :push :<up>
-map O bboo
+map z bboo
 map _ cmds
 map <+> drawbox! 
 map x !$f 
@@ -125,12 +122,13 @@ map b bopen
 map bb $batcat -pf $f
 map bg $glow -p $f
 map bq $return 0
+map L :cd $logs
 # map f :push F<backspace><right><backspace><right><backspace>**<left>
 ####
 cmd bboo ${{ 
 IFS=$'\n\t '; popo=(chafa bat micro xgd-open); 
-po=($(printf %b "${popo[*]}"|fzf-tmux -h --no-preview -i --cycle --bind 'q:abort' --border 'top')); 
-case $po in chafa) pp="$po -f symbols"; pv="printf %b '\e[4A'$f'\n'; mediainfo $f|tr -d ' '|grep -E -m4 'Width|Height|File'|bat -ppfljava; ";; bat) pp="$po -p";; *) pp="$po";; esac; 
+po=($(printf %b "${popo[*]}"|fzf-tmux -h --no-preview -i --cycle --bind 'q:abort' --border 'top'||exit))||exit 0; 
+case $po in chafa) pp="$po -f symbols"; pv="printf %b '\e[4A'$f'\n'; mediainfo $f|tr -d ' '|grep -E -m4 'Width|Height|File'|bat -ppfljava; ";; bat) pp="$po -p";; *) pp="$po";; esac;
 tmux display-popup -E -w "99%" -h "95%" "${pp} $f; ${pv} read -e -n 1 kk"; 
 }} 
 
@@ -143,6 +141,11 @@ tmux display-popup -E -w "99%" -h "95%" "${pp} $f; ${pv} read -e -n 1 kk";
 cmd bopen ${{ 
 if [[ ${f/*./} = md ]]; then glow -p ${f}; 
 elif [[ ${f/*./} = sh ]]; then bat -pf ${f}; 
+elif [[ ${f/*./} = jpg ]]; then IFS=$'\n\t '; 
+popo=(chafa bat micro xgd-open ffmpeg-convert); 
+po=($(printf %b "${popo[*]}"|fzf-tmux -h --no-preview -i --cycle --bind 'q:abort' --border 'top'||exit))||exit 0; 
+case $po in chafa) pp="$po -f symbols $f"; pv="printf %b '\e[4A'$f'\n'; mediainfo $f|tr -d ' '|grep -E -m4 'Width|Height|File'|bat -ppfljava; ";; bat) pp="$po -p";; ffmpeg-convert) printf %b "\n\n\e[A -- to fileformat:"; read -ep ' ' -i "webp" "end"; ffmpeg -i $f ${f/*\//}.$end; read -es -n1 kk;; *) pp="$po";; esac; 
+tmux display-popup -E -w "99%" -h "95%" "${pp}; ${pv} read -e -n 1 kk"; 
 else bat -pfljava ${f}; 
 fi; }}
     # case $(file --mime-type -Lb $f) in
@@ -509,11 +512,10 @@ set cursorpreviewfmt "\033[2m\033[91m"
 set cursorparentfmt "\033[92m" 
 set cursorpreviewfmt "\033[1m" 
 set cursoractivefmt "\033[4;7m"
-set drawbox false
+set nodrawbox
 set drawbox off
 set mouse on 
-set icons true 
-set icons off 
+set noicons  
 set shell bash 
 set info size:time
 set sortby time
