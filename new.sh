@@ -91,20 +91,18 @@ cpu=($(lscpu |grep -E 'Model name'|tr -s "\t" " "|cut -f3- -d" "));
 cpus=($(lscpu|grep -e 'CPU(s):' -m1|cut -f2 -d":"|tr -d " ")); 
 ## ____ IP _ GET _____ ##########
 [ $PREFIX ] && wlan="$(getprop|grep -v "gateway"|grep -E "ipv4" -m1|tr -d "[]"|cut -f2 -d" ")"; 
-# [ -z $PREFIX ] && wlan=($(hostname -I));
 [ -z $wlan ] && wlan="$(ip -brief a 2>/dev/null|grep -v "127.0.0.1"|tr -s "/\t " "\n"|grep -E "UP" -A1 -m1|tail -n1)"; 
 [ -z $wlan ] && wlan="$($sudo ifconfig 2>/dev/null|grep -e "wlan" -A1|sed -e 1d|tr -s "a-z " "\n"|sed -e 1d -e 3,4d)"; 
 [ -z $PREFIX ] && mac=($(ip a show dynamic 2>/dev/null| grep --color=no -e 'ether' -B1|tr -s " " " "|cut -f2-3 -d" "|sed -e "s/\: <.*//g" -e "s/link\/ether\ //g"|tac));
-[ "$wlan" ] && printf %b "${wlan[*]}" > $HOME/logs/wlan.sh || wlan="$(cat $HOME/logs/wlan.log)"; printf %b "$wlan" > $HOME/logs/iploc.log;  
+[ "$wlan" ] && printf %b "${wlan[*]}" > $HOME/logs/wlan.log || wlan="$(cat $HOME/logs/wlan.log)"; printf %b "$wlan" > $HOME/logs/iploc.log;  
 ########
+wlan="$(cat $HOME/logs/wlan.log)"; 
+idn="${wlan/*./}"; . $HOME/88/i/colors/coala.sh; idc=(${co[idn]}); 
+tmux set-option -g status-style bg=colour$(printf %b "$idc";); 
 ########
-memram="$(memram)"; 
-idn="${wlan/*./}"; 
-. $HOME/88/i/colors/coala.sh; 
-idc=(${co[idn]}); 
-# tmux set-option -g status-style bg=colour$(printf %b "$idc";); 
-[ -z "$ssh" ] && ssh=(${SSH_CONNECTION}); 
+####
 ########
+memram="$(memram)"; [ -z "$ssh" ] && ssh=(${SSH_CONNECTION}); 
 ########
 dots() { printf %b "${re}·········${re}"; }; 
 dott() { printf %b "\e[0m"; for i in $(seq ${1-45}); do printf %b "·"; done; printf %b "\e[0m"; }; 
@@ -154,11 +152,7 @@ dott;
 echo;
 [ "$(cat ${logs}/dfree.log|wc -c)" -gt 4 ] && cat "${logs}/dfree.log" || dfree; 
 dott; echo;
-printf '\e]12;red\e\\'; 
-printf '\e]12;cyan\e\\'; 
 ####
-moda="$(printf %b "${modo}"|tr -d "[]"|head -c14)"; 
-model="${moda/%\ /}"; 
 # . ${HOME}/88/alias.sh; 
 # . $HOME/88/_ps1.sh; 
 ####
@@ -172,15 +166,20 @@ model="${moda/%\ /}";
 printf %b "\x1b[1 q"; ## > cursor = block
 printf %b "\x1b]12;#ff44bb"; ## cursor = pink
 printf %b "\x1b]11;#04000f"; ## background = $arkblue 
+####
+####
+moda="$(printf %b "${modo}"|tr -d "[]"|head -c14)"; 
+model="${moda/%\ /}"; 
+printf %b "${modo[*]}" > $HOME/logs/model.log; 
 }; 
 ##
 ##
-[ $PREFIX ] && modo=($(getprop|grep -E "vendor.manufacturer|product.manufacturer" -m1 -A1 --group-separator=""|cut -f2- -d" "|tr -s "\n[]" " "; )); 
-#############################
-[ -z $PREFIX ] && [ -e /sys/devices/virtual/dmi/id/product_family ] && \
-modo=($(for bb in product_sku board_vendor board_name bios_vendor sys_vendor; 
+[ -n $PREFIX ] && modo=($(getprop|grep -E "vendor.manufacturer|product.manufacturer" -m1 -A1 --group-separator=""|cut -f2- -d" "|tr -s "\n[]" " "; )); 
+[ -z $PREFIX ] && [ -e /sys/devices/virtual/dmi/id/product_family ] && modo=($(for bb in product_sku board_vendor board_name bios_vendor sys_vendor; 
 do cat /sys/devices/virtual/dmi/id/${bb} 2>/dev/null|tr -s "\n" " "; done)); 
+####
 moda="$(printf %b "${modo}"|tr -d "[]"|head -c14)"; model="${moda/%\ /}"; 
+#############################
 ##
 . $HOME/88/_ps1.sh; 
 . ${HOME}/88/alias.sh; 

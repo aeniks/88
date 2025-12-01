@@ -27,10 +27,10 @@ printf -v "batcap" "/sys/class/power_supply/BAT1/capacity";
 else unset -v batcap batstat; 
 fi; fi; 
 ####
-[ "$batcap" ] && batp="$(cat $batcap)"; 
+[ -e "$batcap" ] && batp="$(cat $batcap)"; 
 grep -wqi "Charging" "$batstat" && bcharge="\e[0m\e[38;5;42;1m" || bcharge="\e[0m\e[2m"; 
 bcolor="$(printf %b "$((batp / 10 * 4 + 124 - 4))"|tee ~/logs/b/bcolor.log)"; 
-[ "$batcap" ] && printf %b " ${bcharge}[${re}\e[38;5;${bcolor}m${batp}${bcharge}]$re"; 
+[ -e "$batcap" ] && printf %b " ${bcharge}[${re}\e[38;5;${bcolor}m${batp}${bcharge}]$re"; 
 ####
 }; 
 ################
