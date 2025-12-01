@@ -43,14 +43,12 @@
 # }
 audio() {
 mediainfo "$1"|tr -s "\t\n " " \n "|batcat -pfl zig; 
-
 }
 
 image() { 
 ww=$(($2-4))
 termimage -s $(($2-4))x$3 "$1"||chafa  -s ${ww}x$3 "$1" 2>/dev/null|| chafa  -s ${ww}x$3 "$6" 2>/dev/null|| jp2a $1 --width=${ww} --color-depth=8 --fill; 
 mediainfo "$1"|tr -s "\t " " "|grep -e ":"|batcat -ppflzig; 
-
 } 
 # exifprobe -c -L "$1"|batcat -pPfl go;
 # printf "$1"; 
@@ -68,13 +66,8 @@ mediainfo "$1"|tr -s "\t " " "|grep -e ":"|batcat -ppflzig;
 # be regenerated once seen.
 # 
 [ -e "${XDG_CACHE_HOME:-"$HOME/.cache"}/lf" ]||mkdir -p -m 775 ${XDG_CACHE_HOME:-"$HOME/.cache"}/lf; 
-create_cache() {
-	CACHE="${XDG_CACHE_HOME:-"$HOME/.cache"}/lf/thumb.$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' \
-		-- "$(readlink -f "$1" || realpath "$1" )" \
-		| sha256sum \
-		| cut -d' ' -f1)"
-#exiftool $1|batcat -pl c#; 
-}
+####
+create_cache() { CACHE="${XDG_CACHE_HOME:-"$HOME/.cache"}/lf/thumb.$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$1" || realpath "$1" )" | sha256sum | cut -d' ' -f1)"; }; 
 
 mime_preview() {
 	# The 'ran_guard' variable is there in case I need to do recursion
@@ -145,10 +138,11 @@ zipinfo -1 "$1"|batcat -pPfl perl;
 echo;echo " -- -- -- -- ";echo;
 zipinfo -t "$1"|batcat -pPfl c; 
 	;;
-	(application/zip,0 | application/x-7z-compressed,0 )
-tar -
+	(application/x-tar,0)
+	tar --list -f $1|head -n88|batcat -ppfljs|tr -s "\t " " ";; 
+	(application/gzip,0)
+	gzip -l $1|head -n88|batcat -ppfljs|tr -s "\t " " ";;
 	(*)
-	batcat -ppf "$1"|tr -s "\t " " "; 
 	;;
 	(*.mod,0)
 batcat $f -fppl d
@@ -163,11 +157,10 @@ batcat $f -fppl d
 		;;
 	(video/*,[01])
 		create_cache "$1"
-		[ -f "$CACHE" ] \
-			|| ffmpegthumbnailer -i "$1" -o "$CACHE" -m
+		[ -f "$CACHE" ] || ffmpegthumbnailer -i "$1" -o "$CACHE" -m
 		##image "$CACHE" "$2" "$3" "$4" "$5" "$1"
 chafa ${CACHE} --view-size $(($2-4))x$3 --scale max --polite=on; 
-	mediainfo "$1"|tr -s "\t " " "|grep -e ":"|batcat -ppflzig
+mediainfo "$1"|tr -s "\t " " "|grep -e ":"|batcat -ppflzig
 
 # mediainfo "$1"; 
 exiftool -S $1|tac|batcat -pfl d; 
@@ -227,7 +220,7 @@ exiftool -S $1|tac|batcat -pfl d;
 		(gpg)
 			printf "OpenPGP \033[1;31mencrypted\033[m file,\ntry using gpg to decrypt it\n\n"
 		;;
-		(*) 
+		(*) 	
 	mediainfo $1$f|batcat -pplc||batcat "$f" -pp
 		esac
 	;;
