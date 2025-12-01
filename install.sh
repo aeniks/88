@@ -39,12 +39,12 @@ _prompt "download config-files? " && _where;
 #####
 _prompt "install config-files? "; 
 ######
-_prompt "login to github? " && p2 "$c2 " && p1 "password? " && read -sp " " "pwgh"; 
+_prompt "login to github? " && p2 "$c2 " && p1 "password? " && read -res "pwgh"; 
 #####
-_prompt "install extras ? " && p2 "$c2 " && p1 "password? " && read -sp " " "pw"; 
+_prompt "install extras? " && p2 "$c2 " && p1 "password? " && read -res "pw"; 
 ########################################
 #####
-[ "$ny" = "q" ] && return 0 && echo; 
+[ "$ny" = "q" ] && return 0; echo; echo;  
 #####
 if [ $pp1 ]; then printf %b "\n$c2 updating apts ...\n"; 
 $sudo apt update && $sudo apt upgrade -y; printf %b "\n$c2 apts updated! \n"; 
@@ -70,8 +70,7 @@ for ss in {ssh,openssl,openssh-server,gh,git} ; do hash $ss 2>/dev/null || $sudo
 if [ $pp6 ]; then 
 printf %b "\n$c2 installing extras ...\n"; 
 gpgs=($(ls -1 $start/c/gpg/*.gpg)); 
-for i in ${gpgs[*]}; do 
-gpg -q -o $HOME/.safe/${i/.gpg/} --passphrase $pw -d $i 2>/dev/null; 
+for i in ${gpgs[*]}; do gpg -q -o $HOME/.safe/${i/.gpg/} --passphrase $pw -d $i 2>/dev/null; 
 done; 
 printf %b "\n$c2 done ...\n"; 
 fi; 
