@@ -39,37 +39,46 @@ _prompt "download config-files? " && _where;
 #####
 _prompt "install config-files? "; 
 ######
-_prompt "login to github? " && printf %b "\n\n\e[A\e[96m --\e[0m"; read -resp ' ' "pwgh"; 
+_prompt "login to github? " && p2 "$c2 " && p1 "password? " && read -sp " " "pwgh"; 
 #####
-_prompt "install extras ? " && printf %b "\n\n\e[A\e[96m --\e[0m"; read -resp ' ' "pw"; 
+_prompt "install extras ? " && p2 "$c2 " && p1 "password? " && read -sp " " "pw"; 
 ########################################
-########################################
 #####
+[ "$ny" = "q" ] && return 0 && echo; 
 #####
-[ "$ny" = "q" ] && return 0; echo; 
-#####
-if [ $pp1 ]; then $sudo apt update && $sudo apt upgrade -y; printf %b "\n$c2 apts updated! \n"; echo; fi; 
+if [ $pp1 ]; then printf %b "\n$c2 updating apts ...\n"; 
+$sudo apt update && $sudo apt upgrade -y; printf %b "\n$c2 apts updated! \n"; 
+fi; 
 ##############################
 ##############################
-if [ $pp2 ]; then for i in $(ls -1 $HOME/88/install/ap); do rr="$((RANDOM%222))";  printf %b "\ec\e[0m -- \e[48;5;${rr}m ${i} \e[0m --\n\e[38;5;${rr}m "; command -v $i &>/dev/null || $sudo apt install -y $i; done; printf %b "\e[2J\e[2H\n\n\e[0m -- \e[48;5;196m DONE \e[0m --\n\n"; echo; fi; 
+if [ $pp2 ]; then printf %b "\n$c2 installing apts ... \n"; 
+for i in $(ls -1 $HOME/88/install/ap); do rr="$((RANDOM%222))";  printf %b "\ec\e[0m -- \e[48;5;${rr}m ${i} \e[0m --\n\e[38;5;${rr}m "; command -v $i &>/dev/null || $sudo apt install -y $i; done; printf %b "\n$c2 apts installed ...\n"; fi; 
 ##############################
 ##############################
 if [ $pp3 ]; then _backup "$start"; _newcolor; hash -v git &>/dev/null || $sudo apt install -y git 2>/dev/null; git clone https://github.com/aeniks/88.git $start; cd "$start"; git config remote.origin.url git@github.com:aeniks/88.git; cd $OLDPWD; printf %b "\n$c2 config files downloaded! \n"; echo; fi; 
 ##############################
 ##############################
-if [ $pp4 ]; then _backup $HOME/.inputrc; _newcolor; _link $start/c/inputrc $HOME/.inputrc; _newcolor; confolders=($(ls -1p $HOME/88/c|grep "/")); for q in ${confolders[*]}; do mkdir -p $HOME/.config/$q 2>/dev/null; _backup $HOME/.config/$q/*; _newcolor; ln -s $start/c/$q/* -t $HOME/.config/$q/ 2>/dev/null; sleep .2; printf %b "\n\e[0m"; p1 "updated"; _newcolor; printf %b " $q"; done; _newcolor; printf %b "${PATH}:${HOME}/.local/bin" > $HOME/.config/path.sh; chmod 775 $HOME/.config/path.sh; _newcolor; printf %b "\n\e[0m"; p1 'added PATH to ~/.config/path.sh '; printf %b "\n$c2 config files installed! \n"; echo; fi; 
+if [ $pp4 ]; then printf %b "\n$c2 installing config files ...\n"; 
+_backup $HOME/.inputrc; _newcolor; _link $start/c/inputrc $HOME/.inputrc; _newcolor; confolders=($(ls -1p $HOME/88/c|grep "/")); for q in ${confolders[*]}; do mkdir -p $HOME/.config/$q 2>/dev/null; _backup $HOME/.config/$q/*; _newcolor; ln -s $start/c/$q/* -t $HOME/.config/$q/ 2>/dev/null; sleep .2; printf %b "\n\e[0m"; p1 "updated"; _newcolor; printf %b " $q"; done; _newcolor; printf %b "${PATH}:${HOME}/.local/bin" > $HOME/.config/path.sh; chmod 775 $HOME/.config/path.sh; _newcolor; printf %b "\n\e[0m"; p1 'added PATH to ~/.config/path.sh '; printf %b "\n$c2 config files installed! \n"; echo; fi; 
 ##############################
 ##############################
-if [ $pp5 ]; then ghuser="$(id -nu)"; ghmail="$(id -nu)@$(hostname)"; 
+if [ $pp5 ]; then printf %b "\n$c2 logging in to github ...\n"; 
+ghuser="$(id -nu)"; ghmail="$(id -nu)@$(hostname)"; 
 for ss in {ssh,openssl,openssh-server,gh,git} ; do hash $ss 2>/dev/null || $sudo apt install -y ${ss} 2>/dev/null; printf %b ""; done; gh_aeniks="$start/c/gpg/gh_aeniks.gpg"; gpg --quiet --passphrase "${pwgh}" -o "$HOME/.safe/gh_aeniks.log" -d "$gh_aeniks" 2>/dev/null; gh auth login --with-token < "$HOME/.safe/gh_aeniks.log"; printf "$c2 "; sleep .2; gh auth status && printf %b "\e[60G      \e[8D  "; p2 "\e[0;1m [\e[0;92m"; p1 "OK"; p2 "\e[0;1m]  \e[0m\n"; git config --global user.name $ghuser; git config --global user.email $ghmail; git config --global init.defaultBranch main; [ $(ls $HOME/.ssh/*.pub) ] || [ -r $HOME/.ssh/id_ed25519.pub ] || ssh-keygen -N '' -f $HOME/.ssh/id_ed25519; chmod 600 $HOME/.ssh/*; chmod 644 $HOME/.ssh/*.pub; gh config set git_protocol ssh; gh ssh-key add $HOME/.ssh/id_ed25519.pub; printf %b "\e[96m\u990 \e[0m"; ssh -T git@github.com; printf %b "\n"; cd $start; git config remote.origin.url git@github.com:aeniks/88.git 2>/dev/null; cd $OLDPWD; printf %b "\n$c2 logged in to github! \n"; echo; fi; 
 # gpg --quiet --pinentry-mode loopback -o "$HOME/.safe/gh_aeniks.log" -d "$gh_aeniks" 2>/dev/null; 
 ##############################
 if [ $pp6 ]; then 
-gpgs=($($start/c/gpg/*.gpg)); for i in ${gpgs[*]}; do gpg -q -o $HOME/.safe/${i/.gpg/} --passphrase "$pw" -d $i 2>/dev/null; done; fi; 
+printf %b "\n$c2 installing extras ...\n"; 
+gpgs=($(ls -1 $start/c/gpg/*.gpg)); 
+for i in ${gpgs[*]}; do 
+gpg -q -o $HOME/.safe/${i/.gpg/} --passphrase $pw -d $i 2>/dev/null; 
+done; 
+printf %b "\n$c2 done ...\n"; 
+fi; 
 ##############################
 ##############################
 ##############################
-echo; 
+printf %b "\n\n\n\n\e[4A\n\e[0m -- \e[48;5;196m DONE \e[0m --\n\n"; 
 }; 
 ####
 ####
