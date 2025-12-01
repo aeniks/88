@@ -1,7 +1,8 @@
 #!/bin/bash 
 ################
-[ "$PREFIX" ] && . "${HOME}"/88/crons/bat.sh & disown; 
 mkdir $HOME/logs/b -p -m 775 2>/dev/null; 
+[ "$PREFIX" ] && . "${HOME}"/88/crons/bat.sh & disown; 
+[ "$PREFIX" ] && touch $HOME/logs/b/battery.log; 
 touch $HOME/logs/b/bp.log; 
 chmod 775 $HOME/logs/b/bp.log; 
 yellow='\e[93m'; cyan='\e[96m'; re='\e[0m'; bc=0; dim='\e[2m'; 
@@ -9,30 +10,28 @@ yellow='\e[93m'; cyan='\e[96m'; re='\e[0m'; bc=0; dim='\e[2m';
 wlan="$(cat "$HOME/logs/iploc.log" 2>/dev/null)"; 
 ################
 _bat() { 
-if [ -e "/sys/class/power_supply/BAT0/status" ]; \
-then printf -v "batstat" "/sys/class/power_supply/BAT0/status"; \
-printf -v "batcap" "/sys/class/power_supply/BAT0/capacity"; 
-elif [ -e "/sys/class/power_supply/battery/status" ]; \
-then printf -v "batstat" "/sys/class/power_supply/battery/status"; \
-printf -v "batcap" "/sys/class/power_supply/battery/capacity"; 
-elif [ -e "/sys/class/power_supply/BAT1/status" ]; \
-then printf -v "batstat" "/sys/class/power_supply/BAT1/status"; \
-printf -v "batcap" "/sys/class/power_supply/BAT1/capacity"; 
-else 
+if [ "PREFIX" ]; then 
 printf -v "batstat" %b "$HOME/logs/b/battery.log"; 
-batp="$(cat "$HOME/logs/b/bp.log")"; 
-fi; 
+printf -v "batcap" %b "$HOME/logs/b/bp.log"; 
+else 
 ####
-# printf -v "bcharge" "\e[0;2m["; cat "$batstat" 2>/dev/null|
+if [ -e "/sys/class/power_supply/battery/status" ]; then 
+printf -v "batstat" "/sys/class/power_supply/battery/status"; 
+printf -v "batcap" "/sys/class/power_supply/battery/capacity"; 
+elif [ -e "/sys/class/power_supply/BAT0/status" ]; then 
+printf -v "batstat" "/sys/class/power_supply/BAT0/status"; 
+printf -v "batcap" "/sys/class/power_supply/BAT0/capacity"; 
+elif [ -e "/sys/class/power_supply/BAT1/status" ]; then 
+printf -v "batstat" "/sys/class/power_supply/BAT1/status"; 
+printf -v "batcap" "/sys/class/power_supply/BAT1/capacity"; 
+else unset -v batcap batstat; 
+fi; fi; 
+####
+[ "$batcap" ] && batp="$(cat $batcap)"; 
 grep -wqi "Charging" "$batstat" && bcharge="\e[0m\e[38;5;42;1m" || bcharge="\e[0m\e[2m"; 
-# [ "$bc" ] && printf -v "bcolor" %b "$(cat "$batcap")";
-# [ "$bc" ] && 
 bcolor="$(printf %b "$((batp / 10 * 4 + 124 - 4))"|tee ~/logs/b/bcolor.log)"; 
-# printf %b "$bcolor" > ~/logs/b/bcolor.log; 
-# printf -v "bat" %b "\e[${bc}m$bc"; 
-
-# [ "$bc" ] && 
-printf %b " ${bcharge}[${re}\e[38;5;${bcolor}m${batp}${bcharge}]$re"; 
+[ "$batcap" ] && printf %b " ${bcharge}[${re}\e[38;5;${bcolor}m${batp}${bcharge}]$re"; 
+####
 }; 
 ################
 # [[ "$HOSTNAME" == "localhost" ]] && unset HOSTNAME || \
