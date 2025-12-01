@@ -25,7 +25,8 @@ p1 "       hello... ";
 sleep 1; echo; sleep .2; echo; sleep .2; sl="0.04"
 #####
 #####
-_ok() { p2 "\e[42G\e[0;1m [\e[0;92m"; p1 "OK"; p2 "\e[0;1m]"; p1 " "; p2 "\n"; }; 
+_ok() { p2 "\e[42G\e[0;1m [\e[0;92m"; p1 "OK"; p2 "\e[0;1m]"; p1 " "; p2 "\n"; 
+[ "$ny" = "q" ] && return 1; }; 
 ##
 _yno() { yno='\e[0m[\e[2mY\e[0m/\e[2mn\e[0m]'; [ "$1" ] && ny=${1}; printf %b "\e[?25h\e[45G\b\b\b\b\b\b\b\b$yno "; 
 printf -v _yno_${1} "false"; read -rsn1 ny; [[ -z $ny || $ny = y ]] && printf -v "pp$((yy++))" %b "ok" && printf -v _yno_${1} "true" || unset -v pp$((yy++)); _ok; [[ $ny = q ]] && printf %b "\e[?25l\n\n" && return 1; }; 
